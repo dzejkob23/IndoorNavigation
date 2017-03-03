@@ -367,6 +367,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         StartCoroutine(_DoSaveCurrentAreaDescription());
     }
 
+    public void JoinMarkers()
+    {
+        // empty
+    }
+
     /// <summary>
     /// This is called each time a Tango event happens.
     /// </summary>
@@ -686,10 +691,33 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         markerScript.m_deviceTMarker = Matrix4x4.Inverse(uwTDevice) * uwTMarker;
 
         // Set position of new marker to text whit marker position
-        m_markerPosition.text = newMarkObject.transform.position.ToString();
+        m_markerPosition.text = markerScript.getID().ToString();
 
         // Render line between last two markers
         m_points.Add(newMarkObject.transform.position);
+        
+        if (m_currentMarkType == 0)
+        {
+            // 1. choise (connect new and last markers)
+            int markerListSize = m_markerList.Capacity;
+            ARMarker lastMarker = m_markerList[markerListSize - 1].GetComponent<ARMarker>();
+
+            // Join both markers
+            lastMarker.m_listNeighbours.Add(markerScript.getID());
+            markerScript.m_listNeighbours.Add(lastMarker.getID());
+        }
+        else if (m_currentMarkType == 1)
+        {
+            // 2. choise
+        }
+        else if (m_currentMarkType == 2)
+        {
+            // 3. choise
+        }
+        else
+        {
+            // empty
+        }
 
         m_markerList.Add(newMarkObject);
 

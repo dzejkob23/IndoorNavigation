@@ -18,6 +18,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -27,6 +28,16 @@ using UnityEngine;
 /// </summary>
 public class ARMarker : MonoBehaviour
 {
+    /// <summary>
+    /// Unique identifikator
+    /// </summary>
+    private static int ID = 0;
+
+    /// <summary>
+    /// Marker neighbours.
+    /// </summary>
+    public List<int> m_listNeighbours;
+
     /// <summary>
     /// The type of the location mark.
     /// 
@@ -53,12 +64,19 @@ public class ARMarker : MonoBehaviour
     private Animation m_anim;
 
     /// <summary>
+    /// Start this instance
+    /// </summary>
+    public void Start()
+    {
+        ID++;
+    }
+
+    /// <summary>
     /// Awake this instance.
     /// </summary>
     private void Awake()
     {
         // The animation should be started in Awake and not Start so that it plays on its first frame.
-        print("Object position: " + transform.position.ToString());
         m_anim = GetComponent<Animation>();
         m_anim.Play("ARMarkerShow", PlayMode.StopAll);
     }
@@ -77,5 +95,14 @@ public class ARMarker : MonoBehaviour
     private void HideDone()
     {
         Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Get instance ID
+    /// </summary>
+    /// <returns>Instance ID</returns>
+    public int getID()
+    {
+        return ID;
     }
 }
