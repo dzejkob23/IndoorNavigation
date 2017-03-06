@@ -207,47 +207,76 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         if (Input.touchCount == 1)
         {
-            Touch t = Input.GetTouch(0);
-            Vector2 guiPosition = new Vector2(t.position.x, Screen.height - t.position.y);
-            Camera cam = Camera.main;
-            RaycastHit hitInfo;
-
-            if (t.phase != TouchPhase.Began)
-            {
-                return;
-            }
-
-            if (m_selectedRect.Contains(guiPosition))
-            {
-                // do nothing, the button will handle it
-            }
-            else if (Physics.Raycast(cam.ScreenPointToRay(t.position), out hitInfo))
-            {
-                // Found a marker, select it (so long as it isn't disappearing)!
-                GameObject tapped = hitInfo.collider.gameObject;
-                if (!tapped.GetComponent<Animation>().isPlaying)
-                {
-                    m_selectedMarker = tapped.GetComponent<ARMarker>();
-                }
-            }
-            else
-            {
-                // Place a new point at that location, clear selection
-                m_selectedMarker = null;
-                StartCoroutine(_WaitForDepthAndFindPlane(t.position));
-                
-                // Because we may wait a small amount of time, this is a good place to play a small
-                // animation so the user knows that their input was received.
-                RectTransform touchEffectRectTransform = Instantiate(m_prefabTouchEffect) as RectTransform;
-                touchEffectRectTransform.transform.SetParent(m_canvas.transform, false);
-                Vector2 normalizedPosition = t.position;
-                normalizedPosition.x /= Screen.width;
-                normalizedPosition.y /= Screen.height;
-                touchEffectRectTransform.anchorMin = touchEffectRectTransform.anchorMax = normalizedPosition;
-            }
+            _reactionOnTouch();
         }
 
         _RenderLine();
+    }
+
+    /// <summary>
+    /// Do something on touch on screen
+    /// </summary>
+    private void _reactionOnTouch()
+    {
+        Touch t = Input.GetTouch(0);
+        Vector2 guiPosition = new Vector2(t.position.x, Screen.height - t.position.y);
+        Camera cam = Camera.main;
+        RaycastHit hitInfo;
+
+        if (t.phase != TouchPhase.Began)
+        {
+            return;
+        }
+
+        if (m_selectedRect.Contains(guiPosition))
+        {
+            // do nothing, the button will handle it
+        }
+        else if (Physics.Raycast(cam.ScreenPointToRay(t.position), out hitInfo))
+        {
+            _selectCreatedMarker(hitInfo);
+        }
+        else
+        {
+            if (m_currentMarkType == 0 || m_currentMarkType == 2)
+            {
+                _placeNewMarker(t);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Select craete marker via touch
+    /// </summary>
+    /// <param name="hitInfo"></param>
+    private void _selectCreatedMarker(RaycastHit hitInfo)
+    {
+        // Found a marker, select it (so long as it isn't disappearing)!
+        GameObject tapped = hitInfo.collider.gameObject;
+        if (!tapped.GetComponent<Animation>().isPlaying)
+        {
+            m_selectedMarker = tapped.GetComponent<ARMarker>();
+        }
+    }
+
+    /// <summary>
+    /// Place new ar marker to scene
+    /// </summary>
+    /// <param name="t"></param>
+    private void _placeNewMarker(Touch t)
+    {
+        // Place a new point at that location, clear selection
+        m_selectedMarker = null;
+        StartCoroutine(_WaitForDepthAndFindPlane(t.position));
+
+        // Because we may wait a small amount of time, this is a good place to play a small
+        // animation so the user knows that their input was received.
+        RectTransform touchEffectRectTransform = Instantiate(m_prefabTouchEffect) as RectTransform;
+        touchEffectRectTransform.transform.SetParent(m_canvas.transform, false);
+        Vector2 normalizedPosition = t.position;
+        normalizedPosition.x /= Screen.width;
+        normalizedPosition.y /= Screen.height;
+        touchEffectRectTransform.anchorMin = touchEffectRectTransform.anchorMax = normalizedPosition;
     }
 
     /// <summary>
@@ -706,17 +735,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             lastMarker.m_listNeighbours.Add(markerScript.getID());
             markerScript.m_listNeighbours.Add(lastMarker.getID());
         }
-        else if (m_currentMarkType == 1)
-        {
-            // 2. choise
-        }
         else if (m_currentMarkType == 2)
         {
             // 3. choise
-        }
-        else
-        {
-            // empty
         }
 
         m_markerList.Add(newMarkObject);
