@@ -34,16 +34,6 @@ using UnityEngine.UI;
 public class AreaDescriptionPicker : MonoBehaviour, ITangoLifecycle
 {
     /// <summary>
-    /// Renderer for line between two point/positions
-    /// </summary>
-    public LineRenderer m_lineRenderer;
-
-    /// <summary>
-    /// The position of created marker
-    /// </summary>
-    public Text m_markerPosition;
-
-    /// <summary>
     /// The prefab of a standard button in the scrolling list.
     /// </summary>
     public GameObject m_listElement;
@@ -140,14 +130,11 @@ public class AreaDescriptionPicker : MonoBehaviour, ITangoLifecycle
         }
 
         m_tangoApplication.Startup(m_guiController.m_curAreaDescription);
-        m_guiController.m_markerPosition = m_markerPosition;
-        m_guiController.m_lineRenderer = m_lineRenderer;
 
         // Enable GUI controller to allow user tap and interactive with the environment.
         m_poseController.gameObject.SetActive(true);
         m_guiController.enabled = true;
         m_gameControlPanel.SetActive(true);
-        m_markerPosition.gameObject.SetActive(true);
     }
 
     /// <summary>

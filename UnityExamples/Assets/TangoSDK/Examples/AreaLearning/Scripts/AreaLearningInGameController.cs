@@ -36,6 +36,21 @@ using UnityEngine.EventSystems;
 public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEvent, ITangoDepth
 {
     /// <summary>
+    /// Connect two markers.
+    /// </summary>
+    private ARMarker[] m_connectMarkers;
+
+    /// <summary>
+    /// Finish button.
+    /// </summary>
+    public UnityEngine.UI.Button m_finishButton;
+
+    /// <summary>
+    /// Join button.
+    /// </summary>
+    public UnityEngine.UI.Button m_joinButton;
+
+    /// <summary>
     /// Rendering line between two last markers
     /// </summary>
     public UnityEngine.LineRenderer m_lineRenderer;
@@ -130,6 +145,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     private int m_currentMarkType = 0;
 
     /// <summary>
+    /// Current method type.
+    /// </summary>
+    private int m_currentMethodType = 0;
+    
+    /// <summary>
     /// If set, this is the selected marker.
     /// </summary>
     private ARMarker m_selectedMarker;
@@ -164,6 +184,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         m_poseController = FindObjectOfType<TangoARPoseController>();
         m_tangoApplication = FindObjectOfType<TangoApplication>();
         m_points = new List<Vector3>();
+        m_connectMarkers = new ARMarker[2];
 
         if (m_tangoApplication != null)
         {
@@ -238,10 +259,32 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
         else
         {
-            if (m_currentMarkType == 0 || m_currentMarkType == 2)
-            {
-                _placeNewMarker(t);
-            }
+            _placeNewMarker(t);
+            _createConnection();
+            m_finishButton.gameObject.SetActive(true);
+        }
+    }
+
+    private void _createConnection()
+    {
+        // Get ARMarker
+        ARMarker markerScript = newMarkObject.GetComponent<ARMarker>();
+
+        // Set position of new marker to text whit marker position
+        m_markerPosition.text = markerScript.getID().ToString();
+
+        // Render line between last two markers
+        m_points.Add(newMarkObject.transform.position);
+
+        if (m_currentMarkType == 0)
+        {
+            // 1. choise (connect new and last markers)
+            int markerListSize = m_markerList.Capacity;
+            ARMarker lastMarker = m_markerList[markerListSize - 1].GetComponent<ARMarker>();
+
+            // Join both markers
+            lastMarker.m_listNeighbours.Add(markerScript.getID());
+            markerScript.m_listNeighbours.Add(lastMarker.getID());
         }
     }
 
@@ -381,6 +424,27 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     }
 
     /// <summary>
+    /// Set the method type.
+    /// </summary>
+    /// <param name="type"></param>
+    public void SetCurrentMethodType(int type)
+    {
+        if (type != m_currentMethodType)
+        {
+            m_currentMethodType = type;
+        }
+
+        if (type != 1)
+        {
+            m_joinButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            m_joinButton.gameObject.SetActive(true);
+        }
+    }
+
+    /// <summary>
     /// Save the game.
     /// 
     /// Save will trigger 3 things:
@@ -396,9 +460,35 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         StartCoroutine(_DoSaveCurrentAreaDescription());
     }
 
+    /// <summary>
+    /// Create connection between two independent markers
+    /// </summary>
     public void JoinMarkers()
     {
-        // empty
+        if (m_selectedMarker != null && m_connectMarkers[0] == null)
+        {
+            m_connectMarkers[0] = m_selectedMarker;
+            m_selectedMarker = null;
+        }
+
+        if (m_selectedMarker != null && m_connectMarkers[1] == null)
+        {
+            m_connectMarkers[1] = m_selectedMarker;
+            m_selectedMarker = null;
+        }
+
+        if (m_connectMarkers[0] != null && m_connectMarkers[1] != null)
+        {
+            int id_0 = m_connectMarkers[0].getID();
+            int id_1 = m_connectMarkers[1].getID();
+            
+            m_connectMarkers[0].m_listNeighbours.Add(id_1);
+            m_connectMarkers[1].m_listNeighbours.Add(id_0);
+
+            // TODO - render connection
+            m_connectMarkers = new ARMarker[2];
+            AndroidHelper.ShowAndroidToastMessage("Connection is created.");
+        }
     }
 
     /// <summary>
@@ -709,7 +799,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         ARMarker markerScript = newMarkObject.GetComponent<ARMarker>();
 
         markerScript.m_type = m_currentMarkType;
-        markerScript.m_timestamp = (float)m_poseController.m_poseTimestamp;
+        markerScript.m_timestamp = (float) m_poseController.m_poseTimestamp;
         
         Matrix4x4 uwTDevice = Matrix4x4.TRS(m_poseController.m_tangoPosition,
                                             m_poseController.m_tangoRotation,
@@ -718,27 +808,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
                                             newMarkObject.transform.rotation,
                                             Vector3.one);
         markerScript.m_deviceTMarker = Matrix4x4.Inverse(uwTDevice) * uwTMarker;
-
-        // Set position of new marker to text whit marker position
-        m_markerPosition.text = markerScript.getID().ToString();
-
-        // Render line between last two markers
-        m_points.Add(newMarkObject.transform.position);
-        
-        if (m_currentMarkType == 0)
-        {
-            // 1. choise (connect new and last markers)
-            int markerListSize = m_markerList.Capacity;
-            ARMarker lastMarker = m_markerList[markerListSize - 1].GetComponent<ARMarker>();
-
-            // Join both markers
-            lastMarker.m_listNeighbours.Add(markerScript.getID());
-            markerScript.m_listNeighbours.Add(lastMarker.getID());
-        }
-        else if (m_currentMarkType == 2)
-        {
-            // 3. choise
-        }
 
         m_markerList.Add(newMarkObject);
 
