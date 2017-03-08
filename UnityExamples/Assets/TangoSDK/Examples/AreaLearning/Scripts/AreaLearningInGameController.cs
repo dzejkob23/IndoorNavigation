@@ -58,7 +58,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// <summary>
     /// Navigation points
     /// </summary>
-    private List<Vector3> m_points;
+    private List<Vector3[]> m_points;
 
     /// <summary>
     /// Position of created marker
@@ -183,7 +183,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     {
         m_poseController = FindObjectOfType<TangoARPoseController>();
         m_tangoApplication = FindObjectOfType<TangoApplication>();
-        m_points = new List<Vector3>();
         m_connectMarkers = new ARMarker[2];
 
         if (m_tangoApplication != null)
@@ -273,8 +272,26 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         // Set position of new marker to text whit marker position
         m_markerPosition.text = markerScript.getID().ToString();
 
-        // Render line between last two markers
-        m_points.Add(newMarkObject.transform.position);
+        Vector3[] pair = new Vector3 [2];
+
+        if (m_points != null)
+        {
+            int pairsSize = m_points.Capacity;
+
+            pair[0] = (m_points[pairsSize - 1])[1];
+            pair[1] = newMarkObject.transform.position;
+        }
+        else
+        {
+            // first marker on screen
+            m_points = new List<Vector3[]>();
+
+            pair[0] = newMarkObject.transform.position;
+            pair[1] = pair[0];
+
+        }
+
+        m_points.Add(pair);
 
         if (m_currentMarkType == 0)
         {
@@ -485,8 +502,13 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             m_connectMarkers[0].m_listNeighbours.Add(id_1);
             m_connectMarkers[1].m_listNeighbours.Add(id_0);
 
-            // TODO - render connection
+            Vector3[] pair = new Vector3[2];
+            pair[0] = m_connectMarkers[0].transform.position;
+            pair[1] = m_connectMarkers[1].transform.position;
+
+            m_points.Add(pair);
             m_connectMarkers = new ARMarker[2];
+
             AndroidHelper.ShowAndroidToastMessage("Connection is created.");
         }
     }
@@ -819,9 +841,22 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     private void _RenderLine()
     {
-        Vector3[] points = m_points.ToArray();
-        m_lineRenderer.numPositions = points.Length;
-        m_lineRenderer.SetPositions(points);
+        m_lineRenderer.numPositions = 4;
+        //m_lineRenderer.numPositions = m_points.Capacity * 2;
+
+        /*for (int i = 0; i < m_points.Capacity; i++)
+        {
+            m_lineRenderer.SetPosition(0, (m_points[i])[0]);
+            m_lineRenderer.SetPosition(1, (m_points[i])[1]);
+
+        }*/
+
+        m_lineRenderer.SetPosition(0, new Vector3(0,0,0));
+        m_lineRenderer.SetPosition(1, new Vector3(1,0,0));
+
+        m_lineRenderer.SetPosition(3, new Vector3(1, 1, 0));
+        m_lineRenderer.SetPosition(4, new Vector3(1, 0, 1));
+
     }
 
     /// <summary>

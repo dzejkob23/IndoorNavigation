@@ -3011,6 +3011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f27ad1128bc6f42f2b9e96e26ff20a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lineMat: {fileID: 2100000, guid: bfd1d34e5fa944704bf1fa987eecbbae, type: 2}
   m_finishButton: {fileID: 636412815}
   m_joinButton: {fileID: 1634729866}
   m_lineRenderer: {fileID: 1013567090}
