@@ -4,11 +4,11 @@ using UnityEngine;
 
 class RenderMap
 {
-    private List<LineRenderer> renders;
+    private List<ARLine> renders;
 
     public RenderMap()
     {
-        renders = new List<LineRenderer>();
+        renders = new List<ARLine>();
     }
 
     public void renderLine(ARMarker m1, ARMarker m2)
@@ -25,11 +25,24 @@ class RenderMap
         render.SetPosition(0, m1.transform.position);
         render.SetPosition(0, m2.transform.position);
 
-        renders.Add(render);
+        ARLine line = new ARLine();
+        line.setupLine(m1.getID(), m2.getID(), render);
+        renders.Add(line);
     }
 
-    class RenderStruct
+    public bool deleteRendererViaMarker(int markerId)
     {
-           
+        int capacity = renders.Capacity;
+
+        for (int i = 0; i < capacity; i++)
+        {
+            if (renders[i].containsId(markerId))
+            {
+                Destroy(renders[i].getRenderer().gameObject);
+                return true;
+            }
+        }
+
+        return false;
     }
 }
