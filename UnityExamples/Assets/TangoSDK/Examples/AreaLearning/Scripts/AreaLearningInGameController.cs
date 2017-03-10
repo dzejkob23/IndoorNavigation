@@ -53,7 +53,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// <summary>
     /// Rendering line between two last markers
     /// </summary>
-    public UnityEngine.LineRenderer m_lineRenderer;
+    private LineRenderer m_lineRenderer;
 
     /// <summary>
     /// Navigation points
@@ -230,7 +230,12 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             _reactionOnTouch();
         }
 
-        _RenderLine();
+        //_RenderLine();
+    }
+
+    private void _lineRenderer()
+    {
+        m_lineRenderer = .AddComponent(LineRenderer);
     }
 
     /// <summary>
@@ -834,30 +839,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         m_markerList.Add(newMarkObject);
 
         m_selectedMarker = null;
-    }
-
-    /// <summary>
-    /// Function for rendering line between markers
-    /// </summary>
-    private void _RenderLine()
-    {
-        m_lineRenderer.numPositions = 4;
-        //m_lineRenderer.numPositions = m_points.Capacity * 2;
-
-        /*for (int i = 0; i < m_points.Capacity; i++)
-        {
-            m_lineRenderer.SetPosition(0, (m_points[i])[0]);
-            m_lineRenderer.SetPosition(1, (m_points[i])[1]);
-
-        }*/
-
-        m_lineRenderer.SetPosition(0, new Vector3(0,0,0));
-        m_lineRenderer.SetPosition(1, new Vector3(1,0,0));
-
-        m_lineRenderer.SetPosition(3, new Vector3(1, 1, 0));
-        m_lineRenderer.SetPosition(4, new Vector3(1, 0, 1));
-
-    }
+    } 
 
     /// <summary>
     /// Data container for marker.

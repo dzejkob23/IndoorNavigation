@@ -28,6 +28,14 @@ using UnityEngine;
 /// </summary>
 public class ARMarker : MonoBehaviour
 {
+    public LineRenderer line0;
+    public LineRenderer line1;
+    public LineRenderer line2;
+    public LineRenderer line3;
+
+    private byte [] isFull = {0, 0, 0, 0};
+    private int[] whichMarker = { -1, -1, -1, -1};
+
     /// <summary>
     /// Unique identifikator
     /// </summary>
@@ -104,5 +112,123 @@ public class ARMarker : MonoBehaviour
     public int getID()
     {
         return ID;
+    }
+
+    public bool addLine(int markerId)
+    {
+        int it;
+
+        if ((it = isEmptyRenderer()) == -1)
+        {
+            return false;
+        }
+
+        switch(it)
+        {
+            case 0:
+                line0 = gameObject.AddComponent<LineRenderer>();
+                lineSetup(line0);
+                break;
+            case 1:
+                line1 = gameObject.AddComponent<LineRenderer>();
+                lineSetup(line1);
+                break;
+            case 2:
+                line2 = gameObject.AddComponent<LineRenderer>();
+                lineSetup(line2);
+                break;
+            case 3:
+                line3 = gameObject.AddComponent<LineRenderer>();
+                lineSetup(line3);
+                break;
+            default:
+                return false;
+        }
+
+        isFull[it]++;
+        whichMarker[it] = markerId;
+
+        return true;
+    }
+
+    public bool deleteMarkerLine(int markerId)
+    {
+        int idOut;
+
+        // markerId is not in neighbours - ret false
+        if (!m_listNeighbours.Contains(markerId))
+        {
+            return false;
+        }
+
+        // is markerId in connection with some of renderers of lines
+        if (!isExistMarkerId(markerId, out idOut))
+        {
+            return false;
+        }
+
+        m_listNeighbours.Remove(markerId);
+
+        switch (idOut)
+        {
+            case 0:
+                Destroy(line0);
+                break;
+            case 1:
+                Destroy(line1);
+                break;
+            case 2:
+                Destroy(line2);
+                break;
+            case 3:
+                Destroy(line3);
+                break;
+            default:
+                return false;
+        }
+
+        isFull[idOut]--;
+        whichMarker[idOut] = -1;
+
+        return true;
+    }
+
+    private int isEmptyRenderer()
+    {
+        for (int i = 0; i < isFull.Length; i++)
+        {
+            if (isFull[i] != 1)
+            {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
+    private bool isExistMarkerId(int idIn, out int idOut)
+    {
+        idOut = -1;
+
+        for (int i = 0; i < whichMarker.Length; i++)
+        {
+            if (idIn == whichMarker[i])
+            {
+                idOut = i;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void lineSetup(LineRenderer line)
+    {
+        line.sortingLayerName = "OnTop";
+        line.sortingOrder = 5;
+        line.numPositions = 2;
+        line.startWidth = 0.5f;
+        line.endWidth = 0.5f;
+        line.useWorldSpace = true;
     }
 }
