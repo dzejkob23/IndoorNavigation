@@ -28,6 +28,8 @@ using UnityEngine;
 /// </summary>
 public class ARMarker : MonoBehaviour
 {
+    public LineRenderer tmpLine;
+
     public LineRenderer line0;
     public LineRenderer line1;
     public LineRenderer line2;
@@ -114,8 +116,10 @@ public class ARMarker : MonoBehaviour
         return ID;
     }
 
-    public bool addLine(int markerId)
+    public bool addLine(int markerId, Vector3 markerPosition)
     {
+        Vector3[] tmpPositions = { gameObject.transform.position, markerPosition };
+        LineRenderer tmpLine;
         int it;
 
         if ((it = isEmptyRenderer()) == -1)
@@ -123,23 +127,23 @@ public class ARMarker : MonoBehaviour
             return false;
         }
 
-        switch(it)
+        tmpLine = gameObject.AddComponent<LineRenderer>();
+        lineSetup(tmpLine);
+        tmpLine.SetPositions(tmpPositions);
+
+        switch (it)
         {
             case 0:
-                line0 = gameObject.AddComponent<LineRenderer>();
-                lineSetup(line0);
+                line0 = tmpLine;
                 break;
             case 1:
-                line1 = gameObject.AddComponent<LineRenderer>();
-                lineSetup(line1);
+                line1 = tmpLine;
                 break;
             case 2:
-                line2 = gameObject.AddComponent<LineRenderer>();
-                lineSetup(line2);
+                line2 = tmpLine;
                 break;
             case 3:
-                line3 = gameObject.AddComponent<LineRenderer>();
-                lineSetup(line3);
+                line3 = tmpLine;
                 break;
             default:
                 return false;
@@ -227,8 +231,8 @@ public class ARMarker : MonoBehaviour
         line.sortingLayerName = "OnTop";
         line.sortingOrder = 5;
         line.numPositions = 2;
-        line.startWidth = 0.5f;
-        line.endWidth = 0.5f;
+        line.startWidth = 0.1f;
+        line.endWidth = 0.1f;
         line.useWorldSpace = true;
     }
 }

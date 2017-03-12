@@ -35,6 +35,8 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEvent, ITangoDepth
 {
+    private GameObject lastCreatedMarker;
+
     /// <summary>
     /// Connect two markers.
     /// </summary>
@@ -229,13 +231,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         {
             _reactionOnTouch();
         }
-
-        //_RenderLine();
-    }
-
-    private void _lineRenderer()
-    {
-        m_lineRenderer = .AddComponent(LineRenderer);
     }
 
     /// <summary>
@@ -264,8 +259,15 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         else
         {
             _placeNewMarker(t);
-            _createConnection();
+            //_createConnection();
             m_finishButton.gameObject.SetActive(true);
+
+            if (lastCreatedMarker != null)
+            {
+                ARMarker lastTmp = lastCreatedMarker.GetComponent<ARMarker>();
+                ARMarker newTmp = newMarkObject.GetComponent<ARMarker>();
+                lastTmp.addLine(newTmp.getID(), newTmp.transform.position);
+            }
         }
     }
 
@@ -819,6 +821,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
 
         // Instantiate marker object.
+        lastCreatedMarker = newMarkObject;
         newMarkObject = Instantiate(m_markPrefabs[m_currentMarkType],
                                     planeCenter,
                                     Quaternion.LookRotation(forward, up)) as GameObject;
