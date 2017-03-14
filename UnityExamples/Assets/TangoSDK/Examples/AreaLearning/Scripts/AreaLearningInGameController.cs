@@ -844,6 +844,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         m_selectedMarker = null;
     } 
 
+    public List<GameObject> getMarkerList()
+    {
+        return m_markerList;
+    }
+
     /// <summary>
     /// Data container for marker.
     /// 
