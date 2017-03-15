@@ -224,11 +224,13 @@ public class ARMarker : MonoBehaviour
 
         line.sortingLayerName = "OnTop";
         line.sortingOrder = 5;
+
+        // transform
         line0.numPositions = 2;
         line0.SetPosition(0, originalP);
         line0.SetPosition(1, nextP);
-        line.startWidth = 0.25f;
-        line.endWidth = 0.25f;
+        line.startWidth = 0.01f;
+        line.endWidth = 0.01f;
         line.useWorldSpace = true;
     }
 }

@@ -452,13 +452,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             
             m_connectMarkers[0].m_listNeighbours.Add(id_1);
             m_connectMarkers[1].m_listNeighbours.Add(id_0);
-
-            Vector3[] pair = new Vector3[2];
-            pair[0] = m_connectMarkers[0].transform.position;
-            pair[1] = m_connectMarkers[1].transform.position;
+            m_connectMarkers[0].addLine(m_connectMarkers[1].getID(), m_connectMarkers[1].transform.position);
 
             m_connectMarkers = new ARMarker[2];
-
             AndroidHelper.ShowAndroidToastMessage("Connection is created.");
         }
     }

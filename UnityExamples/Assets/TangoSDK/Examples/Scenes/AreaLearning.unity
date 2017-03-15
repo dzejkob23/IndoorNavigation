@@ -2880,7 +2880,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_finishButton: {fileID: 636412815}
   m_joinButton: {fileID: 1634729866}
-  m_lineRenderer: {fileID: 0}
   m_markerPosition: {fileID: 189070666}
   m_markPrefabs:
   - {fileID: 188320, guid: bb3ba25bb7f2d422dbf25c1079b02c8a, type: 2}
