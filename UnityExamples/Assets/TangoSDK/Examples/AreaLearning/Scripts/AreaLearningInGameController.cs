@@ -35,6 +35,9 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEvent, ITangoDepth
 {
+    /// <summary>
+    /// Last created marker.
+    /// </summary>
     private GameObject lastCreatedMarker;
 
     /// <summary>
@@ -51,16 +54,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Join button.
     /// </summary>
     public UnityEngine.UI.Button m_joinButton;
-
-    /// <summary>
-    /// Rendering line between two last markers
-    /// </summary>
-    private LineRenderer m_lineRenderer;
-
-    /// <summary>
-    /// Navigation points
-    /// </summary>
-    private List<Vector3[]> m_points;
 
     /// <summary>
     /// Position of created marker
@@ -259,56 +252,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         else
         {
             _placeNewMarker(t);
-            //_createConnection();
-            m_finishButton.gameObject.SetActive(true);
-
-            if (lastCreatedMarker != null)
-            {
-                ARMarker lastTmp = lastCreatedMarker.GetComponent<ARMarker>();
-                ARMarker newTmp = newMarkObject.GetComponent<ARMarker>();
-                lastTmp.addLine(newTmp.getID(), newTmp.transform.position);
-            }
-        }
-    }
-
-    private void _createConnection()
-    {
-        // Get ARMarker
-        ARMarker markerScript = newMarkObject.GetComponent<ARMarker>();
-
-        // Set position of new marker to text whit marker position
-        m_markerPosition.text = markerScript.getID().ToString();
-
-        Vector3[] pair = new Vector3 [2];
-
-        if (m_points != null)
-        {
-            int pairsSize = m_points.Capacity;
-
-            pair[0] = (m_points[pairsSize - 1])[1];
-            pair[1] = newMarkObject.transform.position;
-        }
-        else
-        {
-            // first marker on screen
-            m_points = new List<Vector3[]>();
-
-            pair[0] = newMarkObject.transform.position;
-            pair[1] = pair[0];
-
-        }
-
-        m_points.Add(pair);
-
-        if (m_currentMarkType == 0)
-        {
-            // 1. choise (connect new and last markers)
-            int markerListSize = m_markerList.Capacity;
-            ARMarker lastMarker = m_markerList[markerListSize - 1].GetComponent<ARMarker>();
-
-            // Join both markers
-            lastMarker.m_listNeighbours.Add(markerScript.getID());
-            markerScript.m_listNeighbours.Add(lastMarker.getID());
+            m_finishButton.gameObject.SetActive(true);         
         }
     }
 
@@ -513,7 +457,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             pair[0] = m_connectMarkers[0].transform.position;
             pair[1] = m_connectMarkers[1].transform.position;
 
-            m_points.Add(pair);
             m_connectMarkers = new ARMarker[2];
 
             AndroidHelper.ShowAndroidToastMessage("Connection is created.");
@@ -842,6 +785,13 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         m_markerList.Add(newMarkObject);
 
         m_selectedMarker = null;
+
+        if (lastCreatedMarker != null)
+        {
+            ARMarker lastTmp = lastCreatedMarker.GetComponent<ARMarker>();
+            ARMarker newTmp = newMarkObject.GetComponent<ARMarker>();
+            lastTmp.addLine(newTmp.getID(), newTmp.transform.position);
+        }
     } 
 
     public List<GameObject> getMarkerList()

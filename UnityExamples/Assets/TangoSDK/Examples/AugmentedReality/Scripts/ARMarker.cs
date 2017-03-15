@@ -33,12 +33,7 @@ public class ARMarker : MonoBehaviour
     private LineRenderer line2;
     private LineRenderer line3;
 
-    private Vector3[] pointsLine0;
-    private Vector3[] pointsLine1;
-    private Vector3[] pointsLine2;
-    private Vector3[] pointsLine3;
-
-    private byte [] isFull = {0, 0, 0, 0};
+    private bool [] isFull = {false, false, false, false};
     private int[] whichMarker = { -1, -1, -1, -1};
 
     /// <summary>
@@ -99,17 +94,6 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     private void Hide()
     {
-        // TODO - move to simple method
-        /*
-                AreaLearningInGameController parent = transform.parent.GetComponent<AreaLearningInGameController>();
-                List<GameObject> list = parent.getMarkerList();
-
-                foreach (GameObject gObject in list)
-                {
-                    ARMarker marker = gObject.GetComponent<ARMarker>();
-                    marker.deleteMarkerLine(ID);
-                }
-        */
         m_anim.Play("ARMarkerHide", PlayMode.StopAll);
     }
 
@@ -130,37 +114,8 @@ public class ARMarker : MonoBehaviour
         return ID;
     }
 
-    public void Update()
-    {
-        if (pointsLine0 != null)
-        {
-            line0.numPositions = pointsLine0.Length;
-            line0.SetPositions(pointsLine0);
-        }
-
-        if (pointsLine1 != null)
-        {
-            line1.numPositions = pointsLine1.Length;
-            line1.SetPositions(pointsLine1);
-        }
-
-        if (pointsLine2 != null)
-        {
-            line2.numPositions = pointsLine2.Length;
-            line2.SetPositions(pointsLine2);
-        }
-
-        if (pointsLine3 != null)
-        {
-            line3.numPositions = pointsLine3.Length;
-            line3.SetPositions(pointsLine3);
-        }
-    }
-
     public bool addLine(int markerId, Vector3 markerPosition)
     {
-        Vector3[] tmpPositions = { gameObject.transform.position, markerPosition };
-        LineRenderer tmpLine;
         int it;
 
         if ((it = isEmptyRenderer()) == -1)
@@ -168,32 +123,25 @@ public class ARMarker : MonoBehaviour
             return false;
         }
 
-        tmpLine = gameObject.AddComponent<LineRenderer>();
-        lineSetup(tmpLine);
-
         switch (it)
         {
             case 0:
-                line0 = tmpLine;
-                pointsLine0 = tmpPositions;
+                lineSetup(out line0, gameObject.transform.position, markerPosition);
                 break;
             case 1:
-                line1 = tmpLine;
-                pointsLine1 = tmpPositions;
+                lineSetup(out line1, gameObject.transform.position, markerPosition);
                 break;
             case 2:
-                line2 = tmpLine;
-                pointsLine2 = tmpPositions;
+                lineSetup(out line2, gameObject.transform.position, markerPosition);
                 break;
             case 3:
-                line3 = tmpLine;
-                pointsLine3 = tmpPositions;
+                lineSetup(out line3, gameObject.transform.position, markerPosition);
                 break;
             default:
                 return false;
         }
 
-        isFull[it]++;
+        isFull[it] = true;
         whichMarker[it] = markerId;
 
         return true;
@@ -221,25 +169,21 @@ public class ARMarker : MonoBehaviour
         {
             case 0:
                 Destroy(line0);
-                pointsLine0 = null;
                 break;
             case 1:
                 Destroy(line1);
-                pointsLine1 = null;
                 break;
             case 2:
                 Destroy(line2);
-                pointsLine2 = null;
                 break;
             case 3:
                 Destroy(line3);
-                pointsLine3 = null;
                 break;
             default:
                 return false;
         }
 
-        isFull[idOut]--;
+        isFull[idOut] = false;
         whichMarker[idOut] = -1;
 
         return true;
@@ -249,7 +193,7 @@ public class ARMarker : MonoBehaviour
     {
         for (int i = 0; i < isFull.Length; i++)
         {
-            if (isFull[i] != 1)
+            if (!isFull[i])
             {
                 return i;
             }
@@ -274,12 +218,17 @@ public class ARMarker : MonoBehaviour
         return false;
     }
 
-    private void lineSetup(LineRenderer line)
+    private void lineSetup(out LineRenderer line, Vector3 originalP, Vector3 nextP)
     {
+        line = gameObject.AddComponent<LineRenderer>();
+
         line.sortingLayerName = "OnTop";
         line.sortingOrder = 5;
-        line.startWidth = 0.1f;
-        line.endWidth = 0.1f;
+        line0.numPositions = 2;
+        line0.SetPosition(0, originalP);
+        line0.SetPosition(1, nextP);
+        line.startWidth = 0.25f;
+        line.endWidth = 0.25f;
         line.useWorldSpace = true;
     }
 }
