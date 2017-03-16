@@ -28,23 +28,15 @@ using UnityEngine;
 /// </summary>
 public class ARMarker : MonoBehaviour
 {
-    private LineRenderer line0;
-    private LineRenderer line1;
-    private LineRenderer line2;
-    private LineRenderer line3;
-
-    private bool [] isFull = {false, false, false, false};
-    private int[] whichMarker = { -1, -1, -1, -1};
+    /// <summary>
+    /// Renders for this marker
+    /// </summary>
+    private Dictionary<int, LineRenderer> renderers;
 
     /// <summary>
     /// Unique identifikator
     /// </summary>
     private static int ID = 0;
-
-    /// <summary>
-    /// Marker neighbours.
-    /// </summary>
-    public List<int> m_listNeighbours;
 
     /// <summary>
     /// The type of the location mark.
@@ -77,6 +69,7 @@ public class ARMarker : MonoBehaviour
     public void Start()
     {
         ID++;
+        renderers = new Dictionary<int, LineRenderer>();
     }
 
     /// <summary>
@@ -114,108 +107,24 @@ public class ARMarker : MonoBehaviour
         return ID;
     }
 
-    public bool addLine(int markerId, Vector3 markerPosition)
+    public void addLine(int markerId, Vector3 markerPosition)
     {
-        int it;
-
-        if ((it = isEmptyRenderer()) == -1)
-        {
-            return false;
-        }
-
-        switch (it)
-        {
-            case 0:
-                lineSetup(out line0, gameObject.transform.position, markerPosition);
-                break;
-            case 1:
-                lineSetup(out line1, gameObject.transform.position, markerPosition);
-                break;
-            case 2:
-                lineSetup(out line2, gameObject.transform.position, markerPosition);
-                break;
-            case 3:
-                lineSetup(out line3, gameObject.transform.position, markerPosition);
-                break;
-            default:
-                return false;
-        }
-
-        isFull[it] = true;
-        whichMarker[it] = markerId;
-
-        return true;
+        LineRenderer renderer = null;
+        lineSetup(out renderer, gameObject.transform.position, markerPosition);
+        renderers.Add(markerId, renderer);
     }
 
-    public bool deleteMarkerLine(int markerId)
+    public bool deleteLineToMarker(int markerId)
     {
-        int idOut;
-
         // markerId is not in neighbours - ret false
-        if (!m_listNeighbours.Contains(markerId))
+        if (!renderers.ContainsKey(markerId))
         {
             return false;
         }
 
-        // is markerId in connection with some of renderers of lines
-        if (!isExistMarkerId(markerId, out idOut))
-        {
-            return false;
-        }
-
-        m_listNeighbours.Remove(markerId);
-
-        switch (idOut)
-        {
-            case 0:
-                Destroy(line0);
-                break;
-            case 1:
-                Destroy(line1);
-                break;
-            case 2:
-                Destroy(line2);
-                break;
-            case 3:
-                Destroy(line3);
-                break;
-            default:
-                return false;
-        }
-
-        isFull[idOut] = false;
-        whichMarker[idOut] = -1;
+        renderers.Remove(markerId);
 
         return true;
-    }
-
-    private int isEmptyRenderer()
-    {
-        for (int i = 0; i < isFull.Length; i++)
-        {
-            if (!isFull[i])
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    private bool isExistMarkerId(int idIn, out int idOut)
-    {
-        idOut = -1;
-
-        for (int i = 0; i < whichMarker.Length; i++)
-        {
-            if (idIn == whichMarker[i])
-            {
-                idOut = i;
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private void lineSetup(out LineRenderer line, Vector3 originalP, Vector3 nextP)
@@ -226,9 +135,9 @@ public class ARMarker : MonoBehaviour
         line.sortingOrder = 5;
 
         // transform
-        line0.numPositions = 2;
-        line0.SetPosition(0, originalP);
-        line0.SetPosition(1, nextP);
+        line.numPositions = 2;
+        line.SetPosition(0, originalP);
+        line.SetPosition(1, nextP);
         line.startWidth = 0.01f;
         line.endWidth = 0.01f;
         line.useWorldSpace = true;

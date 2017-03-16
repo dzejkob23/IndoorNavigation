@@ -447,17 +447,28 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         if (m_connectMarkers[0] != null && m_connectMarkers[1] != null)
         {
-            int id_0 = m_connectMarkers[0].getID();
-            int id_1 = m_connectMarkers[1].getID();
-            
-            m_connectMarkers[0].m_listNeighbours.Add(id_1);
-            m_connectMarkers[1].m_listNeighbours.Add(id_0);
             m_connectMarkers[0].addLine(m_connectMarkers[1].getID(), m_connectMarkers[1].transform.position);
 
-            m_connectMarkers = new ARMarker[2];
+            m_connectMarkers[0] = null;
+            m_connectMarkers[1] = null;
+            m_selectedMarker = null;
+
             AndroidHelper.ShowAndroidToastMessage("Connection is created.");
         }
     }
+
+    public void FinishMarkers()
+    {
+        StartCoroutine(CreateEvaluatedGraph());
+        DisableAllMarkers();
+    }
+
+    private void DisableAllMarkers()
+    {
+        // TODO
+    }
+
+    
 
     /// <summary>
     /// This is called each time a Tango event happens.
