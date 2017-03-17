@@ -8,21 +8,56 @@ using UnityEngine;
 public class Graph
 {
 
-    public double DistancePoint2Point(Vector3 p1, Vector3 p2)
+    private double[][] graph2D;
+
+    private double DistancePoint2Point(Vector3 p1, Vector3 p2)
     {
         return Math.Sqrt(Math.Pow(p2.x - p1.x, 2) + Math.Pow(p2.y - p1.y, 2) + Math.Pow(p2.z - p1.z, 2));
     }
 
-    private IEnumerator CreateEvaluatedGraph(List<GameObject> m_markerList)
+    public IEnumerator CreateEvaluatedGraph(Dictionary<int, GameObject> m_markerDictionary)
     {
-        // TODO
-        int capacity = m_markerList.Capacity;
-        int maxId = m_markerList[capacity - 1].GetComponent<ARMarker>().getID();
+        int maxId = m_markerDictionary.Keys.Max() + 1;
+        graph2D = new double[maxId][];
 
-        for (int i = 0; i < capacity; i++)
+        foreach (KeyValuePair<int, GameObject> marker in m_markerDictionary)
         {
+            int markerId = marker.Key;
 
+            AndroidHelper.ShowAndroidToastMessage("... " + markerId + " ...");
+
+            graph2D[markerId] = new double[maxId];
+            Dictionary<int, GameObject> renderers = marker.Value.GetComponent<ARMarker>().getRendersDictionary();
+
+            foreach (KeyValuePair<int, GameObject> rendererObj in renderers)
+            {
+                // get points of line from renderer (it contains marker and neighbour poisition)
+                Line renderer = rendererObj.Value.GetComponent<Line>();
+                Vector3[] neighbourPositions = new Vector3 [renderer.getNumPositions()];
+                renderer.getPositions(neighbourPositions);
+
+                // fill marker and neighbour position
+                if (neighbourPositions.Length < 2)
+                {
+                    AndroidHelper.ShowAndroidToastMessage("Positions of marker " + markerId + " are EMPTY!");
+                    yield return null;
+                }
+
+                Vector3 markerPosition = neighbourPositions[0];
+                Vector3 neighbourPosition = neighbourPositions[1];
+
+                // compute distance between both markers
+                double distance = DistancePoint2Point(markerPosition, neighbourPosition);
+
+                // fill distance to matrix od distances
+                int neighbourId = rendererObj.Key;
+                // filled for markers in both directions
+                graph2D[markerId][neighbourId] = distance;
+                graph2D[neighbourId][markerId] = distance;
+            }
         }
+
+        AndroidHelper.ShowAndroidToastMessage("Evaluated graph was created!");
 
         yield return null;
     }
