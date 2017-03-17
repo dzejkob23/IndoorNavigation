@@ -8,7 +8,7 @@ using UnityEngine;
 public class Graph
 {
 
-    private double[][] graph2D;
+    private double[,] graph2D;
 
     private double DistancePoint2Point(Vector3 p1, Vector3 p2)
     {
@@ -18,20 +18,17 @@ public class Graph
     public IEnumerator CreateEvaluatedGraph(Dictionary<int, GameObject> m_markerDictionary)
     {
         int maxId = m_markerDictionary.Keys.Max() + 1;
-        graph2D = new double[maxId][];
+        graph2D = new double[maxId, maxId];
 
         foreach (KeyValuePair<int, GameObject> marker in m_markerDictionary)
         {
             int markerId = marker.Key;
-
-            AndroidHelper.ShowAndroidToastMessage("... " + markerId + " ...");
-
-            graph2D[markerId] = new double[maxId];
             Dictionary<int, GameObject> renderers = marker.Value.GetComponent<ARMarker>().getRendersDictionary();
 
             foreach (KeyValuePair<int, GameObject> rendererObj in renderers)
             {
                 // get points of line from renderer (it contains marker and neighbour poisition)
+                int neighbourId = rendererObj.Key;
                 Line renderer = rendererObj.Value.GetComponent<Line>();
                 Vector3[] neighbourPositions = new Vector3 [renderer.getNumPositions()];
                 renderer.getPositions(neighbourPositions);
@@ -49,11 +46,11 @@ public class Graph
                 // compute distance between both markers
                 double distance = DistancePoint2Point(markerPosition, neighbourPosition);
 
-                // fill distance to matrix od distances
-                int neighbourId = rendererObj.Key;
+                AndroidHelper.ShowAndroidToastMessage("... " + neighbourId + " ...");
+
                 // filled for markers in both directions
-                graph2D[markerId][neighbourId] = distance;
-                graph2D[neighbourId][markerId] = distance;
+                graph2D[markerId, neighbourId] = distance;
+                graph2D[neighbourId, markerId] = distance;
             }
         }
 
