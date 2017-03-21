@@ -505,8 +505,9 @@ PlayerSettings:
   XboxOneAllowedProductIds: []
   XboxOnePersistentLocalStorageSize: 0
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  cloudServicesEnabled:
+    UNet: 1
+  cloudProjectId: 92e81295-ed91-4be6-b55a-75b91e4df6d7
+  projectName: IndoorNavigation
+  organizationId: dzejkob
   cloudEnabled: 0

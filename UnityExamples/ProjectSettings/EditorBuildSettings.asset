@@ -29,3 +29,5 @@ EditorBuildSettings:
     path: Assets/TangoSDK/Examples/Scenes/ExperimentalMeshOcclusion.unity
   - enabled: 1
     path: Assets/TangoSDK/Examples/Scenes/ExperimentalFloorFinding.unity
+  - enabled: 1
+    path: Assets/TangoSDK/Examples/Scenes/Navigation2DMap.unity

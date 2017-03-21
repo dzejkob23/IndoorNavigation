@@ -27,6 +27,7 @@ using System.Xml.Serialization;
 using Tango;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// AreaLearningGUIController is responsible for the main game interaction.
@@ -186,6 +187,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         {
             m_tangoApplication.Register(this);
         }
+    }
+
+    public void Awake()
+    {
+        DontDestroyOnLoad(transform.gameObject);
     }
 
     /// <summary>
@@ -463,6 +469,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     public void FinishMarkers()
     {
         StartCoroutine(graph.CreateEvaluatedGraph(m_markerList));
+        show2DMapScene();
         DisableAllMarkers();
     }
 
@@ -471,7 +478,12 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         // TODO
     }
 
-    
+    private void show2DMapScene()
+    {
+        //Application.LoadLevel("Navigation2DMap");
+        SceneManager.LoadScene("Navigation2DMap");
+        //DontDestroyOnLoad("Navigation2DMap");
+    }
 
     /// <summary>
     /// This is called each time a Tango event happens.

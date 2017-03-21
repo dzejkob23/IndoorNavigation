@@ -20,6 +20,7 @@
 using System.Collections;
 using Tango;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Script that displays a scene switching UI.
@@ -58,11 +59,10 @@ public class SceneSwitcher : MonoBehaviour
                                        SCENE_BUTTON_SIZE_Y);
             #pragma warning disable 618
             if (GUI.Button(buttonRect, "<size=20>" + m_sceneNames[it] + "</size>")
-                && Application.loadedLevelName != m_sceneNames[it])
+                && SceneManager.GetActiveScene().name != m_sceneNames[it])
             {
-                Application.LoadLevel(m_sceneNames[it]);
+                SceneManager.LoadScene(m_sceneNames[it]);
             }
-            #pragma warning restore 618
         }
     }
 }
