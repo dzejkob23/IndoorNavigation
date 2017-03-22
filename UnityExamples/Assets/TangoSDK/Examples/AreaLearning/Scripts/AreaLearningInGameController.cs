@@ -36,6 +36,8 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEvent, ITangoDepth
 {
+    public Dictionary<int, Vector3> markerListNewScene;
+    public static AreaLearningInGameController Instance;
     private Graph graph = new Graph();
 
     /// <summary>
@@ -57,11 +59,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Join button.
     /// </summary>
     public UnityEngine.UI.Button m_joinButton;
-
-    /// <summary>
-    /// Position of created marker
-    /// </summary>
-    public UnityEngine.UI.Text m_markerPosition;
 
     /// <summary>
     /// Prefabs of different colored markers.
@@ -191,7 +188,21 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
     public void Awake()
     {
-        DontDestroyOnLoad(transform.gameObject);
+        if (Instance == null)
+        {
+            DontDestroyOnLoad(gameObject);
+            Instance = this;
+        }
+        else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void SaveGraphParameters()
+    {
+        // TODO - save data for new scene
+        Instance.markerListNewScene = graph.getMarkersPosition();
     }
 
     /// <summary>
@@ -206,16 +217,12 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             // After saving an Area Description or mark data, we reload the scene to restart the game.
             _UpdateMarkersForLoopClosures();
             _SaveMarkerToDisk();
-            #pragma warning disable 618
-            Application.LoadLevel(Application.loadedLevel);
-            #pragma warning restore 618
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         if (Input.GetKey(KeyCode.Escape))
         {
-            #pragma warning disable 618
-            Application.LoadLevel(Application.loadedLevel);
-            #pragma warning restore 618
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
 
         if (!m_initialized)
@@ -308,9 +315,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         {
             // When application is backgrounded, we reload the level because the Tango Service is disconected. All
             // learned area and placed marker should be discarded as they are not saved.
-            #pragma warning disable 618
-            Application.LoadLevel(Application.loadedLevel);
-            #pragma warning restore 618
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 
@@ -468,7 +473,8 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
     public void FinishMarkers()
     {
-        StartCoroutine(graph.CreateEvaluatedGraph(m_markerList));
+        //StartCoroutine(graph.CreateEvaluatedGraph(m_markerList));
+        graph.CreateEvaluatedGraph(m_markerList);
         show2DMapScene();
         DisableAllMarkers();
     }
@@ -480,9 +486,8 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
     private void show2DMapScene()
     {
-        //Application.LoadLevel("Navigation2DMap");
+        SaveGraphParameters();
         SceneManager.LoadScene("Navigation2DMap");
-        //DontDestroyOnLoad("Navigation2DMap");
     }
 
     /// <summary>
@@ -619,9 +624,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             else
             {
                 _SaveMarkerToDisk();
-                #pragma warning disable 618
-                Application.LoadLevel(Application.loadedLevel);
-                #pragma warning restore 618
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
     }
