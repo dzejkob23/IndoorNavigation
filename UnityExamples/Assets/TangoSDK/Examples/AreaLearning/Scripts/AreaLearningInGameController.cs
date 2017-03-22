@@ -36,9 +36,8 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEvent, ITangoDepth
 {
-    public Dictionary<int, Vector3> markerListNewScene;
     public static AreaLearningInGameController Instance;
-    private Graph graph = new Graph();
+    private Graph graph;
 
     /// <summary>
     /// Last created marker.
@@ -127,7 +126,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// <summary>
     /// List of markers placed in the scene.
     /// </summary>
-    private Dictionary<int, GameObject> m_markerList = new Dictionary<int, GameObject>();
+    private Dictionary<int, GameObject> m_markerList;
 
     /// <summary>
     /// Reference to the newly placed marker.
@@ -179,6 +178,8 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         m_poseController = FindObjectOfType<TangoARPoseController>();
         m_tangoApplication = FindObjectOfType<TangoApplication>();
         m_connectMarkers = new ARMarker[2];
+        m_markerList = new Dictionary<int, GameObject>();
+        graph = new Graph();
 
         if (m_tangoApplication != null)
         {
@@ -197,12 +198,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         {
             Destroy(gameObject);
         }
-    }
-
-    public void SaveGraphParameters()
-    {
-        // TODO - save data for new scene
-        Instance.markerListNewScene = graph.getMarkersPosition();
     }
 
     /// <summary>
@@ -486,7 +481,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
     private void show2DMapScene()
     {
-        SaveGraphParameters();
         SceneManager.LoadScene("Navigation2DMap");
     }
 
@@ -824,6 +818,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     public Dictionary<int, GameObject> getMarkerList()
     {
         return m_markerList;
+    }
+
+    public Graph getGraph()
+    {
+        return graph;
     }
 
     /// <summary>

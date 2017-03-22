@@ -63,7 +63,7 @@ public class Graph
         return markersPositions;
     }
 
-    public double[,] getGraph()
+    public double[,] get2DGraph()
     {
         return graph2D;
     }
