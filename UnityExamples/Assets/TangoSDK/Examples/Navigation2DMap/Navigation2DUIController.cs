@@ -23,6 +23,7 @@ public class Navigation2DUIController : MonoBehaviour
 
     public Texture2D texture;
     private LineRenderer renderer;
+    public Material mat;
 
     public void Start()
     {
@@ -30,7 +31,7 @@ public class Navigation2DUIController : MonoBehaviour
         graph2D = AreaLearningInGameController.Instance.getGraph().get2DGraph();
         lineRenderers = new List<GameObject>();
         //drawConnectionsBetweenMarkers();
-        //drawLine();
+        drawLine();
     }
 
     /// <summary>
@@ -149,8 +150,8 @@ public class Navigation2DUIController : MonoBehaviour
 */
     private void drawLine()
     {
-        Vector2 p1 = new Vector2(500, 500);
-        Vector2 p2 = new Vector2(800, 800);
+        Vector2 p1 = new Vector2(0, 0);
+        Vector2 p2 = new Vector2(Screen.width, Screen.height);
 
         renderer = new LineRenderer();
 
@@ -164,5 +165,21 @@ public class Navigation2DUIController : MonoBehaviour
         renderer.startWidth = 0.01f;
         renderer.endWidth = 0.01f;
         renderer.useWorldSpace = true;
+    }
+
+    private void drawLine2()
+    {
+        Vector2 p1 = new Vector2(0, 0);
+        Vector2 p2 = new Vector2(Screen.width, Screen.height);
+
+        GL.PushMatrix();
+        mat.SetPass(0);
+        GL.LoadOrtho();
+        GL.Begin(GL.LINES);
+        GL.Color(Color.red);
+        GL.Vertex(p1);
+        GL.Vertex(p2);
+        GL.End();
+        GL.PopMatrix();
     }
 }
