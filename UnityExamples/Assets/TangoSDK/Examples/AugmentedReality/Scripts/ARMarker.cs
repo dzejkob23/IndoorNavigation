@@ -29,6 +29,11 @@ using UnityEngine;
 public class ARMarker : MonoBehaviour
 {
     /// <summary>
+    /// Identificator
+    /// </summary>
+    private int ID;
+
+    /// <summary>
     /// Renders for this marker
     /// </summary>
     private Dictionary<int, GameObject> lines;
@@ -36,7 +41,7 @@ public class ARMarker : MonoBehaviour
     /// <summary>
     /// Unique identifikator
     /// </summary>
-    private static int ID = 0;
+    private static int count_id = 0;
 
     /// <summary>
     /// The type of the location mark.
@@ -68,8 +73,7 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     public void Start()
     {
-        ID++;
-        lines = new Dictionary<int, GameObject>();
+        // EMPTY
     }
 
     /// <summary>
@@ -77,6 +81,9 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     private void Awake()
     {
+        ID = System.Threading.Interlocked.Increment(ref count_id);
+        lines = new Dictionary<int, GameObject>();
+
         // The animation should be started in Awake and not Start so that it plays on its first frame.
         m_anim = GetComponent<Animation>();
         m_anim.Play("ARMarkerShow", PlayMode.StopAll);

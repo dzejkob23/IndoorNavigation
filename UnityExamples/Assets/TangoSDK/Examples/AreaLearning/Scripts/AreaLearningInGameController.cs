@@ -456,6 +456,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         if (m_connectMarkers[0] != null && m_connectMarkers[1] != null)
         {
+            Debug.Log("#CHECK - Created connection from ID: " + m_connectMarkers[0].getID() + " to ID: " + m_connectMarkers[1].getID());
             m_connectMarkers[0].addLine(m_connectMarkers[1].getID(), m_connectMarkers[1].transform.position);
 
             m_connectMarkers[0] = null;
@@ -792,6 +793,8 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         ARMarker markerScript = newMarkObject.GetComponent<ARMarker>();
         int newMarker_id = markerScript.getID();
 
+        Debug.Log("#CHECK - new marker id: " + newMarker_id);
+
         markerScript.m_type = m_currentMarkType;
         markerScript.m_timestamp = (float) m_poseController.m_poseTimestamp;
         
@@ -809,9 +812,14 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         if (lastCreatedMarker != null)
         {
+            Debug.Log("#CHECK - last created marker is NULL = FALSE");
             ARMarker lastTmp = lastCreatedMarker.GetComponent<ARMarker>();
             ARMarker newTmp = newMarkObject.GetComponent<ARMarker>();
             lastTmp.addLine(newTmp.getID(), newTmp.transform.position);
+        }
+        else
+        {
+            Debug.Log("#CHECK - last created marker is NULL = TRUE");
         }
     } 
 

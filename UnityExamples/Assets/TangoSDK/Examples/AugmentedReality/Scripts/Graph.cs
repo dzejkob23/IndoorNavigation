@@ -18,6 +18,8 @@ public class Graph
 
     public void CreateEvaluatedGraph(Dictionary<int, GameObject> m_markerDictionary)
     {
+        Debug.Log("#CHECK - Start of method CreateEvaluatedGraph ...");
+
         int maxId = m_markerDictionary.Keys.Max() + 1;
         graph2D = new double[maxId, maxId];
         markersPositions = new Dictionary<int, Vector3>();
@@ -36,15 +38,28 @@ public class Graph
                 Vector3[] neighbourPositions = new Vector3 [renderer.getNumPositions()];
                 renderer.getPositions(neighbourPositions);
 
+                Debug.Log("#CHECK -  marker_ID: " + markerId + " neib_ID: " + neighbourId + " neib_count: " + neighbourPositions.Length);
+
                 // fill marker and neighbour position
                 if (neighbourPositions.Length < 2)
                 {
+                    Debug.Log("Positions of marker " + markerId + " are EMPTY!");
                     AndroidHelper.ShowAndroidToastMessage("Positions of marker " + markerId + " are EMPTY!");
                     return;
                 }
 
                 Vector3 markerPosition = neighbourPositions[0];
                 Vector3 neighbourPosition = neighbourPositions[1];
+
+                if (markerPosition == null)
+                {
+                    Debug.Log("markerPostion is NULL!");
+                }
+
+                if (neighbourPosition == null)
+                {
+                    Debug.Log("neighbourPosition is NULL!");
+                }
 
                 // compute distance between both markers
                 double distance = DistancePoint2Point(markerPosition, neighbourPosition);
@@ -55,6 +70,7 @@ public class Graph
             }
         }
 
+        Debug.Log("#CHECK - End of method CreateEvaluatedGraph ...");
         AndroidHelper.ShowAndroidToastMessage("Evaluated graph was created!");
     }
 

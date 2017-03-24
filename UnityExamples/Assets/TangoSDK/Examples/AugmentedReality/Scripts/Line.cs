@@ -24,22 +24,6 @@ public class Line : MonoBehaviour
         renderer.useWorldSpace = true;
     }
 
-    public void lineSetup(Vector2 originalP, Vector2 nextP)
-    {
-        renderer = gameObject.AddComponent<LineRenderer>();
-
-        renderer.sortingLayerName = "OnTop";
-        renderer.sortingOrder = 5;
-
-        // transform
-        renderer.numPositions = 2;
-        renderer.SetPosition(0, originalP);
-        renderer.SetPosition(1, nextP);
-        renderer.startWidth = 0.01f;
-        renderer.endWidth = 0.01f;
-        renderer.useWorldSpace = true;
-    }
-
     public int getNumPositions()
     {
         return renderer.numPositions;

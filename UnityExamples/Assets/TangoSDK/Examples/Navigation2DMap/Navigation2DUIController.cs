@@ -11,33 +11,33 @@ public class Navigation2DUIController : MonoBehaviour
     private const int BUTTON_SIZE_WIDTH = 100;
     private const int BUTTON_SIZE_HEIGHT = 100;
 
-    private double width = Screen.width;
-    private double height = Screen.height;
-
-    private Dictionary<int, Vector2> newMarkersPosition;
     private double[,] graph2D;
     private List<GameObject> lineRenderers;
 
-    private const int SCALE_XY = 200;
-    private const int BOUD_SCALED_XY = 100;
+    private const int SCALE_XY = 1;
+    private const int BOUD_SCALED_XY = 1;
 
     public Texture2D texture;
     private LineRenderer renderer;
     public Material mat;
 
+    public Canvas m_canvas;
+    public GameObject buttonPref;
+
     public void Start()
     {
-        newMarkersPosition = scaleMarkersPositions(AreaLearningInGameController.Instance.getGraph().getMarkersPosition());
+        Dictionary<int, Vector2>  newMarkersPosition = scaleMarkersPositions(AreaLearningInGameController.Instance.getGraph().getMarkersPosition());
         graph2D = AreaLearningInGameController.Instance.getGraph().get2DGraph();
         lineRenderers = new List<GameObject>();
         //drawConnectionsBetweenMarkers();
-        drawLine();
+
+        drawGUI(newMarkersPosition);
     }
 
     /// <summary>
     /// Scene switching GUI.
     /// </summary>
-    private void OnGUI()
+    private void drawGUI(Dictionary<int, Vector2> newMarkersPosition)
     {
         
         if (newMarkersPosition == null || newMarkersPosition.Keys.Count == 0 || newMarkersPosition.Values.Count == 0)
@@ -53,8 +53,9 @@ public class Navigation2DUIController : MonoBehaviour
                 AndroidHelper.ShowAndroidToastMessage("value");
                 break;
             }
-            
-            drawReactangle(marker.Key.ToString(), (int) marker.Value.x, (int) marker.Value.y);
+
+            Debug.Log("#CHECK - name of marker: " + marker.Key.ToString());
+            drawButton(marker.Key.ToString(), marker.Value.x, marker.Value.y);
         }
     }
 
@@ -73,14 +74,16 @@ public class Navigation2DUIController : MonoBehaviour
     }
 
     private void doSomething(String name)
-    {
-        AndroidHelper.ShowAndroidToastMessage("Button ID: " + name);
+    { 
+        //AndroidHelper.ShowAndroidToastMessage("Button ID: " + name);
     }
 
-    private Vector2 findMinXY(Dictionary<int, Vector3> markers)
+    private Vector4 findMinXY(Dictionary<int, Vector3> markers)
     {
         float minX = float.MaxValue;
         float minY = float.MaxValue;
+        float maxX = float.MinValue;
+        float maxY = float.MinValue;
 
         foreach (KeyValuePair<int, Vector3> marker in markers)
         {
@@ -92,26 +95,55 @@ public class Navigation2DUIController : MonoBehaviour
             {
                 minY = marker.Value.z;
             }
+            if (marker.Value.z > maxY)
+            {
+                maxY = marker.Value.z;
+            }
+            if (marker.Value.x > maxX)
+            {
+                maxX = marker.Value.x;
+            }
         }
 
-        return new Vector2(minX, minY);
+        return new Vector4(maxX, minX, maxY, minY);
+    }
+
+    private Vector2 computeScalingForDisplay(Dictionary<int, Vector3> markers)
+    {
+        Vector4 scaling = findMinXY(markers);
+
+        float markersWidth = Math.Abs(scaling[0]) + Math.Abs(scaling[1]);
+        float markersHeight = Math.Abs(scaling[2]) + Math.Abs(scaling[3]);
+
+        float scaledX =  markersWidth / Screen.width;
+        float scaledY =  markersHeight / Screen.height;
+
+        Debug.Log("#CHECK *** V4: " + scaling[0] + " " + scaling[1] + " " + scaling[2] + " " + scaling[3]);
+        Debug.Log("#CHECK *** V2 " + scaledX + " " + scaledY);
+
+        return new Vector2(scaledX, scaledY);
     }
 
     private Dictionary<int, Vector2> scaleMarkersPositions(Dictionary<int, Vector3> markers)
     {
-        Vector2 shiftXY = findMinXY(markers);
-        newMarkersPosition = new Dictionary<int, Vector2>();
+        Vector2 scaling = computeScalingForDisplay(markers);
+        Dictionary<int, Vector2> scaledPositions = new Dictionary<int, Vector2>();
 
         foreach (KeyValuePair<int, Vector3> marker in markers)
         {
-            int x = (int)(((marker.Value.x - shiftXY.x) * SCALE_XY) + BOUD_SCALED_XY);
-            int z = (int)(((marker.Value.z - shiftXY.y) * SCALE_XY) + BOUD_SCALED_XY);
+            Debug.Log("#CHECK - BEFOR: " + marker.Value.x + " " + marker.Value.z);           
 
-            newMarkersPosition.Add(marker.Key, new Vector2(x, z));
+            float x = marker.Value.x * scaling[0];
+            float z = marker.Value.z * scaling[1];
+
+            Debug.Log("#CHECK - AFTER: " + x + " " + z);
+
+            scaledPositions.Add(marker.Key, new Vector2(x, z));
         }
 
-        return newMarkersPosition;
+        return scaledPositions;
     }
+
  /*
     private void drawConnectionsBetweenMarkers()
     {
@@ -150,10 +182,10 @@ public class Navigation2DUIController : MonoBehaviour
 */
     private void drawLine()
     {
-        Vector2 p1 = new Vector2(0, 0);
-        Vector2 p2 = new Vector2(Screen.width, Screen.height);
+        Vector3 p1 = new Vector3(0, 0, -1);
+        Vector3 p2 = new Vector3(200, 200, -1);
 
-        renderer = new LineRenderer();
+        renderer = gameObject.AddComponent<LineRenderer>();
 
         renderer.sortingLayerName = "OnTop";
         renderer.sortingOrder = 5;
@@ -162,24 +194,23 @@ public class Navigation2DUIController : MonoBehaviour
         renderer.numPositions = 2;
         renderer.SetPosition(0, p1);
         renderer.SetPosition(1, p2);
-        renderer.startWidth = 0.01f;
-        renderer.endWidth = 0.01f;
+        renderer.startWidth = 5;
+        renderer.endWidth = 5;
         renderer.useWorldSpace = true;
     }
 
-    private void drawLine2()
+    private void drawButton(String name, float x, float y)
     {
-        Vector2 p1 = new Vector2(0, 0);
-        Vector2 p2 = new Vector2(Screen.width, Screen.height);
+        GameObject newButton = Instantiate(buttonPref) as GameObject;
+        newButton.transform.SetParent(gameObject.transform, true);
+        newButton.GetComponent<Image>().color = Color.red;
+        newButton.GetComponentInChildren<Text>().text = name;
+        newButton.transform.position = new Vector3(x, y, 0);
+        newButton.GetComponent<Button>().onClick.AddListener( () => { doDOdo(); } );
+    }
 
-        GL.PushMatrix();
-        mat.SetPass(0);
-        GL.LoadOrtho();
-        GL.Begin(GL.LINES);
-        GL.Color(Color.red);
-        GL.Vertex(p1);
-        GL.Vertex(p2);
-        GL.End();
-        GL.PopMatrix();
+    private void doDOdo()
+    {
+        AndroidHelper.ShowAndroidToastMessage("oasnasdgjkln");
     }
 }
