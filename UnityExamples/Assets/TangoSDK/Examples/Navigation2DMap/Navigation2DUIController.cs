@@ -8,9 +8,6 @@ using UnityEngine.UI;
 
 public class Navigation2DUIController : MonoBehaviour
 {
-    private const int BUTTON_SIZE_WIDTH = 100;
-    private const int BUTTON_SIZE_HEIGHT = 100;
-
     private double[,] graph2D;
     private List<GameObject> lineRenderers;
 
@@ -21,16 +18,16 @@ public class Navigation2DUIController : MonoBehaviour
     private LineRenderer renderer;
     public Material mat;
 
-    public Canvas m_canvas;
-    public GameObject buttonPref;
+    public GameObject cube;
+    public GameObject button;
 
     public void Start()
     {
         Dictionary<int, Vector2>  newMarkersPosition = scaleMarkersPositions(AreaLearningInGameController.Instance.getGraph().getMarkersPosition());
         graph2D = AreaLearningInGameController.Instance.getGraph().get2DGraph();
         lineRenderers = new List<GameObject>();
-        //drawConnectionsBetweenMarkers();
-
+        //drawConnectionsBetweenMarkers(newMarkersPosition);
+        drawLine();
         drawGUI(newMarkersPosition);
     }
 
@@ -57,25 +54,6 @@ public class Navigation2DUIController : MonoBehaviour
             Debug.Log("#CHECK - name of marker: " + marker.Key.ToString());
             drawButton(marker.Key.ToString(), marker.Value.x, marker.Value.y);
         }
-    }
-
-    private void drawReactangle(String name, int x, int y)
-    {
-        GUI.color = new Color(1.0f, 0, 0);  // Red color 
-        Rect tmpButton = new Rect(x, y, BUTTON_SIZE_WIDTH, BUTTON_SIZE_HEIGHT);
-        GUI.DrawTexture(tmpButton, texture);
-
-        if (GUI.Button(tmpButton, "<size=20>" + name + "</size>"))
-        {
-            doSomething(name);
-        }
-
-        GUI.color = Color.white;            // White color
-    }
-
-    private void doSomething(String name)
-    { 
-        //AndroidHelper.ShowAndroidToastMessage("Button ID: " + name);
     }
 
     private Vector4 findMinXY(Dictionary<int, Vector3> markers)
@@ -115,8 +93,8 @@ public class Navigation2DUIController : MonoBehaviour
         float markersWidth = Math.Abs(scaling[0]) + Math.Abs(scaling[1]);
         float markersHeight = Math.Abs(scaling[2]) + Math.Abs(scaling[3]);
 
-        float scaledX =  markersWidth / Screen.width;
-        float scaledY =  markersHeight / Screen.height;
+        float scaledX =  Screen.width / markersWidth;
+        float scaledY = Screen.height / markersHeight;
 
         Debug.Log("#CHECK *** V4: " + scaling[0] + " " + scaling[1] + " " + scaling[2] + " " + scaling[3]);
         Debug.Log("#CHECK *** V2 " + scaledX + " " + scaledY);
@@ -144,8 +122,8 @@ public class Navigation2DUIController : MonoBehaviour
         return scaledPositions;
     }
 
- /*
-    private void drawConnectionsBetweenMarkers()
+
+    private void drawConnectionsBetweenMarkers(Dictionary<int, Vector2> newMarkersPosition)
     {
         for (int i = 0; i < graph2D.GetLength(0); i++)
         {
@@ -165,21 +143,22 @@ public class Navigation2DUIController : MonoBehaviour
                 }
 
                 Vector2 secondPosition = new Vector2();
-                bool isFillSecond = newMarkersPosition.TryGetValue(j, out firstPosition);
+                bool isFillSecond = newMarkersPosition.TryGetValue(j, out secondPosition);
 
                 if (!isFillSecond)
                 {
                     break;
                 }
-
+                
                 GameObject tmp = new GameObject();
                 tmp.transform.SetParent(gameObject.transform);
-                tmp.AddComponent<Line>().lineSetup(firstPosition, secondPosition);
+                tmp.AddComponent<Line>().lineSetup(new Vector3(firstPosition.x, firstPosition.y, -1),
+                                                   new Vector3(secondPosition.x, secondPosition.y, -1));
                 lineRenderers.Add(tmp);
             }
         }
     }
-*/
+
     private void drawLine()
     {
         Vector3 p1 = new Vector3(0, 0, -1);
@@ -201,12 +180,20 @@ public class Navigation2DUIController : MonoBehaviour
 
     private void drawButton(String name, float x, float y)
     {
-        GameObject newButton = Instantiate(buttonPref) as GameObject;
+        /*
+        GameObject arcube = Instantiate(cube) as GameObject;
+        arcube.transform.SetParent(gameObject.transform, true);
+        arcube.GetComponentInChildren<TextMesh>().text = name;
+        arcube.transform.position = new Vector3(x, y, 0);
+        */
+       
+        GameObject newButton = Instantiate(button) as GameObject;
         newButton.transform.SetParent(gameObject.transform, true);
         newButton.GetComponent<Image>().color = Color.red;
         newButton.GetComponentInChildren<Text>().text = name;
         newButton.transform.position = new Vector3(x, y, 0);
         newButton.GetComponent<Button>().onClick.AddListener( () => { doDOdo(); } );
+        
     }
 
     private void doDOdo()
