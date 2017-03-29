@@ -23,15 +23,63 @@ public class Navigation2DUIController : MonoBehaviour
     public GameObject cube;
     public GameObject button;
 
+    private int lastSelectedID = -1;
+    private int newSelectedID = -1;
+    private int nearestID = -1;
+    private Color lastSelectedColor;
+
+
     public void Start()
     {
         Dictionary<int, Vector2>  newMarkersPosition = scaleMarkersPositions(AreaLearningInGameController.Instance.getGraph().getMarkersPosition());
         graph2D = AreaLearningInGameController.Instance.getGraph().get2DGraph();
         lineRenderers = new List<GameObject>();
         buttons = new Dictionary<int, GameObject>();
+
         drawGUI(newMarkersPosition);
         drawConnectionsBetweenMarkers(newMarkersPosition);
         markNearestMarker(newMarkersPosition);
+    }
+
+    public void Update()
+    {
+        selectMarkerToNavigate();
+    }
+
+    private void selectMarkerToNavigate()
+    {
+        // mark the nearest marker to user position - return
+        if (newSelectedID == nearestID)
+        {
+            return;
+        }
+
+        // select new marker for navigation
+        if (newSelectedID != lastSelectedID)
+        {
+            GameObject tmpButton = new GameObject();
+
+            if (!buttons.TryGetValue(newSelectedID, out tmpButton))
+            {
+                Debug.Log("#CHECK - Can not find marker with ID " + newSelectedID + " ! - method Update");
+                return;
+            }
+
+            lastSelectedColor = tmpButton.GetComponent<Image>().color;
+            tmpButton.GetComponent<Image>().color = Color.gray;
+
+            bool isLastInButtons = buttons.TryGetValue(lastSelectedID, out tmpButton);
+            lastSelectedID = newSelectedID;
+
+            if (!isLastInButtons)
+            {
+
+                Debug.Log("#CHECK - Can not find marker with ID " + lastSelectedID + " ! - method Update");
+                return;
+            }
+
+            tmpButton.GetComponent<Image>().color = lastSelectedColor;
+        }
     }
 
     /// <summary>
@@ -114,6 +162,9 @@ public class Navigation2DUIController : MonoBehaviour
 
             for (int j = i + 1; j < graph2D.GetLength(0); j++)
             {
+
+                Debug.Log("#CHECK_GRAPH\n" + graph2D[i,j].ToString());
+
                 if (!isFillFirst)
                 {
                     break;
@@ -148,7 +199,6 @@ public class Navigation2DUIController : MonoBehaviour
         Vector2 myPosition2D = new Vector2(myPosition3D.x * SCALING, myPosition3D.z * SCALING);
         GameObject nearestButton = null;
 
-        int nearestID = -1;
         float nearestDistance = float.MaxValue;
 
         foreach (KeyValuePair<int, Vector2> marker in markers)
@@ -181,13 +231,14 @@ public class Navigation2DUIController : MonoBehaviour
         newButton.GetComponent<Image>().color = Color.red;
         newButton.GetComponentInChildren<Text>().text = buttonId.ToString();
         newButton.transform.position = new Vector3(x, y, 0);
-        newButton.GetComponent<Button>().onClick.AddListener( () => { doDOdo(); } );
+        newButton.GetComponent<Button>().onClick.AddListener( () => { doOnButton(buttonId); } );
 
         buttons.Add(buttonId, newButton);
     }
 
-    private void doDOdo()
+    private void doOnButton(int currentId)
     {
-        AndroidHelper.ShowAndroidToastMessage("oasnasdgjkln");
+        newSelectedID = currentId;
+        AndroidHelper.ShowAndroidToastMessage("Selected " + currentId + " to navigate!");
     }
 }

@@ -481,7 +481,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   perspectiveZoomSpeed: 1
   orthoZoomSpeed: 1
+  orthoDragSpeed: 2
   camera: {fileID: 942586246}
+  originTouch: {x: 0, y: 0}
 --- !u!1 &1759402090
 GameObject:
   m_ObjectHideFlags: 0
