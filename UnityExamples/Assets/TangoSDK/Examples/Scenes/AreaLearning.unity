@@ -1006,22 +1006,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 397727052}
---- !u!1 &429726235 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 100000, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-  m_PrefabInternal: {fileID: 918352600}
---- !u!114 &429726236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 429726235}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 531a9836db7524b7fa88ac5bfe2ad56a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_relocalizationOverlay: {fileID: 524327924}
 --- !u!1 &472774631
 GameObject:
   m_ObjectHideFlags: 0
@@ -2161,46 +2145,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_enableAreaLearning
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_enableADFLoading
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11476464, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_enableVideoOverlay
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_allowOutOfDateTangoAPI
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_enableDepth
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_autoConnectToService
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_enableAreaDescriptions
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_showEmulationOptionsInInspector
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11400006, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
-      propertyPath: m_areaDescriptionLearningMode
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: 114946823464447452, guid: ff519ec4bed0442dc9bf3a21a9777c4d,
+        type: 2}
+      propertyPath: m_relocalizationOverlay
+      value: 
+      objectReference: {fileID: 524327924}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ff519ec4bed0442dc9bf3a21a9777c4d, type: 2}
   m_IsPrefabParent: 0

@@ -833,6 +833,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         return graph;
     }
 
+    public Vector3 getCurrentPosition()
+    {
+        return m_poseController.m_tangoPosition;
+    }
+
     /// <summary>
     /// Data container for marker.
     /// 

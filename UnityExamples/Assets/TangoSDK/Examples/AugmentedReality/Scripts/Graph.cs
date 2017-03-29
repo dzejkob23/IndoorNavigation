@@ -11,11 +11,6 @@ public class Graph
     private double[,] graph2D;
     private Dictionary<int, Vector3> markersPositions;
 
-    private double DistancePoint2Point(Vector3 p1, Vector3 p2)
-    {
-        return Math.Sqrt(Math.Pow(p2.x - p1.x, 2) + Math.Pow(p2.y - p1.y, 2) + Math.Pow(p2.z - p1.z, 2));
-    }
-
     public void CreateEvaluatedGraph(Dictionary<int, GameObject> m_markerDictionary)
     {
         Debug.Log("#CHECK - Start of method CreateEvaluatedGraph ...");
@@ -62,7 +57,7 @@ public class Graph
                 }
 
                 // compute distance between both markers
-                double distance = DistancePoint2Point(markerPosition, neighbourPosition);
+                double distance = Vector3.Distance(markerPosition, neighbourPosition);
 
                 // filled for markers in both directions
                 graph2D[markerId, neighbourId] = distance;

@@ -10,9 +10,11 @@ public class Navigation2DUIController : MonoBehaviour
 {
     private double[,] graph2D;
     private List<GameObject> lineRenderers;
+    private Dictionary<int, GameObject> buttons;
 
     private const int SCALE_XY = 1;
     private const int BOUD_SCALED_XY = 1;
+    private const int SCALING = 100;
 
     public Texture2D texture;
     private LineRenderer renderer;
@@ -26,9 +28,10 @@ public class Navigation2DUIController : MonoBehaviour
         Dictionary<int, Vector2>  newMarkersPosition = scaleMarkersPositions(AreaLearningInGameController.Instance.getGraph().getMarkersPosition());
         graph2D = AreaLearningInGameController.Instance.getGraph().get2DGraph();
         lineRenderers = new List<GameObject>();
-        //drawConnectionsBetweenMarkers(newMarkersPosition);
-        drawLine();
+        buttons = new Dictionary<int, GameObject>();
         drawGUI(newMarkersPosition);
+        drawConnectionsBetweenMarkers(newMarkersPosition);
+        markNearestMarker(newMarkersPosition);
     }
 
     /// <summary>
@@ -52,7 +55,7 @@ public class Navigation2DUIController : MonoBehaviour
             }
 
             Debug.Log("#CHECK - name of marker: " + marker.Key.ToString());
-            drawButton(marker.Key.ToString(), marker.Value.x, marker.Value.y);
+            drawButton(marker.Key, marker.Value.x, marker.Value.y);
         }
     }
 
@@ -86,35 +89,14 @@ public class Navigation2DUIController : MonoBehaviour
         return new Vector4(maxX, minX, maxY, minY);
     }
 
-    private Vector2 computeScalingForDisplay(Dictionary<int, Vector3> markers)
-    {
-        Vector4 scaling = findMinXY(markers);
-
-        float markersWidth = Math.Abs(scaling[0]) + Math.Abs(scaling[1]);
-        float markersHeight = Math.Abs(scaling[2]) + Math.Abs(scaling[3]);
-
-        float scaledX =  Screen.width / markersWidth;
-        float scaledY = Screen.height / markersHeight;
-
-        Debug.Log("#CHECK *** V4: " + scaling[0] + " " + scaling[1] + " " + scaling[2] + " " + scaling[3]);
-        Debug.Log("#CHECK *** V2 " + scaledX + " " + scaledY);
-
-        return new Vector2(scaledX, scaledY);
-    }
-
     private Dictionary<int, Vector2> scaleMarkersPositions(Dictionary<int, Vector3> markers)
     {
-        Vector2 scaling = computeScalingForDisplay(markers);
         Dictionary<int, Vector2> scaledPositions = new Dictionary<int, Vector2>();
 
         foreach (KeyValuePair<int, Vector3> marker in markers)
         {
-            Debug.Log("#CHECK - BEFOR: " + marker.Value.x + " " + marker.Value.z);           
-
-            float x = marker.Value.x * scaling[0];
-            float z = marker.Value.z * scaling[1];
-
-            Debug.Log("#CHECK - AFTER: " + x + " " + z);
+            float x = marker.Value.x * SCALING;
+            float z = marker.Value.z * SCALING;
 
             scaledPositions.Add(marker.Key, new Vector2(x, z));
         }
@@ -152,33 +134,40 @@ public class Navigation2DUIController : MonoBehaviour
                 
                 GameObject tmp = new GameObject();
                 tmp.transform.SetParent(gameObject.transform);
-                tmp.AddComponent<Line>().lineSetup(new Vector3(firstPosition.x, firstPosition.y, -1),
-                                                   new Vector3(secondPosition.x, secondPosition.y, -1));
+                tmp.AddComponent<Line>().lineSetup(new Vector3(firstPosition.x, firstPosition.y, 0),
+                                                   new Vector3(secondPosition.x, secondPosition.y, 0),
+                                                   5f);
                 lineRenderers.Add(tmp);
             }
         }
     }
 
-    private void drawLine()
+    private void markNearestMarker(Dictionary<int, Vector2> markers)
     {
-        Vector3 p1 = new Vector3(0, 0, -1);
-        Vector3 p2 = new Vector3(200, 200, -1);
+        Vector3 myPosition3D = AreaLearningInGameController.Instance.getCurrentPosition();
+        Vector2 myPosition2D = new Vector2(myPosition3D.x * SCALING, myPosition3D.z * SCALING);
+        GameObject nearestButton = null;
 
-        renderer = gameObject.AddComponent<LineRenderer>();
+        int nearestID = -1;
+        float nearestDistance = float.MaxValue;
 
-        renderer.sortingLayerName = "OnTop";
-        renderer.sortingOrder = 5;
+        foreach (KeyValuePair<int, Vector2> marker in markers)
+        {
+            float dist = Vector2.Distance(myPosition2D, marker.Value);
+            if (dist < nearestDistance)
+            {
+                nearestDistance = dist;
+                nearestID = marker.Key;
+            }
+        }
 
-        // transform
-        renderer.numPositions = 2;
-        renderer.SetPosition(0, p1);
-        renderer.SetPosition(1, p2);
-        renderer.startWidth = 5;
-        renderer.endWidth = 5;
-        renderer.useWorldSpace = true;
+        if (buttons.TryGetValue(nearestID, out nearestButton))
+        {
+            nearestButton.GetComponent<Image>().color = Color.yellow;
+        }
     }
 
-    private void drawButton(String name, float x, float y)
+    private void drawButton(int buttonId, float x, float y)
     {
         /*
         GameObject arcube = Instantiate(cube) as GameObject;
@@ -190,10 +179,11 @@ public class Navigation2DUIController : MonoBehaviour
         GameObject newButton = Instantiate(button) as GameObject;
         newButton.transform.SetParent(gameObject.transform, true);
         newButton.GetComponent<Image>().color = Color.red;
-        newButton.GetComponentInChildren<Text>().text = name;
+        newButton.GetComponentInChildren<Text>().text = buttonId.ToString();
         newButton.transform.position = new Vector3(x, y, 0);
         newButton.GetComponent<Button>().onClick.AddListener( () => { doDOdo(); } );
-        
+
+        buttons.Add(buttonId, newButton);
     }
 
     private void doDOdo()

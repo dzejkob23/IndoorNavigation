@@ -149,7 +149,7 @@ public class AreaDescriptionPicker : MonoBehaviour, ITangoLifecycle
         }
         else
         {
-            AndroidHelper.ShowAndroidToastMessage("Motion Tracking and Area Learning Permissions Needed");
+            AndroidHelper.ShowAndroidToastMessage("#TANGO_LIFE - Motion Tracking and Area Learning Permissions Needed");
             
             // This is a fix for a lifecycle issue where calling
             // Application.Quit() here, and restarting the application
@@ -163,6 +163,7 @@ public class AreaDescriptionPicker : MonoBehaviour, ITangoLifecycle
     /// </summary>
     public void OnTangoServiceConnected()
     {
+        Debug.Log("#TANGO_LIFE - OnTangoServiceConnected");
     }
     
     /// <summary>
@@ -170,6 +171,7 @@ public class AreaDescriptionPicker : MonoBehaviour, ITangoLifecycle
     /// </summary>
     public void OnTangoServiceDisconnected()
     {
+        Debug.Log("#TANGO_LIFE - OnTangoServiceDisconnected");
     }
 
     /// <summary>

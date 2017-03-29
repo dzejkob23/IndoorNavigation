@@ -118,7 +118,7 @@ public class ARMarker : MonoBehaviour
     {
         GameObject tmp = new GameObject();
         tmp.transform.SetParent(gameObject.transform);
-        tmp.AddComponent<Line>().lineSetup(gameObject.transform.position, markerPosition);
+        tmp.AddComponent<Line>().lineSetup(gameObject.transform.position, markerPosition, 0.01f);
 
         lines.Add(markerId, tmp);
     }

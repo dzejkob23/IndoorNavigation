@@ -5,11 +5,12 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 400000}
-  - 114: {fileID: 11400006}
-  - 114: {fileID: 11476464}
+  - component: {fileID: 400000}
+  - component: {fileID: 11400006}
+  - component: {fileID: 11476464}
+  - component: {fileID: 114946823464447452}
   m_Layer: 0
   m_Name: Tango Manager
   m_TagString: Untagged
@@ -29,6 +30,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -40,21 +42,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f51549b4778944861a78b99341a9c5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_autoConnectToService: 0
   m_allowOutOfDateTangoAPI: 0
+  m_showPerformanceOptionsInInspector: 1
+  m_showEmulationOptionsInInspector: 0
   m_emulationEnvironment: {fileID: 4300002, guid: e80bac5c99a63412b8472d348c3a51ce,
     type: 3}
+  m_emulationEnvironmentTexture: {fileID: 0}
   m_doSlowEmulation: 1
   m_emulationVideoOverlaySimpleLighting: 1
+  m_emulatedAreaDescriptionStartOffset: {x: 0, y: 0, z: 0}
   m_enableMotionTracking: 1
-  m_enableDepth: 0
-  m_enableVideoOverlay: 0
   m_motionTrackingAutoReset: 1
+  m_enableAreaDescriptions: 1
+  m_areaDescriptionLearningMode: 1
+  m_enableDriftCorrection: 0
+  m_enableDepth: 1
   m_enableAreaLearning: 0
   m_enableADFLoading: 0
-  m_enableCloudADF: 0
-  m_useExperimentalVideoOverlay: 1
-  m_autoConnectToService: 1
-  m_cloudApiKey: 
+  m_enable3DReconstruction: 0
+  m_3drResolutionMeters: 0.1
+  m_3drGenerateColor: 0
+  m_3drGenerateNormal: 0
+  m_3drGenerateTexCoord: 0
+  m_3drSpaceClearing: 0
+  m_3drUseAreaDescriptionPose: 0
+  m_3drMinNumVertices: 20
+  m_3drUpdateMethod: 1
+  m_enableVideoOverlay: 1
+  m_videoOverlayUseTextureMethod: 1
+  m_videoOverlayUseYUVTextureIdMethod: 0
+  m_videoOverlayUseByteBufferMethod: 0
+  m_keepScreenAwake: 0
+  m_adjustScreenResolution: 0
+  m_targetResolution: 1080
+  m_allowOversizedScreenResolutions: 0
+  m_initialPointCloudMaxPoints: 0
 --- !u!114 &11476464
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -67,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_enableUXLibrary: 1
-  m_drawDefaultUXExceptions: 1
+  m_drawDefaultUXExceptions: 0
   m_showConnectionScreen: 1
   m_holdPosture: 0
 --- !u!1001 &100100000
@@ -81,3 +104,15 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
+--- !u!114 &114946823464447452
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 531a9836db7524b7fa88ac5bfe2ad56a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_relocalizationOverlay: {fileID: 0}

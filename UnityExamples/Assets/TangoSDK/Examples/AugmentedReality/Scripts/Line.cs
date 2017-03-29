@@ -8,7 +8,7 @@ public class Line : MonoBehaviour
 {
     private new LineRenderer renderer;
 
-    public void lineSetup(Vector3 originalP, Vector3 nextP)
+    public void lineSetup(Vector3 originalP, Vector3 nextP, float widthOfLine)
     {
         renderer = gameObject.AddComponent<LineRenderer>();
 
@@ -19,8 +19,8 @@ public class Line : MonoBehaviour
         renderer.numPositions = 2;
         renderer.SetPosition(0, originalP);
         renderer.SetPosition(1, nextP);
-        renderer.startWidth = 0.01f;
-        renderer.endWidth = 0.01f;
+        renderer.startWidth = widthOfLine;
+        renderer.endWidth = widthOfLine;
         renderer.useWorldSpace = true;
     }
 
