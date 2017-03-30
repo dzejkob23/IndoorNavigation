@@ -65,4 +65,9 @@ public class SceneSwitcher : MonoBehaviour
             }
         }
     }
+
+    public void runAreaLearning()
+    {
+        SceneManager.LoadScene("AreaLearning");
+    }
 }
