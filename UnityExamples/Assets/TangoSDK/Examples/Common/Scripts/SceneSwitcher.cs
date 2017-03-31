@@ -27,45 +27,6 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class SceneSwitcher : MonoBehaviour
 {
-    private const int SCENE_BUTTON_SIZE_X = 300;
-    private const int SCENE_BUTTON_SIZE_Y = 65;
-    private const int SCENE_BUTTON_GAP_X = 5;
-    private const int SCENE_BUTTON_GAP_Y = 3;
-
-    /// <summary>
-    /// The names of all the scenes this can switch between.
-    /// </summary>
-    private readonly string[] m_sceneNames =
-    {
-        "DetectTangoCore",
-        "MotionTracking",
-        "PointCloud",
-        "AreaLearning",
-        "AreaDescriptionManagement",
-        "SimpleAugmentedReality",
-        "PointToPoint"
-    };
-
-    /// <summary>
-    /// Scene switching GUI.
-    /// </summary>
-    private void OnGUI()
-    {
-        for (int it = 0; it < m_sceneNames.Length; ++it)
-        {
-            Rect buttonRect = new Rect(Screen.width - SCENE_BUTTON_GAP_X - SCENE_BUTTON_SIZE_X,
-                                       SCENE_BUTTON_GAP_Y + ((SCENE_BUTTON_GAP_Y + SCENE_BUTTON_SIZE_Y) * it),
-                                       SCENE_BUTTON_SIZE_X,
-                                       SCENE_BUTTON_SIZE_Y);
-            #pragma warning disable 618
-            if (GUI.Button(buttonRect, "<size=20>" + m_sceneNames[it] + "</size>")
-                && SceneManager.GetActiveScene().name != m_sceneNames[it])
-            {
-                SceneManager.LoadScene(m_sceneNames[it]);
-            }
-        }
-    }
-
     public void runAreaLearning()
     {
         SceneManager.LoadScene("AreaLearning");

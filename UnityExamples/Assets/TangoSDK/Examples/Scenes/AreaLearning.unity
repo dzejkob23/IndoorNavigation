@@ -2097,6 +2097,10 @@ Prefab:
       propertyPath: far clip plane
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 11402180, guid: 6433b1b4ccf6f474083daeac76842ec5, type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6433b1b4ccf6f474083daeac76842ec5, type: 2}
   m_IsPrefabParent: 0

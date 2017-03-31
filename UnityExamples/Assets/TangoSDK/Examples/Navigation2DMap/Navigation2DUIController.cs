@@ -241,4 +241,10 @@ public class Navigation2DUIController : MonoBehaviour
         newSelectedID = currentId;
         AndroidHelper.ShowAndroidToastMessage("Selected " + currentId + " to navigate!");
     }
+
+    public void moveToNavigation()
+    {
+        AndroidHelper.ShowAndroidToastMessage("Navigation started ...");
+        // SceneManager.LoadScene("ARNavigation");
+    }
 }
