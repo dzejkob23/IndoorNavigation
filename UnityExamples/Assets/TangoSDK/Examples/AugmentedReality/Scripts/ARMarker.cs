@@ -31,12 +31,12 @@ public class ARMarker : MonoBehaviour
     /// <summary>
     /// Identificator
     /// </summary>
-    private int ID;
+    private int ID = -1;
 
     /// <summary>
     /// Renders for this marker
     /// </summary>
-    private Dictionary<int, GameObject> lines;
+    public Dictionary<int, GameObject> lines;
 
     /// <summary>
     /// Unique identifikator
@@ -69,6 +69,11 @@ public class ARMarker : MonoBehaviour
     private Animation m_anim;
 
     /// <summary>
+    ///  ???
+    /// </summary>
+    private int[] oldNeighboursIds;
+
+    /// <summary>
     /// Start this instance
     /// </summary>
     public void Start()
@@ -81,7 +86,11 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        ID = System.Threading.Interlocked.Increment(ref count_id);
+        if (ID == -1)
+        {
+            ID = System.Threading.Interlocked.Increment(ref count_id);
+        }
+
         lines = new Dictionary<int, GameObject>();
 
         // The animation should be started in Awake and not Start so that it plays on its first frame.
@@ -139,5 +148,16 @@ public class ARMarker : MonoBehaviour
     public Dictionary<int, GameObject> getRendersDictionary()
     {
         return lines;
+    }
+
+    public void setAllParameters(int oldId, int [] oldNeighboursIds)
+    {
+        this.ID = oldId;
+        this.oldNeighboursIds = oldNeighboursIds;
+    }
+
+    public int [] getOldNeighboursIds()
+    {
+        return oldNeighboursIds;
     }
 }

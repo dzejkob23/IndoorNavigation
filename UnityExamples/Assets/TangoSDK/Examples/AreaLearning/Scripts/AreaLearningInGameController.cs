@@ -669,6 +669,10 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             temp.m_type = obj.Value.GetComponent<ARMarker>().m_type;
             temp.m_position = obj.Value.transform.position;
             temp.m_orientation = obj.Value.transform.rotation;
+            temp.m_neighbours = new int[obj.Value.GetComponent<ARMarker>().lines.Keys.Count];
+            obj.Value.GetComponent<ARMarker>().lines.Keys.CopyTo(temp.m_neighbours, 0);
+            temp.m_id = obj.Value.GetComponent<ARMarker>().getID();
+
             xmlDataList.Add(temp);
         }
 
@@ -699,6 +703,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             return;
         }
 
+        // Load marker data from XML file
         m_markerList.Clear();
         foreach (MarkerData mark in xmlDataList)
         {
@@ -706,8 +711,30 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             GameObject temp_instance = Instantiate(m_markPrefabs[mark.m_type],
                                           mark.m_position,
                                           mark.m_orientation) as GameObject;
+
+            // Set other values
+            temp_instance.GetComponent<ARMarker>().setAllParameters(mark.m_id, mark.m_neighbours);
+
+            // Add re-created marker to list
             int temp_id = temp_instance.GetComponent<ARMarker>().getID();
             m_markerList.Add(temp_id, temp_instance);
+        }
+
+        // Draw connections between markers
+        foreach (KeyValuePair<int, GameObject> marker in m_markerList)
+        {
+            // Draw all lines to neighbours
+            int[] neighboursIds = marker.Value.GetComponent<ARMarker>().getOldNeighboursIds();
+            int capacity = neighboursIds.Length;
+            GameObject neighbour;
+
+            for (int i = 0; i < capacity; i++)
+            {
+                if (m_markerList.TryGetValue(neighboursIds[i], out neighbour))
+                {
+                    marker.Value.GetComponent<ARMarker>().addLine(neighboursIds[i], neighbour.transform.position);
+                }
+            }
         }
     }
 
@@ -863,5 +890,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         /// </summary>
         [XmlElement("orientation")]
         public Quaternion m_orientation;
+
+        [XmlElement("neighbours")]
+        public int[] m_neighbours;
+
+        [XmlElement("id")]
+        public int m_id;
     }
 }
