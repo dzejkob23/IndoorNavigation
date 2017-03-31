@@ -11,7 +11,6 @@ class PinchZoom : MonoBehaviour
     public float orthoDragSpeed = 0.01f;
 
     public Camera camera;
-    public Vector2 originTouch;
 
     private Vector3 worldStartPoint;
 

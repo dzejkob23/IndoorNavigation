@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Navigation3DMap : MonoBehaviour {
+public class Navigation3DUIController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start ()

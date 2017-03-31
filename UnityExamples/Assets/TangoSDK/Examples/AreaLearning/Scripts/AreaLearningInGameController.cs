@@ -261,8 +261,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
         else
         {
-            _placeNewMarker(t);
-            m_finishButton.gameObject.SetActive(true);         
+            _placeNewMarker(t);         
         }
     }
 
@@ -472,12 +471,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         //StartCoroutine(graph.CreateEvaluatedGraph(m_markerList));
         graph.CreateEvaluatedGraph(m_markerList);
         show2DMapScene();
-        DisableAllMarkers();
-    }
-
-    private void DisableAllMarkers()
-    {
-        // TODO
     }
 
     private void show2DMapScene()
@@ -810,16 +803,13 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         m_selectedMarker = null;
 
-        if (lastCreatedMarker != null)
+        m_finishButton.gameObject.SetActive(true);
+
+        if (lastCreatedMarker != null && m_currentMethodType != 2)
         {
-            Debug.Log("#CHECK - last created marker is NULL = FALSE");
             ARMarker lastTmp = lastCreatedMarker.GetComponent<ARMarker>();
             ARMarker newTmp = newMarkObject.GetComponent<ARMarker>();
             lastTmp.addLine(newTmp.getID(), newTmp.transform.position);
-        }
-        else
-        {
-            Debug.Log("#CHECK - last created marker is NULL = TRUE");
         }
     } 
 

@@ -8,36 +8,53 @@ using UnityEngine.UI;
 
 public class Navigation2DUIController : MonoBehaviour
 {
-    private double[,] graph2D;
-    private List<GameObject> lineRenderers;
-    private Dictionary<int, GameObject> buttons;
-
-    private const int SCALE_XY = 1;
-    private const int BOUD_SCALED_XY = 1;
     private const int SCALING = 100;
+    private static Color NEAREST_BUTTON_COLOR = Color.yellow;
+    private static Color NAVIGATION_BUTTON_COLOR = Color.gray;
+    private static Color NEWLINE_BUTTON_COLOR = Color.green;
+    private static Color BASIC_BUTTON_COLOR = Color.red;
 
-    public Texture2D texture;
-    private LineRenderer renderer;
-    public Material mat;
+    // Add line in 2D
+    private int[] connectMarkersId = { -1, -1 };
 
-    public GameObject cube;
+    // Global values from previous scene
+    Dictionary<int, Vector2> newMarkersPosition;
+    private double[,] graph2D;
+
+    // Selected marker to navigate
     public GameObject button;
-
     private int lastSelectedID = -1;
     private int newSelectedID = -1;
     private int nearestID = -1;
     private Color lastSelectedColor;
 
+    // GUI buttons and lines
+    public Button navigateButton;
+    public Button modifyButton;
+    public Button finishButton;
+    public Button addLineButton;
+    private Dictionary<int, GameObject> buttons;
+    private List<GameObject> lineRenderers;
 
     public void Start()
     {
-        Dictionary<int, Vector2>  newMarkersPosition = scaleMarkersPositions(AreaLearningInGameController.Instance.getGraph().getMarkersPosition());
+        // Get values from previous scene
+        newMarkersPosition = scaleMarkersPositions(AreaLearningInGameController.Instance.getGraph().getMarkersPosition());
         graph2D = AreaLearningInGameController.Instance.getGraph().get2DGraph();
+
+        // Initialization
         lineRenderers = new List<GameObject>();
         buttons = new Dictionary<int, GameObject>();
 
-        drawGUI(newMarkersPosition);
-        drawConnectionsBetweenMarkers(newMarkersPosition);
+        // Check if global values are prepared
+        if (newMarkersPosition == null || newMarkersPosition.Count == 0)
+        {
+            return;
+        }
+
+        // Prepare environment
+        drawGuiButtons(newMarkersPosition);
+        drawConnectionsBetweenButtons(newMarkersPosition, graph2D);
         markNearestMarker(newMarkersPosition);
     }
 
@@ -58,6 +75,7 @@ public class Navigation2DUIController : MonoBehaviour
         if (newSelectedID != lastSelectedID)
         {
             GameObject tmpButton = new GameObject();
+            GameObject nearestButton = new GameObject();
 
             if (!buttons.TryGetValue(newSelectedID, out tmpButton))
             {
@@ -65,8 +83,14 @@ public class Navigation2DUIController : MonoBehaviour
                 return;
             }
 
+            if (!buttons.TryGetValue(nearestID, out nearestButton))
+            {
+                Debug.Log("#CHECK - Can not find nearest marker with ID " + newSelectedID + " ! - method Update");
+                return;
+            }
+
             lastSelectedColor = tmpButton.GetComponent<Image>().color;
-            tmpButton.GetComponent<Image>().color = Color.gray;
+            tmpButton.GetComponent<Image>().color = NAVIGATION_BUTTON_COLOR;
 
             bool isLastInButtons = buttons.TryGetValue(lastSelectedID, out tmpButton);
             lastSelectedID = newSelectedID;
@@ -79,13 +103,14 @@ public class Navigation2DUIController : MonoBehaviour
             }
 
             tmpButton.GetComponent<Image>().color = lastSelectedColor;
+            nearestButton.GetComponent<Image>().color = NEAREST_BUTTON_COLOR;
         }
     }
 
     /// <summary>
     /// Scene switching GUI.
     /// </summary>
-    private void drawGUI(Dictionary<int, Vector2> newMarkersPosition)
+    private void drawGuiButtons(Dictionary<int, Vector2> newMarkersPosition)
     {
         
         if (newMarkersPosition == null || newMarkersPosition.Keys.Count == 0 || newMarkersPosition.Values.Count == 0)
@@ -153,7 +178,7 @@ public class Navigation2DUIController : MonoBehaviour
     }
 
 
-    private void drawConnectionsBetweenMarkers(Dictionary<int, Vector2> newMarkersPosition)
+    private void drawConnectionsBetweenButtons(Dictionary<int, Vector2> newMarkersPosition, double[,] graph2D)
     {
         for (int i = 0; i < graph2D.GetLength(0); i++)
         {
@@ -182,15 +207,20 @@ public class Navigation2DUIController : MonoBehaviour
                 {
                     break;
                 }
-                
-                GameObject tmp = new GameObject();
-                tmp.transform.SetParent(gameObject.transform);
-                tmp.AddComponent<Line>().lineSetup(new Vector3(firstPosition.x, firstPosition.y, 0),
-                                                   new Vector3(secondPosition.x, secondPosition.y, 0),
-                                                   5f);
-                lineRenderers.Add(tmp);
+
+                addLine(firstPosition, secondPosition);
             }
         }
+    }
+
+    private void addLine(Vector2 firstPosition, Vector2 secondPosition)
+    {
+        GameObject tmp = new GameObject();
+        tmp.transform.SetParent(gameObject.transform);
+        tmp.AddComponent<Line>().lineSetup(new Vector3(firstPosition.x, firstPosition.y, 0),
+                                           new Vector3(secondPosition.x, secondPosition.y, 0),
+                                           5f);
+        lineRenderers.Add(tmp);
     }
 
     private void markNearestMarker(Dictionary<int, Vector2> markers)
@@ -219,16 +249,9 @@ public class Navigation2DUIController : MonoBehaviour
 
     private void drawButton(int buttonId, float x, float y)
     {
-        /*
-        GameObject arcube = Instantiate(cube) as GameObject;
-        arcube.transform.SetParent(gameObject.transform, true);
-        arcube.GetComponentInChildren<TextMesh>().text = name;
-        arcube.transform.position = new Vector3(x, y, 0);
-        */
-       
         GameObject newButton = Instantiate(button) as GameObject;
         newButton.transform.SetParent(gameObject.transform, true);
-        newButton.GetComponent<Image>().color = Color.red;
+        newButton.GetComponent<Image>().color = BASIC_BUTTON_COLOR;
         newButton.GetComponentInChildren<Text>().text = buttonId.ToString();
         newButton.transform.position = new Vector3(x, y, 0);
         newButton.GetComponent<Button>().onClick.AddListener( () => { doOnButton(buttonId); } );
@@ -246,5 +269,86 @@ public class Navigation2DUIController : MonoBehaviour
     {
         AndroidHelper.ShowAndroidToastMessage("Navigation started ...");
         // SceneManager.LoadScene("ARNavigation");
+    }
+
+    public void modify2DMap()
+    {
+        navigateButton.gameObject.SetActive(false);
+        modifyButton.gameObject.SetActive(false);
+        finishButton.gameObject.SetActive(true);
+        addLineButton.gameObject.SetActive(true);
+    }
+
+    public void update2DGraph()
+    {
+        navigateButton.gameObject.SetActive(true);
+        modifyButton.gameObject.SetActive(true);
+        finishButton.gameObject.SetActive(false);
+        addLineButton.gameObject.SetActive(false);
+    }
+
+    public void addLineIn2D()
+    {
+        GameObject tmp;
+
+        if (newSelectedID == -1)
+        {
+            return;
+        }
+
+        if (newSelectedID != -1 && connectMarkersId[0] == -1)
+        {
+            connectMarkersId[0] = newSelectedID;
+            buttons.TryGetValue(connectMarkersId[0], out tmp);
+            tmp.GetComponent<Image>().color = NEWLINE_BUTTON_COLOR;
+            return;
+        }
+
+        if (newSelectedID != -1
+            && connectMarkersId[1] == -1 
+            && connectMarkersId[0] != newSelectedID)
+        {
+            connectMarkersId[1] = newSelectedID;
+            buttons.TryGetValue(connectMarkersId[1], out tmp);
+            tmp.GetComponent<Image>().color = NEWLINE_BUTTON_COLOR;
+        }
+        else
+        {
+            AndroidHelper.ShowAndroidToastMessage("Select second marker!");
+            return;
+        }
+
+        if (graph2D[connectMarkersId[0], connectMarkersId[1]] != 0)
+        {
+            AndroidHelper.ShowAndroidToastMessage("Connecion exists! Cache was cleaned!");
+            connectMarkersId[0] = -1;
+            connectMarkersId[1] = -1;
+            return;
+        }
+
+        if (connectMarkersId[0] != -1 && connectMarkersId[1] != -1)
+        {
+            Vector2 firstPosition;
+            Vector2 secondPosition;
+
+            newMarkersPosition.TryGetValue(connectMarkersId[0], out firstPosition);
+            newMarkersPosition.TryGetValue(connectMarkersId[1], out secondPosition);
+
+            addLine(firstPosition, secondPosition);
+
+            firstPosition = new Vector2(firstPosition.x / SCALING, firstPosition.y / SCALING);
+            secondPosition = new Vector2(secondPosition.x / SCALING, secondPosition.y / SCALING);
+
+            float distance = Vector2.Distance(firstPosition, secondPosition);
+            graph2D[connectMarkersId[0], connectMarkersId[1]] = distance;
+            graph2D[connectMarkersId[1], connectMarkersId[0]] = distance;
+
+            // TODO - check if this settings is OK
+            connectMarkersId[0] = -1;
+            connectMarkersId[1] = -1;
+            //newSelectedID = -1;
+
+            AndroidHelper.ShowAndroidToastMessage("Created NEW connection.");
+        }
     }
 }
