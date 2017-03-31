@@ -805,7 +805,14 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         m_finishButton.gameObject.SetActive(true);
 
-        if (lastCreatedMarker != null && m_currentMethodType != 2)
+        // Create independent marker
+        if (m_currentMethodType == 2)
+        {
+            yield break;
+        }
+
+        // Created first marker => can not create connection
+        if (lastCreatedMarker != null)
         {
             ARMarker lastTmp = lastCreatedMarker.GetComponent<ARMarker>();
             ARMarker newTmp = newMarkObject.GetComponent<ARMarker>();

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class Navigation2DUIController : MonoBehaviour
 {
-    private const int SCALING = 100;
+    private const int SCALING = 300;
     private static Color NEAREST_BUTTON_COLOR = Color.yellow;
     private static Color NAVIGATION_BUTTON_COLOR = Color.gray;
     private static Color NEWLINE_BUTTON_COLOR = Color.green;
