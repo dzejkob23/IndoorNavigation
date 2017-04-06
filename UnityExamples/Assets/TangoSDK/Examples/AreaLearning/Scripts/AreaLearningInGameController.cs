@@ -176,7 +176,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     public void Start()
     {
         m_poseController = FindObjectOfType<TangoARPoseController>();
+        //DontDestroyOnLoad(m_poseController);
+
         m_tangoApplication = FindObjectOfType<TangoApplication>();
+        //DontDestroyOnLoad(m_tangoApplication);
+
         m_connectMarkers = new ARMarker[2];
         m_markerList = new Dictionary<int, GameObject>();
         graph = new Graph();
@@ -189,7 +193,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
     public void Awake()
     {
-        if (Instance == null)
+        /*if (Instance == null)
         {
             DontDestroyOnLoad(gameObject);
             Instance = this;
@@ -197,7 +201,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         else if (Instance != this)
         {
             Destroy(gameObject);
-        }
+        }*/
     }
 
     /// <summary>
@@ -234,6 +238,8 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         {
             _reactionOnTouch();
         }
+
+        //Debug.Log("#POSITION: " + m_poseController.m_tangoPosition);
     }
 
     /// <summary>
@@ -469,13 +475,15 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     public void FinishMarkers()
     {
         //StartCoroutine(graph.CreateEvaluatedGraph(m_markerList));
+        //_SaveCurrentADFile();
         graph.CreateEvaluatedGraph(m_markerList);
         show2DMapScene();
     }
 
     private void show2DMapScene()
     {
-        SceneManager.LoadScene("Navigation2DMap");
+        SceneManager.LoadScene("Navigation2DMap", LoadSceneMode.Additive);
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Navigation2DMap"));
     }
 
     /// <summary>
@@ -860,6 +868,24 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     public Vector3 getCurrentPosition()
     {
         return m_poseController.m_tangoPosition;
+    }
+
+    private void _SaveCurrentADFile()
+    {
+        // Save TMP description of area description
+        if (m_tangoApplication.m_areaDescriptionLearningMode)
+        {
+            m_saveThread = new Thread(delegate ()
+            {
+                // Start saving process in another thread.
+                m_curAreaDescription = AreaDescription.SaveCurrent();
+                AreaDescription.Metadata metadata = m_curAreaDescription.GetMetadata();
+
+                metadata.m_name = "TMP";
+                m_curAreaDescription.SaveMetadata(metadata);
+            });
+            m_saveThread.Start();
+        }
     }
 
     /// <summary>

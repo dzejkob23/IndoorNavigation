@@ -6,6 +6,8 @@ TagManager:
   tags:
   - UICamera
   - Ground
+  - Navigation2DMap
+  - AreaLearning
   layers:
   - Default
   - TransparentFX

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Tango;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -36,11 +37,23 @@ public class Navigation2DUIController : MonoBehaviour
     private Dictionary<int, GameObject> buttons;
     private List<GameObject> lineRenderers;
 
+    AreaLearningInGameController algcInstance;
+    TangoApplication tangoApp;
+    TangoARPoseController poseController;
+
+
     public void Start()
     {
+        tangoApp = FindObjectOfType<TangoApplication>();
+        poseController = FindObjectOfType<TangoARPoseController>();
+        algcInstance = FindObjectOfType<AreaLearningInGameController>();
+
+        poseController.GetComponentInParent<Camera>().enabled = false;
+        GameObject.FindGameObjectWithTag("AreaLearning").SetActive(false);
+
         // Get values from previous scene
-        newMarkersPosition = scaleMarkersPositions(AreaLearningInGameController.Instance.getGraph().getMarkersPosition());
-        graph2D = AreaLearningInGameController.Instance.getGraph().get2DGraph();
+        newMarkersPosition = scaleMarkersPositions(algcInstance.getGraph().getMarkersPosition());
+        graph2D = algcInstance.getGraph().get2DGraph();
 
         // Initialization
         lineRenderers = new List<GameObject>();
@@ -61,6 +74,9 @@ public class Navigation2DUIController : MonoBehaviour
     public void Update()
     {
         selectMarkerToNavigate();
+
+        Debug.Log("#POSITION: " + poseController.m_tangoPosition);
+        //Debug.Log("#POSITION: " + algcInstance);
     }
 
     private void selectMarkerToNavigate()
@@ -225,7 +241,7 @@ public class Navigation2DUIController : MonoBehaviour
 
     private void markNearestMarker(Dictionary<int, Vector2> markers)
     {
-        Vector3 myPosition3D = AreaLearningInGameController.Instance.getCurrentPosition();
+        Vector3 myPosition3D = algcInstance.getCurrentPosition();
         Vector2 myPosition2D = new Vector2(myPosition3D.x * SCALING, myPosition3D.z * SCALING);
         GameObject nearestButton = null;
 
@@ -267,8 +283,9 @@ public class Navigation2DUIController : MonoBehaviour
 
     public void moveToNavigation()
     {
-        AndroidHelper.ShowAndroidToastMessage("Navigation started ...");
+        //AndroidHelper.ShowAndroidToastMessage("Navigation started ...");
         // SceneManager.LoadScene("ARNavigation");
+        SceneManager.LoadScene("Navigation3DMap");
     }
 
     public void modify2DMap()

@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
+  m_IndirectSpecularColor: {r: 0.44688356, g: 0.49676478, b: 0.5749998, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 388797371}
   m_Layer: 5
   m_Name: Canvas
-  m_TagString: Untagged
+  m_TagString: Navigation2DMap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -579,7 +579,6 @@ MonoBehaviour:
   orthoZoomSpeed: 1
   orthoDragSpeed: 2
   camera: {fileID: 942586246}
-  originTouch: {x: 0, y: 0}
 --- !u!1 &1004412376
 GameObject:
   m_ObjectHideFlags: 0
