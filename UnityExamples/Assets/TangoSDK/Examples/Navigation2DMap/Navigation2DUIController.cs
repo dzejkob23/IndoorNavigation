@@ -27,6 +27,7 @@ public class Navigation2DUIController : MonoBehaviour
     private int lastSelectedID = -1;
     private int newSelectedID = -1;
     private int nearestID = -1;
+    private int previousNearestID = -1;
     private Color lastSelectedColor;
 
     // GUI buttons and lines
@@ -40,7 +41,6 @@ public class Navigation2DUIController : MonoBehaviour
     AreaLearningInGameController algcInstance;
     TangoApplication tangoApp;
     TangoARPoseController poseController;
-
 
     public void Start()
     {
@@ -68,12 +68,13 @@ public class Navigation2DUIController : MonoBehaviour
         // Prepare environment
         drawGuiButtons(newMarkersPosition);
         drawConnectionsBetweenButtons(newMarkersPosition, graph2D);
-        markNearestMarker(newMarkersPosition);
+        
     }
 
     public void Update()
     {
         selectMarkerToNavigate();
+        markNearestMarker(newMarkersPosition);
 
         Debug.Log("#POSITION: " + poseController.m_tangoPosition);
         //Debug.Log("#POSITION: " + algcInstance);
@@ -247,6 +248,8 @@ public class Navigation2DUIController : MonoBehaviour
 
         float nearestDistance = float.MaxValue;
 
+        previousNearestID = nearestID;
+
         foreach (KeyValuePair<int, Vector2> marker in markers)
         {
             float dist = Vector2.Distance(myPosition2D, marker.Value);
@@ -259,7 +262,12 @@ public class Navigation2DUIController : MonoBehaviour
 
         if (buttons.TryGetValue(nearestID, out nearestButton))
         {
-            nearestButton.GetComponent<Image>().color = Color.yellow;
+            nearestButton.GetComponent<Image>().color = NEAREST_BUTTON_COLOR;
+        }
+
+        if (buttons.TryGetValue(previousNearestID, out nearestButton) && previousNearestID != nearestID)
+        {
+            nearestButton.GetComponent<Image>().color = BASIC_BUTTON_COLOR;
         }
     }
 
