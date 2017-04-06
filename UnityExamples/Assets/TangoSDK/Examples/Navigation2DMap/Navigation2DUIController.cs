@@ -296,6 +296,12 @@ public class Navigation2DUIController : MonoBehaviour
 
         poseController.GetComponentInParent<Camera>().enabled = true;
         GameObject.FindGameObjectWithTag("AreaLearning").SetActive(true);
+        GameObject.FindGameObjectWithTag("Navigation2DMap").SetActive(false);
+
+        navigateButton.gameObject.SetActive(false);
+        modifyButton.gameObject.SetActive(false);
+
+        //SceneManager.SetActiveScene(SceneManager.GetSceneByName("AreaLearning"));
     }
 
     public void modify2DMap()
@@ -370,10 +376,10 @@ public class Navigation2DUIController : MonoBehaviour
             graph2D[connectMarkersId[0], connectMarkersId[1]] = distance;
             graph2D[connectMarkersId[1], connectMarkersId[0]] = distance;
 
-            // TODO - check if this settings is OK
+            algcInstance.addLineWithIds(connectMarkersId[0], connectMarkersId[1]);
+
             connectMarkersId[0] = -1;
             connectMarkersId[1] = -1;
-            //newSelectedID = -1;
 
             AndroidHelper.ShowAndroidToastMessage("Created NEW connection.");
         }

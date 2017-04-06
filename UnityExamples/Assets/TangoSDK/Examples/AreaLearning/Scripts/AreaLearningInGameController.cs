@@ -868,6 +868,20 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         return m_poseController.m_tangoPosition;
     }
 
+    public void addLineWithIds(int id1, int id2)
+    {
+        GameObject go1;
+        GameObject go2;
+
+        m_markerList.TryGetValue(id1, out go1);
+        m_markerList.TryGetValue(id2, out go2);
+
+        ARMarker marker1 = go1.GetComponent<ARMarker>();
+        ARMarker marker2 = go2.GetComponent<ARMarker>();
+
+        marker1.addLine(marker2.getID(), marker2.transform.position);
+    }
+
     /// <summary>
     /// Data container for marker.
     /// 

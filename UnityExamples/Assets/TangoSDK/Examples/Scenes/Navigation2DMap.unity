@@ -319,7 +319,7 @@ GameObject:
   - component: {fileID: 720540000}
   m_Layer: 0
   m_Name: CanvasUnzoomed
-  m_TagString: Untagged
+  m_TagString: Navigation2DMap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
