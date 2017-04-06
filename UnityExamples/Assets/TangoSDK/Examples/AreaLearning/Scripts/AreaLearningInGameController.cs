@@ -474,8 +474,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
     public void FinishMarkers()
     {
-        //StartCoroutine(graph.CreateEvaluatedGraph(m_markerList));
-        //_SaveCurrentADFile();
         graph.CreateEvaluatedGraph(m_markerList);
         show2DMapScene();
     }
@@ -870,24 +868,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         return m_poseController.m_tangoPosition;
     }
 
-    private void _SaveCurrentADFile()
-    {
-        // Save TMP description of area description
-        if (m_tangoApplication.m_areaDescriptionLearningMode)
-        {
-            m_saveThread = new Thread(delegate ()
-            {
-                // Start saving process in another thread.
-                m_curAreaDescription = AreaDescription.SaveCurrent();
-                AreaDescription.Metadata metadata = m_curAreaDescription.GetMetadata();
-
-                metadata.m_name = "TMP";
-                m_curAreaDescription.SaveMetadata(metadata);
-            });
-            m_saveThread.Start();
-        }
-    }
-
     /// <summary>
     /// Data container for marker.
     /// 
@@ -917,9 +897,15 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         [XmlElement("orientation")]
         public Quaternion m_orientation;
 
+        /// <summary>
+        /// Arrays of neighbours of current marker
+        /// </summary>
         [XmlElement("neighbours")]
         public int[] m_neighbours;
 
+        /// <summary>
+        /// ID of current marker.
+        /// </summary>
         [XmlElement("id")]
         public int m_id;
     }

@@ -293,7 +293,9 @@ public class Navigation2DUIController : MonoBehaviour
     {
         //AndroidHelper.ShowAndroidToastMessage("Navigation started ...");
         // SceneManager.LoadScene("ARNavigation");
-        SceneManager.LoadScene("Navigation3DMap");
+
+        poseController.GetComponentInParent<Camera>().enabled = true;
+        GameObject.FindGameObjectWithTag("AreaLearning").SetActive(true);
     }
 
     public void modify2DMap()
