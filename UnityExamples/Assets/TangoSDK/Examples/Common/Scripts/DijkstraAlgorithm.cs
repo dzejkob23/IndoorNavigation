@@ -2,57 +2,105 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
-class DijkstraAlgorithm
+public class DijkstraAlgorithm
 {
-    private static int MinimumDistance(int[] distance, bool[] shortestPathTreeSet, int verticesCount)
-    {
-        int min = int.MaxValue;
-        int minIndex = 0;
+    /* Takes adjacency matrix in the following format, for a directed graph (2-D array)
+     * Ex. node 1 to 3 is accessible at a cost of 4
+     *        0  1  2  3  4 
+     *   0  { 0, 2, 5, 0, 0},
+     *   1  { 0, 0, 0, 4, 0},
+     *   2  { 0, 6, 0, 0, 8},
+     *   3  { 0, 0, 0, 0, 9},
+     *   4  { 0, 0, 0, 0, 0}
+     */
 
-        for (int v = 0; v < verticesCount; ++v)
+    /* Resulting arrays with distances to nodes and how to get there */
+    public double[] dist { get; private set; }
+    public int[] path { get; private set; }
+
+    /* Holds queue for the nodes to be evaluated */
+    private List<int> queue = new List<int>();
+
+    /* Sets up initial settings */
+    private void Initialize(int s, int len)
+    {
+        dist = new double[len];
+        path = new int[len];
+
+        /* Set distance to all nodes to infinity - alternatively use Int.MaxValue for use of Int type instead */
+        for (int i = 0; i < len; i++)
         {
-            if (shortestPathTreeSet[v] == false && distance[v] <= min)
+            dist[i] = Double.PositiveInfinity;
+
+            queue.Add(i);
+        }
+
+        /* Set distance to 0 for starting point and the previous node to null (-1) */
+        dist[s] = 0;
+        path[s] = -1;
+    }
+
+    /* Retrives next node to evaluate from the queue */
+    private int GetNextVertex()
+    {
+        double min = Double.PositiveInfinity;
+        int Vertex = -1;
+
+        /* Search through queue to find the next node having the smallest distance */
+        foreach (int j in queue)
+        {
+            if (dist[j] <= min)
             {
-                min = distance[v];
-                minIndex = v;
+                min = dist[j];
+                Vertex = j;
             }
         }
 
-        return minIndex;
+        queue.Remove(Vertex);
+
+        return Vertex;
+
     }
 
-    private static void Print(int[] distance, int verticesCount)
+    /* Takes a graph as input an adjacency matrix (see top for details) and a starting node */
+    public DijkstraAlgorithm(double[,] G, int s)
     {
-        Console.WriteLine("Vertex    Distance from source");
-
-        for (int i = 0; i < verticesCount; ++i)
-            Console.WriteLine("{0}\t  {1}", i, distance[i]);
-    }
-
-    public static void Dijkstra(int[,] graph, int source, int verticesCount)
-    {
-        int[] distance = new int[verticesCount];
-        bool[] shortestPathTreeSet = new bool[verticesCount];
-
-        for (int i = 0; i < verticesCount; ++i)
+        /* Check graph format and that the graph actually contains something */
+        if (G.GetLength(0) < 1 || G.GetLength(0) != G.GetLength(1))
         {
-            distance[i] = int.MaxValue;
-            shortestPathTreeSet[i] = false;
+            throw new ArgumentException("Graph error, wrong format or no nodes to compute");
         }
 
-        distance[source] = 0;
+        int len = G.GetLength(0);
 
-        for (int count = 0; count < verticesCount - 1; ++count)
+        Initialize(s, len);
+
+        while (queue.Count > 0)
         {
-            int u = MinimumDistance(distance, shortestPathTreeSet, verticesCount);
-            shortestPathTreeSet[u] = true;
+            int u = GetNextVertex();
 
-            for (int v = 0; v < verticesCount; ++v)
-                if (!shortestPathTreeSet[v] && Convert.ToBoolean(graph[u, v]) && distance[u] != int.MaxValue && distance[u] + graph[u, v] < distance[v])
-                    distance[v] = distance[u] + graph[u, v];
+            /* Find the nodes that u connects to and perform relax */
+            for (int v = 0; v < len; v++)
+            {
+                /* Checks for edges with negative weight */
+                if (G[u, v] < 0)
+                {
+                    throw new ArgumentException("Graph contains negative edge(s)");
+                }
+
+                /* Check for an edge between u and v */
+                if (G[u, v] > 0)
+                {
+                    /* Edge exists, relax the edge */
+                    if (dist[v] > dist[u] + G[u, v])
+                    {
+                        dist[v] = dist[u] + G[u, v];
+                        path[v] = u;
+                    }
+                }
+            }
         }
-
-        Print(distance, verticesCount);
     }
 }
