@@ -75,9 +75,6 @@ public class Navigation2DUIController : MonoBehaviour
     {
         selectMarkerToNavigate();
         markNearestMarker(newMarkersPosition);
-
-        Debug.Log("#POSITION: " + poseController.m_tangoPosition);
-        //Debug.Log("#POSITION: " + algcInstance);
     }
 
     private void selectMarkerToNavigate()
@@ -295,12 +292,19 @@ public class Navigation2DUIController : MonoBehaviour
         // SceneManager.LoadScene("ARNavigation");
 
         poseController.GetComponentInParent<Camera>().enabled = true;
-        GameObject.FindGameObjectWithTag("AreaLearning").SetActive(true);
-        GameObject.FindGameObjectWithTag("Navigation2DMap").SetActive(false);
+        //GameObject.FindGameObjectWithTag("AreaLearning").SetActive(true);
+        //SceneManager.SetActiveScene(SceneManager.GetSceneByName("AreaLearning"));
+        Debug.Log("Disabling before foreach blabla krle3");
+        foreach (GameObject canvas in GameObject.FindGameObjectsWithTag("Navigation2DMap"))
+        {
+            Debug.Log("Disabling:" + canvas);
+            canvas.SetActive(false);
+        }
 
+        /*
         navigateButton.gameObject.SetActive(false);
         modifyButton.gameObject.SetActive(false);
-
+        */
         //SceneManager.SetActiveScene(SceneManager.GetSceneByName("AreaLearning"));
     }
 
