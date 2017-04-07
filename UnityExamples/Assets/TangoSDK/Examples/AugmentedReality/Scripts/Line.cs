@@ -7,6 +7,16 @@ using UnityEngine;
 public class Line : MonoBehaviour
 {
     private new LineRenderer renderer;
+    private Material originLine;
+    private Material navigateLine;
+    private Material fosforGreenLine;
+
+    public void Awake()
+    {
+        originLine = (Material)Resources.Load("checker_texture", typeof(Material));
+        navigateLine = (Material)Resources.Load("line", typeof(Material));
+        fosforGreenLine = (Material)Resources.Load("axis_green", typeof(Material));
+    }
 
     public void lineSetup(Vector3 originalP, Vector3 nextP, float widthOfLine)
     {
@@ -22,7 +32,7 @@ public class Line : MonoBehaviour
         renderer.startWidth = widthOfLine;
         renderer.endWidth = widthOfLine;
         renderer.useWorldSpace = true;
-        renderer.material = (Material) Resources.Load("checker_texture", typeof (Material));
+        renderer.material = fosforGreenLine;
     }
 
     public int getNumPositions()
