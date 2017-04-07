@@ -19,7 +19,7 @@ public class Navigation2DUIController : MonoBehaviour
     private int[] connectMarkersId = { -1, -1 };
 
     // Global values from previous scene
-    Dictionary<int, Vector2> newMarkersPosition;
+    private Dictionary<int, Vector2> newMarkersPosition;
     private double[,] graph2D;
 
     // Selected marker to navigate

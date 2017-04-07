@@ -22,6 +22,7 @@ public class Line : MonoBehaviour
         renderer.startWidth = widthOfLine;
         renderer.endWidth = widthOfLine;
         renderer.useWorldSpace = true;
+        renderer.material = (Material) Resources.Load("checker_texture", typeof (Material));
     }
 
     public int getNumPositions()
@@ -32,5 +33,15 @@ public class Line : MonoBehaviour
     public void getPositions(Vector3 [] positions)
     {
         renderer.GetPositions(positions);
+    }
+
+    public void originSetupLine(LineRenderer renderer)
+    {
+
+    }
+
+    public void navigateSetupLine()
+    {
+
     }
 }
