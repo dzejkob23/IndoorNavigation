@@ -65,8 +65,10 @@ public class DijkstraAlgorithm
     }
 
     /* Takes a graph as input an adjacency matrix (see top for details) and a starting node */
-    public DijkstraAlgorithm(double[,] G, int s)
+    public DijkstraAlgorithm(double[,] G, int s, int t)
     {
+        Debug.Log("#DIJKSTRA_navigate: from " + s + " to " + t);
+
         /* Check graph format and that the graph actually contains something */
         if (G.GetLength(0) < 1 || G.GetLength(0) != G.GetLength(1))
         {
@@ -80,6 +82,12 @@ public class DijkstraAlgorithm
         while (queue.Count > 0)
         {
             int u = GetNextVertex();
+            
+            // There I can stop code if "u" equals "target point".
+            if (u == t)
+            {
+                break;
+            }
 
             /* Find the nodes that u connects to and perform relax */
             for (int v = 0; v < len; v++)

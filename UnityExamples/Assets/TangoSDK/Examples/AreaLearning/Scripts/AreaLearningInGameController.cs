@@ -279,7 +279,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
     public void startNavigation(int startingMarker)
     {
-        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph.get2DGraph(), startingMarker);
+        // DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph.get2DGraph(), startingMarker);
         // TODO - get path
         // TODO - disable unused markers
         // TODO - mark shorted path

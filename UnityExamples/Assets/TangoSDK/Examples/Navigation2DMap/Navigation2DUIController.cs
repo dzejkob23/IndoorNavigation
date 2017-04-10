@@ -288,6 +288,7 @@ public class Navigation2DUIController : MonoBehaviour
 
     public void moveToNavigation()
     {
+        /*
         areaLearning.toggleNavigationScene();
         areaLearning.getGraph().set2DGraph(graph2D);
         poseController.GetComponentInParent<Camera>().enabled = true;
@@ -295,6 +296,29 @@ public class Navigation2DUIController : MonoBehaviour
         foreach (GameObject canvas in GameObject.FindGameObjectsWithTag("Navigation2DMap"))
         {
             canvas.SetActive(false);
+        }
+        */
+
+        if (newSelectedID == -1 || nearestID == -1)
+        {
+            AndroidHelper.ShowAndroidToastMessage("You must select target navigation point/marker!");
+        }
+
+        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph2D, nearestID, newSelectedID);
+
+        foreach (double point in graph2D)
+        {
+            Debug.Log("#DIJKSTRA_point: " + point);
+        }
+
+        foreach (double dist in dijkstra.dist)
+        {
+            Debug.Log("#DIJKSTRA_dist: " + dist);
+        }
+
+        foreach (double path in dijkstra.path)
+        {
+            Debug.Log("#DIJKSTRA_path: " + path);
         }
     }
 
