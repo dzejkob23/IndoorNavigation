@@ -28,6 +28,7 @@ using Tango;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /// <summary>
 /// AreaLearningGUIController is responsible for the main game interaction.
@@ -36,8 +37,15 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEvent, ITangoDepth
 {
-    public static AreaLearningInGameController Instance;
+    /// <summary>
+    /// Evalutated graph
+    /// </summary>
     private Graph graph;
+
+    /// <summary>
+    /// Navigation toggle
+    /// </summary>
+    private bool isNavigation = false;
 
     /// <summary>
     /// Last created marker.
@@ -166,6 +174,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     private TangoApplication m_tangoApplication;
 
+    /// <summary>
+    /// Temporary thread
+    /// </summary>
     private Thread m_saveThread;
 
     /// <summary>
@@ -176,10 +187,8 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     public void Start()
     {
         m_poseController = FindObjectOfType<TangoARPoseController>();
-        //DontDestroyOnLoad(m_poseController);
 
         m_tangoApplication = FindObjectOfType<TangoApplication>();
-        //DontDestroyOnLoad(m_tangoApplication);
 
         m_connectMarkers = new ARMarker[2];
         m_markerList = new Dictionary<int, GameObject>();
@@ -189,19 +198,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         {
             m_tangoApplication.Register(this);
         }
-    }
-
-    public void Awake()
-    {
-        /*if (Instance == null)
-        {
-            DontDestroyOnLoad(gameObject);
-            Instance = this;
-        }
-        else if (Instance != this)
-        {
-            Destroy(gameObject);
-        }*/
     }
 
     /// <summary>
@@ -234,12 +230,15 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             return;
         }
 
+        if (!m_finishButton.gameObject.activeSelf && m_markerList.Count != 0)
+        {
+            m_finishButton.gameObject.SetActive(true);
+        }
+
         if (Input.touchCount == 1)
         {
             _reactionOnTouch();
         }
-
-        //Debug.Log("#POSITION: " + m_poseController.m_tangoPosition);
     }
 
     /// <summary>
@@ -257,18 +256,38 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             return;
         }
 
-        if (m_selectedRect.Contains(guiPosition))
+        if (!isNavigation)
         {
-            // do nothing, the button will handle it
-        }
-        else if (Physics.Raycast(cam.ScreenPointToRay(t.position), out hitInfo))
-        {
-            _selectCreatedMarker(hitInfo);
+            if (m_selectedRect.Contains(guiPosition))
+            {
+                // do nothing, the button will handle it
+            }
+            else if (Physics.Raycast(cam.ScreenPointToRay(t.position), out hitInfo))
+            {
+                _selectCreatedMarker(hitInfo);
+            }
+            else
+            {
+                _placeNewMarker(t);
+            }
         }
         else
         {
-            _placeNewMarker(t);         
+            AndroidHelper.ShowAndroidToastMessage("Touch on screen is TURN OFF!");
         }
+    }
+
+    public void startNavigation(int start, int target)
+    {
+        if (target == -1 || start == -1)
+        {
+            AndroidHelper.ShowAndroidToastMessage("You must select target navigation point/marker!");
+        }
+
+        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph.get2DGraph(), start, target);
+        int[] navigatePath = dijkstra.sPath;
+        // TODO - disable unused markers
+        // TODO - mark shorted path
     }
 
     /// <summary>
@@ -836,8 +855,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         m_selectedMarker = null;
 
-        m_finishButton.gameObject.SetActive(true);
-
         // Create independent marker
         if (m_currentMethodType == 2)
         {
@@ -880,6 +897,49 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         ARMarker marker2 = go2.GetComponent<ARMarker>();
 
         marker1.addLine(marker2.getID(), marker2.transform.position);
+    }
+
+    public void toggleNavigationScene()
+    {
+        isNavigation = !isNavigation;
+    }
+
+    public bool getIsNavigation()
+    {
+        return isNavigation;
+    }
+
+    public void disableAllMarkers()
+    {
+        foreach (KeyValuePair<int, GameObject> obj in m_markerList)
+        {
+            foreach (KeyValuePair<int, GameObject> line in obj.Value.GetComponent<ARMarker>().lines)
+            {
+                line.Value.SetActive(false);
+            }
+            obj.Value.SetActive(false);
+        }
+    }
+
+    public void showNavigationMarkers(int [] shortestPath)
+    {
+        for (int i = 0; i < shortestPath.Length; i++ )
+        {
+            GameObject tmpMarker = null;
+            if (m_markerList.TryGetValue(shortestPath[i], out tmpMarker))
+            {
+                // enable marker in shoted path
+                tmpMarker.SetActive(true);
+                for (int j = 0; j < shortestPath.Length; j++)
+                {
+                    GameObject tmpRenderer = null;
+                    if (tmpMarker.GetComponent<ARMarker>().lines.TryGetValue(shortestPath[j], out tmpRenderer))
+                    {
+                        tmpRenderer.SetActive(true);
+                    }
+                }
+            }
+        }
     }
 
     /// <summary>

@@ -38,7 +38,7 @@ public class Navigation2DUIController : MonoBehaviour
     private Dictionary<int, GameObject> buttons;
     private List<GameObject> lineRenderers;
 
-    AreaLearningInGameController algcInstance;
+    AreaLearningInGameController areaLearning;
     TangoApplication tangoApp;
     TangoARPoseController poseController;
 
@@ -46,14 +46,14 @@ public class Navigation2DUIController : MonoBehaviour
     {
         tangoApp = FindObjectOfType<TangoApplication>();
         poseController = FindObjectOfType<TangoARPoseController>();
-        algcInstance = FindObjectOfType<AreaLearningInGameController>();
+        areaLearning = FindObjectOfType<AreaLearningInGameController>();
 
         poseController.GetComponentInParent<Camera>().enabled = false;
         GameObject.FindGameObjectWithTag("AreaLearning").SetActive(false);
 
         // Get values from previous scene
-        newMarkersPosition = scaleMarkersPositions(algcInstance.getGraph().getMarkersPosition());
-        graph2D = algcInstance.getGraph().get2DGraph();
+        newMarkersPosition = scaleMarkersPositions(areaLearning.getGraph().getMarkersPosition());
+        graph2D = areaLearning.getGraph().get2DGraph();
 
         // Initialization
         lineRenderers = new List<GameObject>();
@@ -239,7 +239,7 @@ public class Navigation2DUIController : MonoBehaviour
 
     private void markNearestMarker(Dictionary<int, Vector2> markers)
     {
-        Vector3 myPosition3D = algcInstance.getCurrentPosition();
+        Vector3 myPosition3D = areaLearning.getCurrentPosition();
         Vector2 myPosition2D = new Vector2(myPosition3D.x * SCALING, myPosition3D.z * SCALING);
         GameObject nearestButton = null;
 
@@ -288,12 +288,26 @@ public class Navigation2DUIController : MonoBehaviour
 
     public void moveToNavigation()
     {
-        poseController.GetComponentInParent<Camera>().enabled = true;
+        if (nearestID == -1 || newSelectedID == -1)
+        {
+            AndroidHelper.ShowAndroidToastMessage("Please choose navigate marker!");
+            return;
+        }
 
-        Debug.Log("Disabling before foreach blabla krle3");
+        // before switching
+        // disable all markers with renderers
+        areaLearning.disableAllMarkers();
+        // toggle scene settings from "create navigation map" to "navigate in 3D space"
+        areaLearning.toggleNavigationScene();
+        // enable 3D camere with augmented reality rendering
+        poseController.GetComponentInParent<Camera>().enabled = true;
+        // create dijkstra function and computed shorted path for navigation
+        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph2D, nearestID, newSelectedID);
+        // show only markers for navigation
+        areaLearning.showNavigationMarkers(dijkstra.sPath);
+
         foreach (GameObject canvas in GameObject.FindGameObjectsWithTag("Navigation2DMap"))
         {
-            Debug.Log("Disabling:" + canvas);
             canvas.SetActive(false);
         }
     }
@@ -370,7 +384,7 @@ public class Navigation2DUIController : MonoBehaviour
             graph2D[connectMarkersId[0], connectMarkersId[1]] = distance;
             graph2D[connectMarkersId[1], connectMarkersId[0]] = distance;
 
-            algcInstance.addLineWithIds(connectMarkersId[0], connectMarkersId[1]);
+            areaLearning.addLineWithIds(connectMarkersId[0], connectMarkersId[1]);
 
             connectMarkersId[0] = -1;
             connectMarkersId[1] = -1;
