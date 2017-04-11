@@ -277,10 +277,15 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
     }
 
-    public void startNavigation(int startingMarker)
+    public void startNavigation(int start, int target)
     {
-        // DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph.get2DGraph(), startingMarker);
-        // TODO - get path
+        if (target == -1 || start == -1)
+        {
+            AndroidHelper.ShowAndroidToastMessage("You must select target navigation point/marker!");
+        }
+
+        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph.get2DGraph(), start, target);
+        int[] navigatePath = dijkstra.sPath;
         // TODO - disable unused markers
         // TODO - mark shorted path
     }
@@ -902,6 +907,39 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     public bool getIsNavigation()
     {
         return isNavigation;
+    }
+
+    public void disableAllMarkers()
+    {
+        foreach (KeyValuePair<int, GameObject> obj in m_markerList)
+        {
+            foreach (KeyValuePair<int, GameObject> line in obj.Value.GetComponent<ARMarker>().lines)
+            {
+                line.Value.SetActive(false);
+            }
+            obj.Value.SetActive(false);
+        }
+    }
+
+    public void showNavigationMarkers(int [] shortestPath)
+    {
+        for (int i = 0; i < shortestPath.Length; i++ )
+        {
+            GameObject tmpMarker = null;
+            if (m_markerList.TryGetValue(shortestPath[i], out tmpMarker))
+            {
+                // enable marker in shoted path
+                tmpMarker.SetActive(true);
+                for (int j = 0; j < shortestPath.Length; j++)
+                {
+                    GameObject tmpRenderer = null;
+                    if (tmpMarker.GetComponent<ARMarker>().lines.TryGetValue(shortestPath[j], out tmpRenderer))
+                    {
+                        tmpRenderer.SetActive(true);
+                    }
+                }
+            }
+        }
     }
 
     /// <summary>

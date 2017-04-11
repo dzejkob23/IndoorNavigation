@@ -19,6 +19,7 @@ public class DijkstraAlgorithm
     /* Resulting arrays with distances to nodes and how to get there */
     public double[] dist { get; private set; }
     public int[] path { get; private set; }
+    public int[] sPath { get; private set; }
 
     /* Holds queue for the nodes to be evaluated */
     private List<int> queue = new List<int>();
@@ -110,5 +111,27 @@ public class DijkstraAlgorithm
                 }
             }
         }
+
+        sPath = shortedPath(s, t);
+    }
+
+    private int[] shortedPath(int start, int target)
+    {
+        List<int> shortedPathList = new List<int>();
+        int current = target;
+
+        if (path == null)
+        {
+            return null;
+        }
+
+        while (current != start)
+        {
+            shortedPathList.Add(current);
+            current = path[current];
+        }
+
+        shortedPathList.Add(current);
+        return shortedPathList.ToArray();
     }
 }

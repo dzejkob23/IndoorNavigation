@@ -288,37 +288,27 @@ public class Navigation2DUIController : MonoBehaviour
 
     public void moveToNavigation()
     {
-        /*
+        if (nearestID == -1 || newSelectedID == -1)
+        {
+            AndroidHelper.ShowAndroidToastMessage("Please choose navigate marker!");
+            return;
+        }
+
+        // before switching
+        // disable all markers with renderers
+        areaLearning.disableAllMarkers();
+        // toggle scene settings from "create navigation map" to "navigate in 3D space"
         areaLearning.toggleNavigationScene();
-        areaLearning.getGraph().set2DGraph(graph2D);
+        // enable 3D camere with augmented reality rendering
         poseController.GetComponentInParent<Camera>().enabled = true;
+        // create dijkstra function and computed shorted path for navigation
+        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph2D, nearestID, newSelectedID);
+        // show only markers for navigation
+        areaLearning.showNavigationMarkers(dijkstra.sPath);
 
         foreach (GameObject canvas in GameObject.FindGameObjectsWithTag("Navigation2DMap"))
         {
             canvas.SetActive(false);
-        }
-        */
-
-        if (newSelectedID == -1 || nearestID == -1)
-        {
-            AndroidHelper.ShowAndroidToastMessage("You must select target navigation point/marker!");
-        }
-
-        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph2D, nearestID, newSelectedID);
-
-        foreach (double point in graph2D)
-        {
-            Debug.Log("#DIJKSTRA_point: " + point);
-        }
-
-        foreach (double dist in dijkstra.dist)
-        {
-            Debug.Log("#DIJKSTRA_dist: " + dist);
-        }
-
-        foreach (double path in dijkstra.path)
-        {
-            Debug.Log("#DIJKSTRA_path: " + path);
         }
     }
 
