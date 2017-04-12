@@ -44,14 +44,4 @@ public class Line : MonoBehaviour
     {
         renderer.GetPositions(positions);
     }
-
-    public void originSetupLine(LineRenderer renderer)
-    {
-
-    }
-
-    public void navigateSetupLine()
-    {
-
-    }
 }

@@ -42,6 +42,12 @@ public class Navigation2DUIController : MonoBehaviour
     TangoApplication tangoApp;
     TangoARPoseController poseController;
 
+    // Navigation elements
+    public GameObject navigationIcon;
+    public Button relocalizationButton;
+    public Material relocalizationMaterial;
+    public Material noRelocalizationMaterial;
+
     public void Start()
     {
         tangoApp = FindObjectOfType<TangoApplication>();
@@ -68,13 +74,49 @@ public class Navigation2DUIController : MonoBehaviour
         // Prepare environment
         drawGuiButtons(newMarkersPosition);
         drawConnectionsBetweenButtons(newMarkersPosition, graph2D);
-        
+
+        //relocalizationMaterial = (Material)Resources.Load("RelocalizationButton", typeof(Material));
+        //noRelocalizationMaterial = (Material)Resources.Load("NoRelocalizationButton", typeof(Material));
+
     }
 
     public void Update()
     {
         selectMarkerToNavigate();
         markNearestMarker(newMarkersPosition);
+
+        setPositionNavigationIcon();
+    }
+
+    private void setPositionNavigationIcon()
+    {
+        // Prepare data
+        Vector3 currentPosition = poseController.m_tangoPosition;
+        Vector3 scaledCurrentPosititon = new Vector3(currentPosition.x * SCALING, currentPosition.z * SCALING, 0);
+        Quaternion currentRotation = poseController.m_tangoRotation;
+
+        // Move navigation icon
+        navigationIcon.transform.position = scaledCurrentPosititon;
+        navigationIcon.transform.rotation = new Quaternion(0, 0, currentRotation.z, currentRotation.w);
+
+        if (!Camera.main.GetComponent<PinchZoom>().isUsingRelocalization)
+        {
+            relocalizationButton.GetComponent<RawImage>().material = noRelocalizationMaterial;
+            return;
+        }
+        else
+        {
+            relocalizationButton.GetComponent<RawImage>().material = relocalizationMaterial;
+        }
+
+        // Move main camera
+        scaledCurrentPosititon.z = -500;
+        Camera.main.transform.position = scaledCurrentPosititon;
+    }
+
+    public void relocalizeNavigationIconPosition()
+    {
+        Camera.main.GetComponent<PinchZoom>().isUsingRelocalization = true;
     }
 
     private void selectMarkerToNavigate()

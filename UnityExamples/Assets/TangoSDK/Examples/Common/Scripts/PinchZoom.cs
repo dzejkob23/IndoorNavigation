@@ -10,13 +10,13 @@ class PinchZoom : MonoBehaviour
     public float orthoZoomSpeed = 0.5f;        // The rate of change of the orthographic size in orthographic mode.
     public float orthoDragSpeed = 0.01f;
 
-    public Camera camera;
+    public bool isUsingRelocalization = true;
 
     private Vector3 worldStartPoint;
 
     void Update()
     {
-        if (camera == null)
+        if (Camera.main == null)
         {
             Debug.Log("#CHECK - There is not any camera ...");
             return;
@@ -30,16 +30,13 @@ class PinchZoom : MonoBehaviour
     {
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         {
+            // Move camera
             Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
             transform.Translate(-touchDeltaPosition.x * orthoDragSpeed, -touchDeltaPosition.y * orthoDragSpeed, 0);
-        }
-    }
 
-    private Vector2 getWorldPoint(Vector2 screenPoint)
-    {
-        RaycastHit hit;
-        Physics.Raycast(Camera.main.ScreenPointToRay(screenPoint), out hit);
-        return hit.point;
+            // Stop using relocalization - mobing only with touching the screen
+            isUsingRelocalization = false;
+        }
     }
 
     private void cameraZoom()
@@ -63,21 +60,21 @@ class PinchZoom : MonoBehaviour
             float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
             // If the camera is orthographic...
-            if (camera.orthographic)
+            if (Camera.main.orthographic)
             {
                 // ... change the orthographic size based on the change in distance between the touches.
-                camera.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
+                Camera.main.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
 
                 // Make sure the orthographic size never drops below zero.
-                camera.orthographicSize = Mathf.Max(camera.orthographicSize, 0.1f);
+                Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize, 0.1f);
             }
             else
             {
                 // Otherwise change the field of view based on the change in distance between the touches.
-                camera.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
+                Camera.main.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
 
                 // Clamp the field of view to make sure it's between 0 and 180.
-                camera.fieldOfView = Mathf.Clamp(camera.fieldOfView, 0.1f, 179.9f);
+                Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, 0.1f, 179.9f);
             }
         }
     }
