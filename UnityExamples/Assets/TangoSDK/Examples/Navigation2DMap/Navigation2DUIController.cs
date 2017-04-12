@@ -44,6 +44,7 @@ public class Navigation2DUIController : MonoBehaviour
 
     // Navigation elements
     public GameObject navigationIcon;
+    public GameObject relocalizationIcon;
 
     public void Start()
     {
@@ -78,17 +79,24 @@ public class Navigation2DUIController : MonoBehaviour
     {
         selectMarkerToNavigate();
         markNearestMarker(newMarkersPosition);
+
         setPositionNavigationIcon();
     }
 
     private void setPositionNavigationIcon()
     {
+        // Prepare data
         Vector3 currentPosition = poseController.m_tangoPosition;
         Vector3 scaledCurrentPosititon = new Vector3(currentPosition.x * SCALING, currentPosition.z * SCALING, 0);
-        navigationIcon.transform.position = scaledCurrentPosititon;
-
         Quaternion currentRotation = poseController.m_tangoRotation;
+
+        // Move navigation icon
+        navigationIcon.transform.position = scaledCurrentPosititon;
         navigationIcon.transform.rotation = new Quaternion(0, 0, currentRotation.z, currentRotation.w);
+
+        // Move main camera
+        scaledCurrentPosititon.z = -500;
+        Camera.main.transform.position = scaledCurrentPosititon;
     }
 
     private void selectMarkerToNavigate()
