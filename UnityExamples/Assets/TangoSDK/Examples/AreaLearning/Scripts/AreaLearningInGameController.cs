@@ -179,6 +179,8 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     private Thread m_saveThread;
 
+    public Material arrowMaterial;
+
     /// <summary>
     /// Unity Start function.
     /// 
@@ -937,6 +939,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
                     if (tmpMarker.GetComponent<ARMarker>().lines.TryGetValue(shortestPath[j], out tmpRenderer))
                     {
                         tmpRenderer.SetActive(true);
+                        tmpRenderer.GetComponent<Line>().resetLineSetup(0.1f, arrowMaterial);
                     }
                 }
             }

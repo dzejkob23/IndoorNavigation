@@ -74,17 +74,17 @@ public class Navigation2DUIController : MonoBehaviour
         // Prepare environment
         drawGuiButtons(newMarkersPosition);
         drawConnectionsBetweenButtons(newMarkersPosition, graph2D);
-
-        //relocalizationMaterial = (Material)Resources.Load("RelocalizationButton", typeof(Material));
-        //noRelocalizationMaterial = (Material)Resources.Load("NoRelocalizationButton", typeof(Material));
-
     }
 
     public void Update()
     {
+        // Select marker to navigate
         selectMarkerToNavigate();
+
+        // Mark the nearest navigation marker
         markNearestMarker(newMarkersPosition);
 
+        // Update position navigation icon on screen
         setPositionNavigationIcon();
     }
 
@@ -243,28 +243,13 @@ public class Navigation2DUIController : MonoBehaviour
 
             for (int j = i + 1; j < graph2D.GetLength(0); j++)
             {
-
-                Debug.Log("#CHECK_GRAPH\n" + graph2D[i,j].ToString());
-
-                if (!isFillFirst)
-                {
-                    break;
-                }
-
-                if (graph2D[i, j] == 0)
-                {
-                    break;
-                }
-
                 Vector2 secondPosition = new Vector2();
                 bool isFillSecond = newMarkersPosition.TryGetValue(j, out secondPosition);
 
-                if (!isFillSecond)
+                if (graph2D[i, j] != 0.0f && isFillFirst && isFillSecond)
                 {
-                    break;
+                    addLine(firstPosition, secondPosition);
                 }
-
-                addLine(firstPosition, secondPosition);
             }
         }
     }
