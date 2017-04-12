@@ -242,11 +242,7 @@ public class Navigation2DUIController : MonoBehaviour
             bool isFillFirst = newMarkersPosition.TryGetValue(i, out firstPosition);
 
             for (int j = i + 1; j < graph2D.GetLength(0); j++)
-            //for (int j = 0; j < graph2D.GetLength(0); j++)
             {
-
-                Debug.Log("#CHECK_GRAPH: " + graph2D[i,j]);
-
                 Vector2 secondPosition = new Vector2();
                 bool isFillSecond = newMarkersPosition.TryGetValue(j, out secondPosition);
 
@@ -254,30 +250,6 @@ public class Navigation2DUIController : MonoBehaviour
                 {
                     addLine(firstPosition, secondPosition);
                 }
-
-                /*
-                if (!isFillFirst)
-                {
-                    break;
-                }
-                */
-
-                /*if (graph2D[i, j] == 0)
-                {
-                    break;
-                }*/
-                /*
-                Vector2 secondPosition = new Vector2();
-                bool isFillSecond = newMarkersPosition.TryGetValue(j, out secondPosition);
-
-
-                if (!isFillSecond)
-                {
-                    break;
-                }
-
-                addLine(firstPosition, secondPosition);
-                */
             }
         }
     }
