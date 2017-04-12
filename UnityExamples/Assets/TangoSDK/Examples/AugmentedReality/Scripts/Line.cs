@@ -35,6 +35,13 @@ public class Line : MonoBehaviour
         renderer.material = fosforGreenLine;
     }
 
+    public void resetLineSetup(float widthOfLine, Material material)
+    {
+        renderer.startWidth = widthOfLine;
+        renderer.endWidth = widthOfLine;
+        renderer.material = material;
+    }
+
     public int getNumPositions()
     {
         return renderer.numPositions;

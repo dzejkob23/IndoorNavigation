@@ -74,10 +74,6 @@ public class Navigation2DUIController : MonoBehaviour
         // Prepare environment
         drawGuiButtons(newMarkersPosition);
         drawConnectionsBetweenButtons(newMarkersPosition, graph2D);
-
-        //relocalizationMaterial = (Material)Resources.Load("RelocalizationButton", typeof(Material));
-        //noRelocalizationMaterial = (Material)Resources.Load("NoRelocalizationButton", typeof(Material));
-
     }
 
     public void Update()

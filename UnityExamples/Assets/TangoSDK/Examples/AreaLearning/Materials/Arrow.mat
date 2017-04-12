@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: moon
-  m_Shader: {fileID: 4800000, guid: dbc59a510a2dd451e8be4f6428754706, type: 3}
+  m_Name: Arrow
+  m_Shader: {fileID: 10101, guid: 0000000000000000e000000000000000, type: 0}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 1
   m_CustomRenderQueue: -1
@@ -48,8 +48,8 @@ Material:
     - first:
         name: _MainTex
       second:
-        m_Texture: {fileID: 2800000, guid: 268246ac61ebd44c0933eeb2165ccd56, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 3d1c8a4129b5f4f4d82eb45cd563ed06, type: 3}
+        m_Scale: {x: -5, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
         name: _MetallicGlossMap
@@ -83,8 +83,14 @@ Material:
         name: _DstBlend
       second: 0
     - first:
+        name: _GlossMapScale
+      second: 1
+    - first:
         name: _Glossiness
-      second: 0
+      second: 0.5
+    - first:
+        name: _GlossyReflections
+      second: 1
     - first:
         name: _Metallic
       second: 0
@@ -98,6 +104,12 @@ Material:
         name: _Parallax
       second: 0.02
     - first:
+        name: _SmoothnessTextureChannel
+      second: 0
+    - first:
+        name: _SpecularHighlights
+      second: 1
+    - first:
         name: _SrcBlend
       second: 1
     - first:
@@ -109,7 +121,7 @@ Material:
     m_Colors:
     - first:
         name: _Color
-      second: {r: 1, g: 1, b: 1, a: 1}
+      second: {r: 0.75735295, g: 0, b: 0, a: 1}
     - first:
         name: _EmissionColor
       second: {r: 0, g: 0, b: 0, a: 1}
