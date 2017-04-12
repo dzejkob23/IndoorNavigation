@@ -260,7 +260,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         {
             if (m_selectedRect.Contains(guiPosition))
             {
-                // do nothing, the button will handle it
+                return;
             }
             else if (Physics.Raycast(cam.ScreenPointToRay(t.position), out hitInfo))
             {

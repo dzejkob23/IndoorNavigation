@@ -94,9 +94,19 @@ public class Navigation2DUIController : MonoBehaviour
         navigationIcon.transform.position = scaledCurrentPosititon;
         navigationIcon.transform.rotation = new Quaternion(0, 0, currentRotation.z, currentRotation.w);
 
+        if (!Camera.main.GetComponent<PinchZoom>().isUsingRelocalization)
+        {
+            return;
+        }
+
         // Move main camera
         scaledCurrentPosititon.z = -500;
         Camera.main.transform.position = scaledCurrentPosititon;
+    }
+
+    public void relocalizeNavigationIconPosition()
+    {
+        Camera.main.GetComponent<PinchZoom>().isUsingRelocalization = true;
     }
 
     private void selectMarkerToNavigate()
