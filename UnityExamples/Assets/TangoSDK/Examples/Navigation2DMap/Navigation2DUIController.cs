@@ -42,6 +42,9 @@ public class Navigation2DUIController : MonoBehaviour
     TangoApplication tangoApp;
     TangoARPoseController poseController;
 
+    // Navigation elements
+    public GameObject navigationIcon;
+
     public void Start()
     {
         tangoApp = FindObjectOfType<TangoApplication>();
@@ -75,6 +78,17 @@ public class Navigation2DUIController : MonoBehaviour
     {
         selectMarkerToNavigate();
         markNearestMarker(newMarkersPosition);
+        setPositionNavigationIcon();
+    }
+
+    private void setPositionNavigationIcon()
+    {
+        Vector3 currentPosition = poseController.m_tangoPosition;
+        Vector3 scaledCurrentPosititon = new Vector3(currentPosition.x * SCALING, currentPosition.z * SCALING, 0);
+        navigationIcon.transform.position = scaledCurrentPosititon;
+
+        Quaternion currentRotation = poseController.m_tangoRotation;
+        navigationIcon.transform.rotation = new Quaternion(0, 0, currentRotation.z, currentRotation.w);
     }
 
     private void selectMarkerToNavigate()

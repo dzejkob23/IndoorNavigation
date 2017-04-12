@@ -264,6 +264,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             }
             else if (Physics.Raycast(cam.ScreenPointToRay(t.position), out hitInfo))
             {
+                Debug.Log("#TOUCH - touching touch touching touch !!!");
                 _selectCreatedMarker(hitInfo);
             }
             else
