@@ -44,7 +44,9 @@ public class Navigation2DUIController : MonoBehaviour
 
     // Navigation elements
     public GameObject navigationIcon;
-    public GameObject relocalizationIcon;
+    public Button relocalizationButton;
+    public Material relocalizationMaterial;
+    public Material noRelocalizationMaterial;
 
     public void Start()
     {
@@ -72,7 +74,10 @@ public class Navigation2DUIController : MonoBehaviour
         // Prepare environment
         drawGuiButtons(newMarkersPosition);
         drawConnectionsBetweenButtons(newMarkersPosition, graph2D);
-        
+
+        //relocalizationMaterial = (Material)Resources.Load("RelocalizationButton", typeof(Material));
+        //noRelocalizationMaterial = (Material)Resources.Load("NoRelocalizationButton", typeof(Material));
+
     }
 
     public void Update()
@@ -96,7 +101,12 @@ public class Navigation2DUIController : MonoBehaviour
 
         if (!Camera.main.GetComponent<PinchZoom>().isUsingRelocalization)
         {
+            relocalizationButton.GetComponent<RawImage>().material = noRelocalizationMaterial;
             return;
+        }
+        else
+        {
+            relocalizationButton.GetComponent<RawImage>().material = relocalizationMaterial;
         }
 
         // Move main camera
