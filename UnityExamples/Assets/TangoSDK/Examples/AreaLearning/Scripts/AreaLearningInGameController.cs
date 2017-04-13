@@ -929,31 +929,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             obj.Value.SetActive(false);
         }
     }
-    /*
-    public void showNavigationMarkers(int [] shortestPath)
-    {
-        for (int i = 0; i < shortestPath.Length; i++ )
-        {
-            Debug.Log("#ID markeru: " + shortestPath[i]);
 
-            GameObject tmpMarker = null;
-            if (m_markerList.TryGetValue(shortestPath[i], out tmpMarker))
-            {
-                // enable marker in shoted path
-                tmpMarker.SetActive(true);
-                for (int j = 0; j < shortestPath.Length; j++)
-                {
-                    GameObject tmpRenderer = null;
-                    if (tmpMarker.GetComponent<ARMarker>().lines.TryGetValue(shortestPath[j], out tmpRenderer))
-                    {
-                        tmpRenderer.SetActive(true);
-                        tmpRenderer.GetComponent<Line>().resetLineSetup(0.1f, arrowMaterial);
-                    }
-                }
-            }
-        }
-    }
-    */
     public void showNavigationMarkers(int [] shortestPath)
     {
         if (shortestPathLines == null)
