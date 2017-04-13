@@ -103,6 +103,7 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     private void Hide()
     {
+        Debug.Log("#TOUCH - ARMArker1 - touching touch touching touch !!!");
         m_anim.Play("ARMarkerHide", PlayMode.StopAll);
     }
 
@@ -111,6 +112,7 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     private void HideDone()
     {
+        Debug.Log("#TOUCH - ARMArker2 - touching touch touching touch !!!");
         Destroy(gameObject);
     }
 
@@ -127,22 +129,9 @@ public class ARMarker : MonoBehaviour
     {
         GameObject tmp = new GameObject();
         tmp.transform.SetParent(gameObject.transform);
-        tmp.AddComponent<Line>().lineSetup(gameObject.transform.position, markerPosition, 0.01f);
+        tmp.AddComponent<Line>().lineSetup(gameObject.transform.position, markerPosition, 0.01f, null);
 
         lines.Add(markerId, tmp);
-    }
-
-    public bool deleteLineToMarker(int markerId)
-    {
-        // markerId is not in neighbours - ret false
-        if (!lines.ContainsKey(markerId))
-        {
-            return false;
-        }
-
-        lines.Remove(markerId);
-
-        return true;
     }
 
     public Dictionary<int, GameObject> getRendersDictionary()

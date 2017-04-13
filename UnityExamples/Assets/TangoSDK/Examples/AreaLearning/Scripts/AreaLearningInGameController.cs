@@ -38,6 +38,11 @@ using UnityEngine.UI;
 public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEvent, ITangoDepth
 {
     /// <summary>
+    /// Shortest path in 3D by line renders
+    /// </summary>
+    private List<GameObject> shortestPathLines;
+
+    /// <summary>
     /// Evalutated graph
     /// </summary>
     private Graph graph;
@@ -179,6 +184,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     private Thread m_saveThread;
 
+    /// <summary>
+    /// Material for shortest path in 3D.
+    /// </summary>
     public Material arrowMaterial;
 
     /// <summary>
@@ -189,7 +197,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     public void Start()
     {
         m_poseController = FindObjectOfType<TangoARPoseController>();
-
         m_tangoApplication = FindObjectOfType<TangoApplication>();
 
         m_connectMarkers = new ARMarker[2];
@@ -266,7 +273,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             }
             else if (Physics.Raycast(cam.ScreenPointToRay(t.position), out hitInfo))
             {
-                Debug.Log("#TOUCH - touching touch touching touch !!!");
                 _selectCreatedMarker(hitInfo);
             }
             else
@@ -923,11 +929,13 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             obj.Value.SetActive(false);
         }
     }
-
+    /*
     public void showNavigationMarkers(int [] shortestPath)
     {
         for (int i = 0; i < shortestPath.Length; i++ )
         {
+            Debug.Log("#ID markeru: " + shortestPath[i]);
+
             GameObject tmpMarker = null;
             if (m_markerList.TryGetValue(shortestPath[i], out tmpMarker))
             {
@@ -944,6 +952,35 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
                 }
             }
         }
+    }
+    */
+    public void showNavigationMarkers(int [] shortestPath)
+    {
+        if (shortestPathLines == null)
+        {
+            shortestPathLines = new List<GameObject>();
+        }
+
+        for (int i = shortestPath.Length - 1; i > 0; i--)
+        {
+            GameObject tmp1, tmp2;
+            bool isTmp1 = false, isTmp2 = false;
+
+            isTmp1 = m_markerList.TryGetValue(shortestPath[i], out tmp1);
+            isTmp2 = m_markerList.TryGetValue(shortestPath[i - 1], out tmp2);
+           
+            if (isTmp1 && isTmp2)
+            {
+                GameObject tmpLine = new GameObject();
+                tmpLine.transform.SetParent(gameObject.transform); 
+                tmpLine.AddComponent<Line>().lineSetup(tmp1.transform.position, tmp2.transform.position, 0.1f, arrowMaterial);              
+                shortestPathLines.Add(tmpLine);
+            }
+        }
+
+        GameObject tmp;
+        bool isTmp = m_markerList.TryGetValue(shortestPath[0], out tmp);
+        tmp.SetActive(true);
     }
 
     /// <summary>

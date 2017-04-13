@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
+  m_IndirectSpecularColor: {r: 0.44688344, g: 0.49676383, b: 0.5749997, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -1509,3 +1509,4 @@ MonoBehaviour:
     type: 2}
   noRelocalizationMaterial: {fileID: 2100000, guid: 455a18b2568804840ba629329b5745b5,
     type: 2}
+  line2DMap: {fileID: 2100000, guid: 8542481e97dd4480a9392aed5eb842eb, type: 2}
