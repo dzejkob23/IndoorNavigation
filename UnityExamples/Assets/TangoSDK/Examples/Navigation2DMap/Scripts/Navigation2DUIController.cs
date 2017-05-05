@@ -339,6 +339,8 @@ public class Navigation2DUIController : MonoBehaviour
         {
             canvas.SetActive(false);
         }
+
+        areaLearning.canvas3D.SetActive(true);
     }
 
     public void modify2DMap()

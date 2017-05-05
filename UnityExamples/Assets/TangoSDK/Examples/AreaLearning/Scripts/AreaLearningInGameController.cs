@@ -37,6 +37,8 @@ using UnityEngine.UI;
 /// </summary>
 public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEvent, ITangoDepth
 {
+    public GameObject canvas3D;
+
     /// <summary>
     /// Shortest path in 3D by line renders
     /// </summary>
