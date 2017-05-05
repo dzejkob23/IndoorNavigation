@@ -126,7 +126,7 @@ PlayerSettings:
   xboxOneDisableKinectGpuReservation: 0
   protectGraphicsMemory: 0
   AndroidBundleVersionCode: 50
-  AndroidMinSdkVersion: 19
+  AndroidMinSdkVersion: 18
   AndroidPreferredInstallLocation: 1
   aotOptions: 
   apiCompatibilityLevel: 2
