@@ -103,7 +103,6 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     private void Hide()
     {
-        Debug.Log("#TOUCH - ARMArker1 - touching touch touching touch !!!");
         m_anim.Play("ARMarkerHide", PlayMode.StopAll);
     }
 
@@ -112,7 +111,6 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     private void HideDone()
     {
-        Debug.Log("#TOUCH - ARMArker2 - touching touch touching touch !!!");
         Destroy(gameObject);
     }
 
