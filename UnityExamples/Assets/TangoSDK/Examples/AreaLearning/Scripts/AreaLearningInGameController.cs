@@ -37,7 +37,14 @@ using UnityEngine.UI;
 /// </summary>
 public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEvent, ITangoDepth
 {
+    /// <summary>
+    /// Navigation canvas for ending navigation
+    /// </summary>
     public GameObject canvas2DTo3D;
+
+    /// <summary>
+    /// Navigation canvas for creating navigation
+    /// </summary>
     public GameObject canvas3DTo2D;
 
     /// <summary>
@@ -921,15 +928,37 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         return isNavigation;
     }
 
-    public void disableAllMarkers()
+    public void enableDisableAllMarkers(bool enable)
     {
         foreach (KeyValuePair<int, GameObject> obj in m_markerList)
         {
             foreach (KeyValuePair<int, GameObject> line in obj.Value.GetComponent<ARMarker>().lines)
             {
-                line.Value.SetActive(false);
+                line.Value.SetActive(enable);
             }
-            obj.Value.SetActive(false);
+            obj.Value.SetActive(enable);
+        }
+    }
+
+    public void EnableAllMarkers()
+    {
+        toggleNavigationScene();
+        hideNavigationMarkers();
+        enableDisableAllMarkers(true);
+        canvas2DTo3D.SetActive(false);
+        canvas3DTo2D.SetActive(true);
+    }
+
+    public void ChangeAreaDescription()
+    {
+        SceneManager.LoadScene("AreaLearning");
+    }
+
+    private void hideNavigationMarkers()
+    {
+        foreach (GameObject obj in shortestPathLines)
+        {
+            obj.SetActive(false);
         }
     }
 

@@ -325,7 +325,7 @@ public class Navigation2DUIController : MonoBehaviour
 
         // before switching
         // disable all markers with renderers
-        areaLearning.disableAllMarkers();
+        areaLearning.enableDisableAllMarkers(false);
         // toggle scene settings from "create navigation map" to "navigate in 3D space"
         areaLearning.toggleNavigationScene();
         // enable 3D camere with augmented reality rendering
