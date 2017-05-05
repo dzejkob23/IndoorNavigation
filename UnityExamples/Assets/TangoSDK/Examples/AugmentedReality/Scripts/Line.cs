@@ -18,7 +18,7 @@ public class Line : MonoBehaviour
         fosforGreenLine = (Material)Resources.Load("axis_green", typeof(Material));
     }
 
-    public void lineSetup(Vector3 originalP, Vector3 nextP, float widthOfLine)
+    public void lineSetup(Vector3 originalP, Vector3 nextP, float widthOfLine, Material material)
     {
         renderer = gameObject.AddComponent<LineRenderer>();
 
@@ -32,7 +32,7 @@ public class Line : MonoBehaviour
         renderer.startWidth = widthOfLine;
         renderer.endWidth = widthOfLine;
         renderer.useWorldSpace = true;
-        renderer.material = fosforGreenLine;
+        renderer.material = material;
     }
 
     public void resetLineSetup(float widthOfLine, Material material)

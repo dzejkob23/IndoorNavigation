@@ -47,6 +47,7 @@ public class Navigation2DUIController : MonoBehaviour
     public Button relocalizationButton;
     public Material relocalizationMaterial;
     public Material noRelocalizationMaterial;
+    public Material line2DMap;
 
     public void Start()
     {
@@ -260,7 +261,8 @@ public class Navigation2DUIController : MonoBehaviour
         tmp.transform.SetParent(gameObject.transform);
         tmp.AddComponent<Line>().lineSetup(new Vector3(firstPosition.x, firstPosition.y, 0),
                                            new Vector3(secondPosition.x, secondPosition.y, 0),
-                                           5f);
+                                           5f,
+                                           line2DMap);
         lineRenderers.Add(tmp);
     }
 
@@ -323,7 +325,7 @@ public class Navigation2DUIController : MonoBehaviour
 
         // before switching
         // disable all markers with renderers
-        areaLearning.disableAllMarkers();
+        areaLearning.enableDisableAllMarkers(false);
         // toggle scene settings from "create navigation map" to "navigate in 3D space"
         areaLearning.toggleNavigationScene();
         // enable 3D camere with augmented reality rendering
@@ -337,6 +339,8 @@ public class Navigation2DUIController : MonoBehaviour
         {
             canvas.SetActive(false);
         }
+
+        areaLearning.canvas2DTo3D.SetActive(true);
     }
 
     public void modify2DMap()
