@@ -341,6 +341,7 @@ public class Navigation2DUIController : MonoBehaviour
         }
 
         areaLearning.canvas2DTo3D.SetActive(true);
+        SceneManager.UnloadSceneAsync("Navigation2DMap");
     }
 
     public void modify2DMap()
