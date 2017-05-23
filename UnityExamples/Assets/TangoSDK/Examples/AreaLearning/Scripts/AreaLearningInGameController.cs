@@ -936,6 +936,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         canvas3DTo2D.SetActive(true);
     }
 
+    public void ChangeAreaDescription()
+    {
+        SceneManager.LoadScene("AreaLearning");
+    }
+
     private void hideNavigationMarkers()
     {
         foreach (GameObject obj in shortestPathLines)
