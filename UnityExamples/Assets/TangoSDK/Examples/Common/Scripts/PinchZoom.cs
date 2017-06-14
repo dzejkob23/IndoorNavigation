@@ -29,6 +29,7 @@ class PinchZoom : MonoBehaviour
     private void cameraMove()
     {
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
+        // zkusit pouze podminku "if (Input.touchCount == 1)" - chvalne, co to udela
         {
             // Move camera
             Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;

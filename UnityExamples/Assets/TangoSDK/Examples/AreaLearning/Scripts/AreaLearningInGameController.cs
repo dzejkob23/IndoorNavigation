@@ -296,19 +296,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
     }
 
-    public void startNavigation(int start, int target)
-    {
-        if (target == -1 || start == -1)
-        {
-            AndroidHelper.ShowAndroidToastMessage("You must select target navigation point/marker!");
-        }
-
-        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph.get2DGraph(), start, target);
-        int[] navigatePath = dijkstra.sPath;
-        // TODO - disable unused markers
-        // TODO - mark shorted path
-    }
-
     /// <summary>
     /// Select craete marker via touch
     /// </summary>
