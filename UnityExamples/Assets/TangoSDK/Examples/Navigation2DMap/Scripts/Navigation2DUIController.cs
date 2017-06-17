@@ -310,6 +310,21 @@ public class Navigation2DUIController : MonoBehaviour
         newSelectedID = currentId;
     }
 
+    public void show3DMapScene()
+    {
+        // before switching
+        // enable 3D camere with augmented reality rendering
+        poseController.GetComponentInParent<Camera>().enabled = true;
+
+        foreach (GameObject canvas in GameObject.FindGameObjectsWithTag("Navigation2DMap"))
+        {
+            canvas.SetActive(false);
+        }
+
+        areaLearning.canvas3DTo2D.SetActive(true);
+        SceneManager.UnloadSceneAsync("Navigation2DMap");
+    }
+
     public void moveToNavigation()
     {
         if (nearestID == -1 || newSelectedID == -1)
