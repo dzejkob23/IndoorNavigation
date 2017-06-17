@@ -362,7 +362,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             screenRect.yMin = Mathf.Min(yMin, yMax);
             screenRect.yMax = Mathf.Max(yMin, yMax);
             
-            if (GUI.Button(screenRect, "<size=30>Hide</size>"))
+            if (GUI.Button(screenRect, "<size=30>Touch again = <color=red>HIDE MARKER</color></size>"))
             {
                 int selected_id = m_selectedMarker.gameObject.GetComponent<ARMarker>().getID();
                 m_markerList.Remove(selected_id);
