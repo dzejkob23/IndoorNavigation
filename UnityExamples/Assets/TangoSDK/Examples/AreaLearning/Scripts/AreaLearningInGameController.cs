@@ -988,8 +988,30 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
 
         GameObject tmp;
-        bool isTmp = m_markerList.TryGetValue(shortestPath[0], out tmp);
+        m_markerList.TryGetValue(shortestPath[0], out tmp);
         tmp.SetActive(true);
+    }
+
+    public void removeLineBetweenMarkers(int start, int target)
+    {
+        GameObject tmpObject;
+        GameObject tmpLine;
+
+        m_markerList.TryGetValue(start, out tmpObject);
+        if (tmpObject.GetComponent<ARMarker>().lines.ContainsKey(target))
+        {
+            tmpObject.GetComponent<ARMarker>().lines.TryGetValue(target, out tmpLine);
+            Destroy(tmpLine);
+            tmpObject.GetComponent<ARMarker>().lines.Remove(target);
+        }
+
+        m_markerList.TryGetValue(target, out tmpObject);
+        if (tmpObject.GetComponent<ARMarker>().lines.ContainsKey(start))
+        {
+            tmpObject.GetComponent<ARMarker>().lines.TryGetValue(start, out tmpLine);
+            Destroy(tmpLine);
+            tmpObject.GetComponent<ARMarker>().lines.Remove(start);
+        }
     }
 
     /// <summary>

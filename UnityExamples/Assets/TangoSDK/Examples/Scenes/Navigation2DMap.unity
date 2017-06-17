@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44688344, g: 0.49676383, b: 0.5749997, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -471,7 +471,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Modify
+  m_Text: 'ADD / DEL
+
+    Line'
 --- !u!222 &902636006
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -906,7 +908,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Select
+  m_Text: 'Select
+
+    Marker'
 --- !u!222 &1968228322
 CanvasRenderer:
   m_ObjectHideFlags: 0

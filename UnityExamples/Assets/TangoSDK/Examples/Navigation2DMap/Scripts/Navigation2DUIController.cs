@@ -36,7 +36,7 @@ public class Navigation2DUIController : MonoBehaviour
     public Button finishButton;
     public Button addLineButton;
     private Dictionary<int, GameObject> buttons;
-    private List<GameObject> lineRenderers;
+    private Dictionary<KeyPair, GameObject> lineRenderers;
 
     AreaLearningInGameController areaLearning;
     TangoApplication tangoApp;
@@ -63,7 +63,7 @@ public class Navigation2DUIController : MonoBehaviour
         graph2D = areaLearning.getGraph().get2DGraph();
 
         // Initialization
-        lineRenderers = new List<GameObject>();
+        lineRenderers = new Dictionary<KeyPair, GameObject>();
         buttons = new Dictionary<int, GameObject>();
 
         // Check if global values are prepared
@@ -136,13 +136,11 @@ public class Navigation2DUIController : MonoBehaviour
 
             if (!buttons.TryGetValue(newSelectedID, out tmpButton))
             {
-                Debug.Log("#CHECK - Can not find marker with ID " + newSelectedID + " ! - method Update");
                 return;
             }
 
             if (!buttons.TryGetValue(nearestID, out nearestButton))
             {
-                Debug.Log("#CHECK - Can not find nearest marker with ID " + newSelectedID + " ! - method Update");
                 return;
             }
 
@@ -154,8 +152,6 @@ public class Navigation2DUIController : MonoBehaviour
 
             if (!isLastInButtons)
             {
-
-                Debug.Log("#CHECK - Can not find marker with ID " + lastSelectedID + " ! - method Update");
                 return;
             }
 
@@ -249,13 +245,13 @@ public class Navigation2DUIController : MonoBehaviour
 
                 if (graph2D[i, j] != 0.0f && isFillFirst && isFillSecond)
                 {
-                    addLine(firstPosition, secondPosition);
+                    addLine(firstPosition, secondPosition, i, j);
                 }
             }
         }
     }
 
-    private void addLine(Vector2 firstPosition, Vector2 secondPosition)
+    private void addLine(Vector2 firstPosition, Vector2 secondPosition, int from, int to)
     {
         GameObject tmp = new GameObject();
         tmp.transform.SetParent(gameObject.transform);
@@ -263,7 +259,7 @@ public class Navigation2DUIController : MonoBehaviour
                                            new Vector3(secondPosition.x, secondPosition.y, 0),
                                            5f,
                                            line2DMap);
-        lineRenderers.Add(tmp);
+        lineRenderers.Add(new KeyPair(from, to), tmp);
     }
 
     private void markNearestMarker(Dictionary<int, Vector2> markers)
@@ -397,15 +393,60 @@ public class Navigation2DUIController : MonoBehaviour
             return;
         }
 
-        if (graph2D[connectMarkersId[0], connectMarkersId[1]] != 0)
+        // DELETE LINE
+        if (connectMarkersId[0] != -1
+            && connectMarkersId[1] != -1
+            && graph2D[connectMarkersId[0], connectMarkersId[1]] != 0)
         {
-            AndroidHelper.ShowAndroidToastMessage("Connecion exists! Cache was cleaned!");
+            KeyPair tmpKeyPair = null;
+
+            foreach (KeyValuePair<KeyPair, GameObject> renderer in lineRenderers)
+            {
+                if (renderer.Key.keys[0] == connectMarkersId[0]
+                    && renderer.Key.keys[1] == connectMarkersId[1])
+                {
+                    tmpKeyPair = renderer.Key;
+                    break;
+                }
+            }
+
+            if (tmpKeyPair == null)
+            {
+                foreach (KeyValuePair<KeyPair, GameObject> renderer in lineRenderers)
+                {
+                    if (renderer.Key.keys[0] == connectMarkersId[1]
+                        && renderer.Key.keys[1] == connectMarkersId[0])
+                    {
+                        tmpKeyPair = renderer.Key;
+                        break;
+                    }
+                }
+            }
+
+            if (tmpKeyPair != null)
+            {
+                GameObject tmpObject;
+                lineRenderers.TryGetValue(tmpKeyPair, out tmpObject);
+                Destroy(tmpObject);
+                lineRenderers.Remove(tmpKeyPair);
+            }
+
+            areaLearning.removeLineBetweenMarkers(connectMarkersId[0], connectMarkersId[1]);
+
+            graph2D[connectMarkersId[0], connectMarkersId[1]] = 0;
+            graph2D[connectMarkersId[1], connectMarkersId[0]] = 0;
+
             connectMarkersId[0] = -1;
             connectMarkersId[1] = -1;
+
+            AndroidHelper.ShowAndroidToastMessage("Connecion DELETED!");
             return;
         }
 
-        if (connectMarkersId[0] != -1 && connectMarkersId[1] != -1)
+        // CREATE LINE
+        if (connectMarkersId[0] != -1
+            && connectMarkersId[1] != -1
+            && graph2D[connectMarkersId[0], connectMarkersId[1]] == 0)
         {
             Vector2 firstPosition;
             Vector2 secondPosition;
@@ -413,7 +454,7 @@ public class Navigation2DUIController : MonoBehaviour
             newMarkersPosition.TryGetValue(connectMarkersId[0], out firstPosition);
             newMarkersPosition.TryGetValue(connectMarkersId[1], out secondPosition);
 
-            addLine(firstPosition, secondPosition);
+            addLine(firstPosition, secondPosition, connectMarkersId[0], connectMarkersId[1]);
 
             firstPosition = new Vector2(firstPosition.x / SCALING, firstPosition.y / SCALING);
             secondPosition = new Vector2(secondPosition.x / SCALING, secondPosition.y / SCALING);
