@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class Graph
 {
-
     private double[,] graph2D;
     private Dictionary<int, Vector3> markersPositions;
 

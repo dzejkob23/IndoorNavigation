@@ -68,8 +68,6 @@ public class DijkstraAlgorithm
     /* Takes a graph as input an adjacency matrix (see top for details) and a starting node */
     public DijkstraAlgorithm(double[,] G, int s, int t)
     {
-        Debug.Log("#DIJKSTRA_navigate: from " + s + " to " + t);
-
         /* Check graph format and that the graph actually contains something */
         if (G.GetLength(0) < 1 || G.GetLength(0) != G.GetLength(1))
         {
@@ -117,10 +115,18 @@ public class DijkstraAlgorithm
 
     private int[] shortedPath(int start, int target)
     {
+        Debug.Log("#DIJKSTRA - start:" + start + " target:" + target);
+
         List<int> shortedPathList = new List<int>();
         int current = target;
 
         if (path == null)
+        {
+            return null;
+        }
+
+        // Path does not exist
+        if (path[target] == 0)
         {
             return null;
         }

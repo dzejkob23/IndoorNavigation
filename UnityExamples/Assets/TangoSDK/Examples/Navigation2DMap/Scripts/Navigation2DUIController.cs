@@ -312,7 +312,6 @@ public class Navigation2DUIController : MonoBehaviour
     private void doOnButton(int currentId)
     {
         newSelectedID = currentId;
-        AndroidHelper.ShowAndroidToastMessage("Selected " + currentId + " to navigate!");
     }
 
     public void moveToNavigation()
@@ -323,6 +322,15 @@ public class Navigation2DUIController : MonoBehaviour
             return;
         }
 
+        // create dijkstra function and computed shorted path for navigation
+        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph2D, nearestID, newSelectedID);
+
+        if (dijkstra.sPath == null)
+        {
+            AndroidHelper.ShowAndroidToastMessage("To this NavPoint does not have any path! Please repair graph.");
+            return;
+        }
+
         // before switching
         // disable all markers with renderers
         areaLearning.enableDisableAllMarkers(false);
@@ -330,8 +338,6 @@ public class Navigation2DUIController : MonoBehaviour
         areaLearning.toggleNavigationScene();
         // enable 3D camere with augmented reality rendering
         poseController.GetComponentInParent<Camera>().enabled = true;
-        // create dijkstra function and computed shorted path for navigation
-        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph2D, nearestID, newSelectedID);
         // show only markers for navigation
         areaLearning.showNavigationMarkers(dijkstra.sPath);
 

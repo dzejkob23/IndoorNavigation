@@ -362,9 +362,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             screenRect.yMin = Mathf.Min(yMin, yMax);
             screenRect.yMax = Mathf.Max(yMin, yMax);
             
-            if (GUI.Button(screenRect, "<size=30>Hide</size>"))
+            if (GUI.Button(screenRect, "<size=30>Touch again = <color=red>HIDE MARKER</color></size>"))
             {
                 int selected_id = m_selectedMarker.gameObject.GetComponent<ARMarker>().getID();
+                deleteLineRendererViaMarkerId(selected_id);
+                
                 m_markerList.Remove(selected_id);
                 m_selectedMarker.SendMessage("Hide");
                 m_selectedMarker = null;
@@ -416,6 +418,20 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             }
         }
 #endif
+    }
+
+    private void deleteLineRendererViaMarkerId(int id)
+    {
+        foreach (KeyValuePair<int, GameObject> obj in m_markerList)
+        {
+            GameObject removableLineRenderer;
+
+            if (obj.Value.GetComponent<ARMarker>().lines.TryGetValue(id, out removableLineRenderer))
+            {
+                Destroy(removableLineRenderer);
+                obj.Value.GetComponent<ARMarker>().lines.Remove(id);
+            }
+        }
     }
 
     /// <summary>
@@ -843,8 +859,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         ARMarker markerScript = newMarkObject.GetComponent<ARMarker>();
         int newMarker_id = markerScript.getID();
-
-        Debug.Log("#CHECK - new marker id: " + newMarker_id);
 
         markerScript.m_type = m_currentMarkType;
         markerScript.m_timestamp = (float) m_poseController.m_poseTimestamp;
