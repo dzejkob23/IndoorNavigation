@@ -1,4 +1,11 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="DijkstraAlgorithm.cs">
+//
+// Download from: https://sourceforge.net/projects/dijkstra-csharp/
+//
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

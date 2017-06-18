@@ -123,6 +123,11 @@ public class ARMarker : MonoBehaviour
         return ID;
     }
 
+    /// <summary>
+    /// Add line to 3D space, where this marker is start. Line is join to whis marker.
+    /// </summary>
+    /// <param name="markerId">Id of target marker.</param>
+    /// <param name="markerPosition">Position of target marker.</param>
     public void addLine(int markerId, Vector3 markerPosition)
     {
         GameObject tmp = new GameObject();
@@ -132,17 +137,30 @@ public class ARMarker : MonoBehaviour
         lines.Add(markerId, tmp);
     }
 
+    /// <summary>
+    /// Return all lines attached to this marker.
+    /// </summary>
+    /// <returns>List of lines.</returns>
     public Dictionary<int, GameObject> getRendersDictionary()
     {
         return lines;
     }
 
+    /// <summary>
+    /// Set all needed parameters.
+    /// </summary>
+    /// <param name="oldId">Old ID.</param>
+    /// <param name="oldNeighboursIds">Old neighbours ID.</param>
     public void setAllParameters(int oldId, int [] oldNeighboursIds)
     {
         this.ID = oldId;
         this.oldNeighboursIds = oldNeighboursIds;
     }
 
+    /// <summary>
+    /// Return old neighbours ID.
+    /// </summary>
+    /// <returns>Old neighbours ID.</returns>
     public int [] getOldNeighboursIds()
     {
         return oldNeighboursIds;

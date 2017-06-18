@@ -1,4 +1,11 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Navigation2DUIController.cs" author="Jakub Zíka" student="A15N0087P">
+//
+// License is according West Bohemmia licenses.
+//
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,46 +14,130 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controller script for 2D scene.
+/// </summary>
 public class Navigation2DUIController : MonoBehaviour
 {
+    /// <summary>
+    /// Scaling constant.
+    /// </summary>
     private const int SCALING = 300;
+    /// <summary>
+    /// Nearest marker button color.
+    /// </summary>
     private static Color NEAREST_BUTTON_COLOR = Color.yellow;
+    /// <summary>
+    /// Navigation marker button color.
+    /// </summary>
     private static Color NAVIGATION_BUTTON_COLOR = Color.gray;
+    /// <summary>
+    /// New line between buttons color.
+    /// </summary>
     private static Color NEWLINE_BUTTON_COLOR = Color.green;
+    /// <summary>
+    /// Basic marker button color.
+    /// </summary>
     private static Color BASIC_BUTTON_COLOR = Color.red;
-
-    // Add line in 2D
+    /// <summary>
+    /// Add line in 2D.
+    /// </summary>
     private int[] connectMarkersId = { -1, -1 };
 
     // Global values from previous scene
+    /// <summary>
+    /// Scaling new positions of markers on 2D surface.
+    /// </summary>
     private Dictionary<int, Vector2> newMarkersPosition;
+    /// <summary>
+    /// 2D graph.
+    /// </summary>
     private double[,] graph2D;
 
     // Selected marker to navigate
+    /// <summary>
+    /// Touching button prepared prefab.
+    /// </summary>
     public GameObject button;
+    /// <summary>
+    /// Indicator last selected button.
+    /// </summary>
     private int lastSelectedID = -1;
+    /// <summary>
+    /// Indicator new selected button.
+    /// </summary>
     private int newSelectedID = -1;
+    /// <summary>
+    /// Indicator nearest marker button.
+    /// </summary>
     private int nearestID = -1;
+    /// <summary>
+    /// Previous nearest marker button.
+    /// </summary>
     private int previousNearestID = -1;
+    /// <summary>
+    /// Last color of selected marker button.
+    /// </summary>
     private Color lastSelectedColor;
 
     // GUI buttons and lines
+    /// <summary>
+    /// Instance of navigation button.
+    /// </summary>
     public Button navigateButton;
+    /// <summary>
+    /// Instance of modify button.
+    /// </summary>
     public Button modifyButton;
+    /// <summary>
+    /// Instance of finish button;
+    /// </summary>
     public Button finishButton;
+    /// <summary>
+    /// Instance of add line button.
+    /// </summary>
     public Button addLineButton;
+    /// <summary>
+    /// Dictionary of marker buttons.
+    /// </summary>
     private Dictionary<int, GameObject> buttons;
+    /// <summary>
+    /// Dictionary of lines between marker buttons.
+    /// </summary>
     private Dictionary<KeyPair, GameObject> lineRenderers;
-
+    /// <summary>
+    /// Previous scene AreaLearning controller.
+    /// </summary>
     AreaLearningInGameController areaLearning;
+    /// <summary>
+    /// Tango App controller.
+    /// </summary>
     TangoApplication tangoApp;
+    /// <summary>
+    /// Tango position senzor controller.
+    /// </summary>
     TangoARPoseController poseController;
 
     // Navigation elements
+    /// <summary>
+    /// Position indicator icon in 2D scene.
+    /// </summary>
     public GameObject navigationIcon;
+    /// <summary>
+    /// Relocalization button. Center scene on indicator icon.
+    /// </summary>
     public Button relocalizationButton;
+    /// <summary>
+    /// Relocalization material - centered.
+    /// </summary>
     public Material relocalizationMaterial;
+    /// <summary>
+    /// Relocalization material - doesn't centered.
+    /// </summary>
     public Material noRelocalizationMaterial;
+    /// <summary>
+    /// Background of 2D scene.
+    /// </summary>
     public Material line2DMap;
 
     public void Start()

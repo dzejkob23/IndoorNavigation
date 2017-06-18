@@ -1,19 +1,45 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="PinchZoom.cs" author="Jakub Zíka" student="A15N0087P">
+//
+// License is according West Bohemmia licenses.
+//
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
+/// <summary>
+/// Script for using touches on screen.
+/// </summary>
 class PinchZoom : MonoBehaviour
 {
+    /// <summary>
+    /// Prespective camera zoom speed.
+    /// </summary>
     public float perspectiveZoomSpeed = 0.5f;        // The rate of change of the field of view in perspective mode.
+    /// <summary>
+    /// Orthographic camera zoom speed.
+    /// </summary>
     public float orthoZoomSpeed = 0.5f;        // The rate of change of the orthographic size in orthographic mode.
+    /// <summary>
+    /// Orthographic camera draging speed.
+    /// </summary>
     public float orthoDragSpeed = 0.01f;
-
+    /// <summary>
+    /// Indicator of relocalization using.
+    /// </summary>
     public bool isUsingRelocalization = true;
-
+    /// <summary>
+    /// Start point in 2D scene for position indicator.
+    /// </summary>
     private Vector3 worldStartPoint;
 
+    /// <summary>
+    /// Update method.
+    /// </summary>
     void Update()
     {
         if (Camera.main == null)
@@ -26,6 +52,9 @@ class PinchZoom : MonoBehaviour
         cameraZoom();
     }
 
+    /// <summary>
+    /// Camera moving.
+    /// </summary>
     private void cameraMove()
     {
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
@@ -40,6 +69,9 @@ class PinchZoom : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Camera zooming.
+    /// </summary>
     private void cameraZoom()
     {
         // If there are two touches on the device...
