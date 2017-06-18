@@ -1,15 +1,35 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright file="Graph.cs" author="Jakub Zíka" student="A15N0087P">
+//
+// License is according West Bohemmia licenses.
+//
+// </copyright>
+//-----------------------------------------------------------------------
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 
+/// <summary>
+/// Script represents instance of navigation graph.
+/// </summary>
 public class Graph
 {
+    /// <summary>
+    /// Matrix of neighbours.
+    /// </summary>
     private double[,] graph2D;
+    /// <summary>
+    /// Markers describe by IDs and positions.
+    /// </summary>
     private Dictionary<int, Vector3> markersPositions;
 
+    /// <summary>
+    /// Create evaluated graph by distances.
+    /// </summary>
+    /// <param name="m_markerDictionary">Dictionary with markers.</param>
     public void CreateEvaluatedGraph(Dictionary<int, GameObject> m_markerDictionary)
     {
         int maxId = m_markerDictionary.Keys.Max() + 1;
@@ -52,16 +72,28 @@ public class Graph
         AndroidHelper.ShowAndroidToastMessage("Evaluated graph was created!");
     }
 
+    /// <summary>
+    /// Return markers positions.
+    /// </summary>
+    /// <returns>Markers positions.</returns>
     public Dictionary<int, Vector3> getMarkersPosition()
     {
         return markersPositions;
     }
 
+    /// <summary>
+    /// Return 2D graph in matrix of distances.
+    /// </summary>
+    /// <returns>Graph with distances.</returns>
     public double[,] get2DGraph()
     {
         return graph2D;
     }
 
+    /// <summary>
+    /// Set 2D graph in matric of distances.
+    /// </summary>
+    /// <param name="graph2D">2D graph with distances.</param>
     public void set2DGraph(double [,] graph2D)
     {
         this.graph2D = graph2D;

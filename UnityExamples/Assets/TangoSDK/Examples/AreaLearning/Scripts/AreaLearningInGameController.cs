@@ -206,9 +206,10 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     public void Start()
     {
+        // get main senzors
         m_poseController = FindObjectOfType<TangoARPoseController>();
         m_tangoApplication = FindObjectOfType<TangoApplication>();
-
+        // values initialize
         m_connectMarkers = new ARMarker[2];
         m_markerList = new Dictionary<int, GameObject>();
         graph = new Graph();
@@ -226,9 +227,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     public void Update()
     {
+        // After saving an Area Description or mark data, we reload the scene to restart the app.
         if (m_saveThread != null && m_saveThread.ThreadState != ThreadState.Running)
         {
-            // After saving an Area Description or mark data, we reload the scene to restart the game.
             _UpdateMarkersForLoopClosures();
             _SaveMarkerToDisk();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -541,12 +542,18 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
     }
 
+    /// <summary>
+    /// Compute matrix of neighbours and switch scene.
+    /// </summary>
     public void FinishMarkers()
     {
         graph.CreateEvaluatedGraph(m_markerList);
         show2DMapScene();
     }
 
+    /// <summary>
+    /// Switch scene from 3D to 2D prespective.
+    /// </summary>
     private void show2DMapScene()
     {
         SceneManager.LoadScene("Navigation2DMap", LoadSceneMode.Additive);
@@ -916,23 +923,40 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             ARMarker newTmp = newMarkObject.GetComponent<ARMarker>();
             lastTmp.addLine(newTmp.getID(), newTmp.transform.position);
         }
-    } 
+    }
 
+    /// <summary>
+    /// Return list of markers.
+    /// </summary>
+    /// <returns>Dictionary with markers</returns>
     public Dictionary<int, GameObject> getMarkerList()
     {
         return m_markerList;
     }
 
+    /// <summary>
+    /// Return instance of navigation graph.
+    /// </summary>
+    /// <returns>Instance of class Graph.</returns>
     public Graph getGraph()
     {
         return graph;
     }
 
+    /// <summary>
+    /// Return current position of device in 3D space.
+    /// </summary>
+    /// <returns>Vector with position.</returns>
     public Vector3 getCurrentPosition()
     {
         return m_poseController.m_tangoPosition;
     }
 
+    /// <summary>
+    /// Add line to 3D space according ids of markers.
+    /// </summary>
+    /// <param name="id1">Id of start marker.</param>
+    /// <param name="id2">Id of target marker.</param>
     public void addLineWithIds(int id1, int id2)
     {
         GameObject go1;
@@ -947,16 +971,27 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         marker1.addLine(marker2.getID(), marker2.transform.position);
     }
 
+    /// <summary>
+    /// Toggle of navigation indicator.
+    /// </summary>
     public void toggleNavigationScene()
     {
         isNavigation = !isNavigation;
     }
 
+    /// <summary>
+    /// Return navigation indicator
+    /// </summary>
+    /// <returns>True\false if si navigation enable.</returns>
     public bool getIsNavigation()
     {
         return isNavigation;
     }
 
+    /// <summary>
+    /// Enable or disable all markers with lines in 3D space.
+    /// </summary>
+    /// <param name="enable">True-enable\False-disable.</param>
     public void enableDisableAllMarkers(bool enable)
     {
         foreach (KeyValuePair<int, GameObject> obj in m_markerList)
@@ -969,6 +1004,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
     }
 
+    /// <summary>
+    /// Enable all markers and prepare scene to switching.
+    /// </summary>
     public void EnableAllMarkers()
     {
         toggleNavigationScene();
@@ -978,11 +1016,17 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         canvas3DTo2D.SetActive(true);
     }
 
+    /// <summary>
+    /// Change area description.
+    /// </summary>
     public void ChangeAreaDescription()
     {
         SceneManager.LoadScene("AreaLearning");
     }
 
+    /// <summary>
+    /// Hide navigation markers in shortest path.
+    /// </summary>
     private void hideNavigationMarkers()
     {
         foreach (GameObject obj in shortestPathLines)
@@ -991,6 +1035,10 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
     }
 
+    /// <summary>
+    /// Show navigation path with last marker.
+    /// </summary>
+    /// <param name="shortestPath">Array with markers.</param>
     public void showNavigationMarkers(int [] shortestPath)
     {
         if (shortestPathLines == null)
@@ -1020,6 +1068,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         tmp.SetActive(true);
     }
 
+    /// <summary>
+    /// Remove line between two markers according ids.
+    /// </summary>
+    /// <param name="start">Start ID.</param>
+    /// <param name="target">Target ID.</param>
     public void removeLineBetweenMarkers(int start, int target)
     {
         GameObject tmpObject;
@@ -1043,8 +1096,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     }
 
     /// <summary>
-    /// Data container for marker.
-    /// 
+    /// Data container for marker. 
     /// Used for serializing/deserializing marker to xml.
     /// </summary>
     [System.Serializable]
