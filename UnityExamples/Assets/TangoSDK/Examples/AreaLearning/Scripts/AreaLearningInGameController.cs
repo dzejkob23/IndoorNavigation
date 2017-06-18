@@ -502,14 +502,42 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         if (m_connectMarkers[0] != null && m_connectMarkers[1] != null)
         {
-            Debug.Log("#CHECK - Created connection from ID: " + m_connectMarkers[0].getID() + " to ID: " + m_connectMarkers[1].getID());
-            m_connectMarkers[0].addLine(m_connectMarkers[1].getID(), m_connectMarkers[1].transform.position);
+            // TODO - check if line exists
+            // removeLineBetweenMarkers(firstID, secondID);
+            GameObject tmpLine = null;
+            if (m_connectMarkers[0].lines.TryGetValue(m_connectMarkers[1].getID(), out tmpLine))
+            {
+                m_connectMarkers[0].lines.Remove(m_connectMarkers[1].getID());
+            }
 
-            m_connectMarkers[0] = null;
-            m_connectMarkers[1] = null;
-            m_selectedMarker = null;
+            if (tmpLine == null)
+            {
+                if (m_connectMarkers[1].lines.TryGetValue(m_connectMarkers[0].getID(), out tmpLine))
+                {
+                    m_connectMarkers[1].lines.Remove(m_connectMarkers[0].getID());
+                }
+            }
 
-            AndroidHelper.ShowAndroidToastMessage("Connection is created.");
+            if (tmpLine != null)
+            {
+                Destroy(tmpLine);
+
+                m_connectMarkers[0] = null;
+                m_connectMarkers[1] = null;
+                m_selectedMarker = null;
+
+                AndroidHelper.ShowAndroidToastMessage("Connection is DELETED.");
+            }
+            else
+            {
+                m_connectMarkers[0].addLine(m_connectMarkers[1].getID(), m_connectMarkers[1].transform.position);
+
+                m_connectMarkers[0] = null;
+                m_connectMarkers[1] = null;
+                m_selectedMarker = null;
+
+                AndroidHelper.ShowAndroidToastMessage("Connection is CREATED.");
+            }
         }
     }
 
@@ -988,8 +1016,30 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
 
         GameObject tmp;
-        bool isTmp = m_markerList.TryGetValue(shortestPath[0], out tmp);
+        m_markerList.TryGetValue(shortestPath[0], out tmp);
         tmp.SetActive(true);
+    }
+
+    public void removeLineBetweenMarkers(int start, int target)
+    {
+        GameObject tmpObject;
+        GameObject tmpLine;
+
+        m_markerList.TryGetValue(start, out tmpObject);
+        if (tmpObject.GetComponent<ARMarker>().lines.ContainsKey(target))
+        {
+            tmpObject.GetComponent<ARMarker>().lines.TryGetValue(target, out tmpLine);
+            Destroy(tmpLine);
+            tmpObject.GetComponent<ARMarker>().lines.Remove(target);
+        }
+
+        m_markerList.TryGetValue(target, out tmpObject);
+        if (tmpObject.GetComponent<ARMarker>().lines.ContainsKey(start))
+        {
+            tmpObject.GetComponent<ARMarker>().lines.TryGetValue(start, out tmpLine);
+            Destroy(tmpLine);
+            tmpObject.GetComponent<ARMarker>().lines.Remove(start);
+        }
     }
 
     /// <summary>
