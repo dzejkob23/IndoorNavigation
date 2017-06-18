@@ -140,6 +140,9 @@ public class Navigation2DUIController : MonoBehaviour
     /// </summary>
     public Material line2DMap;
 
+    /// <summary>
+    /// Start method.
+    /// </summary>
     public void Start()
     {
         tangoApp = FindObjectOfType<TangoApplication>();
@@ -168,6 +171,9 @@ public class Navigation2DUIController : MonoBehaviour
         drawConnectionsBetweenButtons(newMarkersPosition, graph2D);
     }
 
+    /// <summary>
+    /// Update method.
+    /// </summary>
     public void Update()
     {
         // Select marker to navigate
@@ -180,6 +186,9 @@ public class Navigation2DUIController : MonoBehaviour
         setPositionNavigationIcon();
     }
 
+    /// <summary>
+    /// Set position icon position by position controller.
+    /// </summary>
     private void setPositionNavigationIcon()
     {
         // Prepare data
@@ -206,11 +215,17 @@ public class Navigation2DUIController : MonoBehaviour
         Camera.main.transform.position = scaledCurrentPosititon;
     }
 
+    /// <summary>
+    /// Set relocalization icon on value true.
+    /// </summary>
     public void relocalizeNavigationIconPosition()
     {
         Camera.main.GetComponent<PinchZoom>().isUsingRelocalization = true;
     }
 
+    /// <summary>
+    /// Select marker to navigate.
+    /// </summary>
     private void selectMarkerToNavigate()
     {
         // mark the nearest marker to user position - return
@@ -252,8 +267,9 @@ public class Navigation2DUIController : MonoBehaviour
     }
 
     /// <summary>
-    /// Scene switching GUI.
+    /// Draw GUI buttons by input positions.
     /// </summary>
+    /// <param name="newMarkersPosition">Position for buttons in 2D</param>
     private void drawGuiButtons(Dictionary<int, Vector2> newMarkersPosition)
     {
         
@@ -276,6 +292,11 @@ public class Navigation2DUIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Method finds the shortest and the fahrest position to [0,0].
+    /// </summary>
+    /// <param name="markers">Dictionarz of markers.</param>
+    /// <returns>Min and Max values.</returns>
     private Vector4 findMinXY(Dictionary<int, Vector3> markers)
     {
         float minX = float.MaxValue;
@@ -306,6 +327,11 @@ public class Navigation2DUIController : MonoBehaviour
         return new Vector4(maxX, minX, maxY, minY);
     }
 
+    /// <summary>
+    /// Scaling markers positions from 3D to 2D.
+    /// </summary>
+    /// <param name="markers">Dictionary of markers.</param>
+    /// <returns>New scaled positions in 2D.</returns>
     private Dictionary<int, Vector2> scaleMarkersPositions(Dictionary<int, Vector3> markers)
     {
         Dictionary<int, Vector2> scaledPositions = new Dictionary<int, Vector2>();
@@ -321,7 +347,11 @@ public class Navigation2DUIController : MonoBehaviour
         return scaledPositions;
     }
 
-
+    /// <summary>
+    /// Draw connection between buttons.
+    /// </summary>
+    /// <param name="newMarkersPosition">Markers positions in 2D.</param>
+    /// <param name="graph2D">Matrix of neighbours between markers.</param>
     private void drawConnectionsBetweenButtons(Dictionary<int, Vector2> newMarkersPosition, double[,] graph2D)
     {
         for (int i = 0; i < graph2D.GetLength(0); i++)
@@ -342,6 +372,13 @@ public class Navigation2DUIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Add line to 2D scene.
+    /// </summary>
+    /// <param name="firstPosition">Start position of line.</param>
+    /// <param name="secondPosition">End position of line.</param>
+    /// <param name="from">Line from id marker.</param>
+    /// <param name="to">Line to id marker.</param>
     private void addLine(Vector2 firstPosition, Vector2 secondPosition, int from, int to)
     {
         GameObject tmp = new GameObject();
@@ -353,6 +390,10 @@ public class Navigation2DUIController : MonoBehaviour
         lineRenderers.Add(new KeyPair(from, to), tmp);
     }
 
+    /// <summary>
+    /// Find nearest the nearest marker to device position.
+    /// </summary>
+    /// <param name="markers">Dictionary of markers.</param>
     private void markNearestMarker(Dictionary<int, Vector2> markers)
     {
         Vector3 myPosition3D = areaLearning.getCurrentPosition();
@@ -384,6 +425,12 @@ public class Navigation2DUIController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Draw button by id and position in 2D.
+    /// </summary>
+    /// <param name="buttonId">Button ID.</param>
+    /// <param name="x">Button position X.</param>
+    /// <param name="y">Button position Y.</param>
     private void drawButton(int buttonId, float x, float y)
     {
         GameObject newButton = Instantiate(button) as GameObject;
@@ -396,11 +443,18 @@ public class Navigation2DUIController : MonoBehaviour
         buttons.Add(buttonId, newButton);
     }
 
+    /// <summary>
+    /// Save button ID on touch.
+    /// </summary>
+    /// <param name="currentId"></param>
     private void doOnButton(int currentId)
     {
         newSelectedID = currentId;
     }
 
+    /// <summary>
+    /// Switch scena from 2D to 3D.
+    /// </summary>
     public void show3DMapScene()
     {
         // before switching
@@ -416,6 +470,9 @@ public class Navigation2DUIController : MonoBehaviour
         SceneManager.UnloadSceneAsync("Navigation2DMap");
     }
 
+    /// <summary>
+    /// Switch scene from 2D to navigation.
+    /// </summary>
     public void moveToNavigation()
     {
         if (nearestID == -1 || newSelectedID == -1)
@@ -452,6 +509,9 @@ public class Navigation2DUIController : MonoBehaviour
         SceneManager.UnloadSceneAsync("Navigation2DMap");
     }
 
+    /// <summary>
+    /// Switch buttons on screen for modifing lines on 2D graph.
+    /// </summary>
     public void modify2DMap()
     {
         navigateButton.gameObject.SetActive(false);
@@ -460,6 +520,9 @@ public class Navigation2DUIController : MonoBehaviour
         addLineButton.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Switch buttons on screen for moving to navigation in 3D.
+    /// </summary>
     public void update2DGraph()
     {
         navigateButton.gameObject.SetActive(true);
@@ -468,6 +531,9 @@ public class Navigation2DUIController : MonoBehaviour
         addLineButton.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Add or delete line in 2D.
+    /// </summary>
     public void addLineIn2D()
     {
         GameObject tmp;
