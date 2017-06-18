@@ -222,7 +222,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &292402588
 RectTransform:
   m_ObjectHideFlags: 0
@@ -354,9 +354,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 775942c0600bd44f798ea2ed327b33fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  start: {fileID: 292402587}
   m_editorPlayModeState: 1
   m_enableIfTangoPresent:
-  - {fileID: 0}
   - {fileID: 1907179935}
   m_enableIfTangoOutOfDate:
   - {fileID: 2130970659}

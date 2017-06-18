@@ -19,12 +19,18 @@
 //-----------------------------------------------------------------------
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Enables and disables GameObjects based on whether Project Tango is available and up-to-date.
 /// </summary>
 public class TangoPresentController : MonoBehaviour
 {
+    /// <summary>
+    /// Start app button.
+    /// </summary>
+    public GameObject start;
+
     /// <summary>
     /// When playing in the editor, whether this script will act as if Project Tango is
     /// present, out of date, or not present.
@@ -80,6 +86,7 @@ public class TangoPresentController : MonoBehaviour
         else
         {
             tangoState = TangoState.Present;
+            start.SetActive(true);
         }
 #endif
 
