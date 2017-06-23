@@ -120,10 +120,9 @@ public class DijkstraAlgorithm
         sPath = shortedPath(s, t);
     }
 
+    /* Method return the shortest path of graph */
     private int[] shortedPath(int start, int target)
     {
-        Debug.Log("#DIJKSTRA - start:" + start + " target:" + target);
-
         List<int> shortedPathList = new List<int>();
         int current = target;
 

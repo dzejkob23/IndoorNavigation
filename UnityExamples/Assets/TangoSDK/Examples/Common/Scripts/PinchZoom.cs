@@ -44,7 +44,6 @@ class PinchZoom : MonoBehaviour
     {
         if (Camera.main == null)
         {
-            Debug.Log("#CHECK - There is not any camera ...");
             return;
         }
 

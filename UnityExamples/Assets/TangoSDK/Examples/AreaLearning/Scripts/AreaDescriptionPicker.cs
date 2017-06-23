@@ -149,8 +149,6 @@ public class AreaDescriptionPicker : MonoBehaviour, ITangoLifecycle
         }
         else
         {
-            AndroidHelper.ShowAndroidToastMessage("#TANGO_LIFE - Motion Tracking and Area Learning Permissions Needed");
-            
             // This is a fix for a lifecycle issue where calling
             // Application.Quit() here, and restarting the application
             // immediately results in a deadlocked app.
@@ -163,7 +161,7 @@ public class AreaDescriptionPicker : MonoBehaviour, ITangoLifecycle
     /// </summary>
     public void OnTangoServiceConnected()
     {
-        Debug.Log("#TANGO_LIFE - OnTangoServiceConnected");
+        Debug.Log("Tango service is connected!");
     }
     
     /// <summary>
@@ -171,7 +169,7 @@ public class AreaDescriptionPicker : MonoBehaviour, ITangoLifecycle
     /// </summary>
     public void OnTangoServiceDisconnected()
     {
-        Debug.Log("#TANGO_LIFE - OnTangoServiceDisconnected");
+        Debug.Log("Tango service is disconnected!");
     }
 
     /// <summary>

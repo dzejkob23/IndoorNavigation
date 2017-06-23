@@ -293,7 +293,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
         else
         {
-            AndroidHelper.ShowAndroidToastMessage("Touch on screen is TURN OFF!");
+            AndroidHelper.ShowAndroidToastMessage("Please, use buttons on right!");
         }
     }
 
@@ -527,7 +527,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
                 m_connectMarkers[1] = null;
                 m_selectedMarker = null;
 
-                AndroidHelper.ShowAndroidToastMessage("Connection is DELETED.");
+                AndroidHelper.ShowAndroidToastMessage("Connection is deleted.");
             }
             else
             {
@@ -537,7 +537,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
                 m_connectMarkers[1] = null;
                 m_selectedMarker = null;
 
-                AndroidHelper.ShowAndroidToastMessage("Connection is CREATED.");
+                AndroidHelper.ShowAndroidToastMessage("Connection is created.");
             }
         }
     }
