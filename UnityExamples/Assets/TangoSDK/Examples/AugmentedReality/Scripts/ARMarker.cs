@@ -82,6 +82,10 @@ public class ARMarker : MonoBehaviour
     /// Selected material mode
     /// </summary>
     public Material selectedMaterial;
+    /// <summary>
+    /// Default width of line.
+    /// </summary>
+    private static float WIDTH_OF_LINE = 0.01f;
 
     /// <summary>
     /// Start this instance
@@ -142,7 +146,7 @@ public class ARMarker : MonoBehaviour
     {
         GameObject tmp = new GameObject();
         tmp.transform.SetParent(gameObject.transform);
-        tmp.AddComponent<Line>().lineSetup(gameObject.transform.position, markerPosition, 0.01f, null);
+        tmp.AddComponent<Line>().lineSetup(gameObject.transform.position, markerPosition, WIDTH_OF_LINE, null);
 
         lines.Add(markerId, tmp);
     }

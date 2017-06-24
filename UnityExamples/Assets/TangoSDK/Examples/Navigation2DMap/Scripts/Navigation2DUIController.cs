@@ -20,6 +20,14 @@ using UnityEngine.UI;
 public class Navigation2DUIController : MonoBehaviour
 {
     /// <summary>
+    /// Set this number on camera distance view.
+    /// </summary>
+    private static int CAMERA_Z_AXIS = -500;
+    /// <summary>
+    /// Does not line between two markers.
+    /// </summary>
+    private static double ZERO_DISTANCE = 0.0f;
+    /// <summary>
     /// Scaling constant.
     /// </summary>
     private const int SCALING = 300;
@@ -211,7 +219,7 @@ public class Navigation2DUIController : MonoBehaviour
         }
 
         // Move main camera
-        scaledCurrentPosititon.z = -500;
+        scaledCurrentPosititon.z = CAMERA_Z_AXIS;
         Camera.main.transform.position = scaledCurrentPosititon;
     }
 
@@ -275,7 +283,6 @@ public class Navigation2DUIController : MonoBehaviour
         
         if (newMarkersPosition == null || newMarkersPosition.Keys.Count == 0 || newMarkersPosition.Values.Count == 0)
         {
-            AndroidHelper.ShowAndroidToastMessage("List of markers is EMPTY!");
             return;
         }
 
@@ -283,7 +290,6 @@ public class Navigation2DUIController : MonoBehaviour
         {
             if (marker.Value == null)
             {
-                AndroidHelper.ShowAndroidToastMessage("value");
                 break;
             }
 
@@ -363,7 +369,7 @@ public class Navigation2DUIController : MonoBehaviour
                 Vector2 secondPosition = new Vector2();
                 bool isFillSecond = newMarkersPosition.TryGetValue(j, out secondPosition);
 
-                if (graph2D[i, j] != 0.0f && isFillFirst && isFillSecond)
+                if (graph2D[i, j] != ZERO_DISTANCE && isFillFirst && isFillSecond)
                 {
                     addLine(firstPosition, secondPosition, i, j);
                 }
