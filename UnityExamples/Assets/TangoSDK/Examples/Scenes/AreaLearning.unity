@@ -2985,6 +2985,8 @@ MonoBehaviour:
     type: 2}
   m_savingText: {fileID: 98283539}
   arrowMaterial: {fileID: 2100000, guid: f7b3a7f47b8101b43a7cfaad7dba3e2d, type: 2}
+  selectMarkerMaterial: {fileID: 2100000, guid: bfd1d34e5fa944704bf1fa987eecbbae,
+    type: 2}
 --- !u!1 &1299377509
 GameObject:
   m_ObjectHideFlags: 0

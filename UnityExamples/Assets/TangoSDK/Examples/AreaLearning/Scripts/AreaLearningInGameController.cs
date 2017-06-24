@@ -492,12 +492,14 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         if (m_selectedMarker != null && m_connectMarkers[0] == null)
         {
             m_connectMarkers[0] = m_selectedMarker;
+            m_connectMarkers[0].GetComponent<ARMarker>().selectGameObject();
             m_selectedMarker = null;
         }
 
         if (m_selectedMarker != null && m_connectMarkers[1] == null)
         {
             m_connectMarkers[1] = m_selectedMarker;
+            m_connectMarkers[1].GetComponent<ARMarker>().selectGameObject();
             m_selectedMarker = null;
         }
 
@@ -522,23 +524,32 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             if (tmpLine != null)
             {
                 Destroy(tmpLine);
-
-                m_connectMarkers[0] = null;
-                m_connectMarkers[1] = null;
-                m_selectedMarker = null;
-
                 AndroidHelper.ShowAndroidToastMessage("Connection is deleted.");
             }
             else
             {
                 m_connectMarkers[0].addLine(m_connectMarkers[1].getID(), m_connectMarkers[1].transform.position);
-
-                m_connectMarkers[0] = null;
-                m_connectMarkers[1] = null;
-                m_selectedMarker = null;
-
                 AndroidHelper.ShowAndroidToastMessage("Connection is created.");
             }
+
+            resetSelectedMarkers();
+
+            m_selectedMarker = null;
+        }
+    }
+
+    private void resetSelectedMarkers()
+    {
+        if (m_connectMarkers[0] != null)
+        {
+            m_connectMarkers[0].GetComponent<ARMarker>().unselectedGameObject();
+            m_connectMarkers[0] = null;
+        }
+
+        if (m_connectMarkers[1] != null)
+        {
+            m_connectMarkers[1].GetComponent<ARMarker>().unselectedGameObject();
+            m_connectMarkers[1] = null;
         }
     }
 
@@ -547,6 +558,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     public void FinishMarkers()
     {
+        resetSelectedMarkers();
         graph.CreateEvaluatedGraph(m_markerList);
         show2DMapScene();
     }

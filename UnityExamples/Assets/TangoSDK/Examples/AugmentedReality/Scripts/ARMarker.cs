@@ -74,11 +74,21 @@ public class ARMarker : MonoBehaviour
     private int[] oldNeighboursIds;
 
     /// <summary>
+    /// Default object material
+    /// </summary>
+    private Material defaultMaterial;
+
+    /// <summary>
+    /// Selected material mode
+    /// </summary>
+    public Material selectedMaterial;
+
+    /// <summary>
     /// Start this instance
     /// </summary>
     public void Start()
     {
-        // EMPTY
+        defaultMaterial = gameObject.GetComponent<MeshRenderer>().material;
     }
 
     /// <summary>
@@ -164,5 +174,21 @@ public class ARMarker : MonoBehaviour
     public int [] getOldNeighboursIds()
     {
         return oldNeighboursIds;
+    }
+
+    /// <summary>
+    /// Change game object material on selected mode
+    /// </summary>
+    public void selectGameObject()
+    {
+        gameObject.GetComponent<MeshRenderer>().material = selectedMaterial;
+    }
+
+    /// <summary>
+    /// Change object material on default mode
+    /// </summary>
+    public void unselectedGameObject()
+    {
+        gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
     }
 }
