@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="KeyPair.cs" author="Jakub Zíka" student="A15N0087P">
 //
-// License is according West Bohemmia licenses.
+// License is according University of West Bohemmia licenses.
 //
 // </copyright>
 //-----------------------------------------------------------------------

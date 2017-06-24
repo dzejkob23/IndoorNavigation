@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="Navigation2DUIController.cs" author="Jakub Zíka" student="A15N0087P">
 //
-// License is according West Bohemmia licenses.
+// License is according University of West Bohemmia licenses.
 //
 // </copyright>
 //-----------------------------------------------------------------------
@@ -287,7 +287,6 @@ public class Navigation2DUIController : MonoBehaviour
                 break;
             }
 
-            Debug.Log("#CHECK - name of marker: " + marker.Key.ToString());
             drawButton(marker.Key, marker.Value.x, marker.Value.y);
         }
     }
@@ -611,7 +610,7 @@ public class Navigation2DUIController : MonoBehaviour
             connectMarkersId[0] = -1;
             connectMarkersId[1] = -1;
 
-            AndroidHelper.ShowAndroidToastMessage("Connecion DELETED!");
+            AndroidHelper.ShowAndroidToastMessage("Connecion is deleted.");
             return;
         }
 
@@ -640,7 +639,10 @@ public class Navigation2DUIController : MonoBehaviour
             connectMarkersId[0] = -1;
             connectMarkersId[1] = -1;
 
-            AndroidHelper.ShowAndroidToastMessage("Created NEW connection.");
+            AndroidHelper.ShowAndroidToastMessage("Created is created.");
         }
     }
+
+
+
 }

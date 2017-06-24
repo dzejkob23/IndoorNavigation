@@ -392,7 +392,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Warehouse Position
+  m_Text: Warehouse position
 --- !u!222 &163547486
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -712,7 +712,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "End \nNavigation"
+  m_Text: "End \nnavigation"
 --- !u!222 &338979823
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1143,7 +1143,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Localize
 
-    Area'
+    area'
 --- !u!222 &397727055
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1198,7 +1198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.30238968, g: 0.875, b: 0.6380578, a: 0.392}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1286,7 +1286,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Create INDEPENDENT marker
+  m_Text: Create independent marker
 --- !u!222 &476057772
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1500,7 +1500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.912, g: 1, b: 0.171, a: 0.567}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1738,7 +1738,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Connect NEW to LAST created marker
+  m_Text: Connect new to last created marker
 --- !u!222 &636276294
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2081,7 +2081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.912, g: 1, b: 0.171, a: 0.567}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2255,7 +2255,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Change
 
-    Area'
+    area'
 --- !u!222 &872247029
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2357,7 +2357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.30238968, g: 0.875, b: 0.6380578, a: 0.392}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2511,7 +2511,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Change
 
-    Area'
+    area'
 --- !u!222 &983767549
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3126,7 +3126,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Learning Mode
+  m_Text: Learning mode
 --- !u!222 &1344260618
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4369,7 +4369,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Connect / Disconnect two markers
+  m_Text: Connect / disconnect two markers
 --- !u!222 &1663081781
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4634,7 +4634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.912, g: 1, b: 0.171, a: 0.567}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -4915,7 +4915,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Area Description
+  m_Text: New area description
 --- !u!222 &1894255888
 CanvasRenderer:
   m_ObjectHideFlags: 0

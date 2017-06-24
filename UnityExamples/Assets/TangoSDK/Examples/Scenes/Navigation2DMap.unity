@@ -472,9 +472,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'ADD / DEL
+  m_Text: 'Add / del
 
-    Line'
+    line'
 --- !u!222 &902636006
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1109,7 +1109,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Select
 
-    Marker'
+    marker'
 --- !u!222 &1968228322
 CanvasRenderer:
   m_ObjectHideFlags: 0

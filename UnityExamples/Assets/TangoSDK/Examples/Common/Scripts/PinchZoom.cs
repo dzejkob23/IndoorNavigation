@@ -1,7 +1,7 @@
 ﻿//-----------------------------------------------------------------------
 // <copyright file="PinchZoom.cs" author="Jakub Zíka" student="A15N0087P">
 //
-// License is according West Bohemmia licenses.
+// License is according University of West Bohemmia licenses.
 //
 // </copyright>
 //-----------------------------------------------------------------------
@@ -44,7 +44,6 @@ class PinchZoom : MonoBehaviour
     {
         if (Camera.main == null)
         {
-            Debug.Log("#CHECK - There is not any camera ...");
             return;
         }
 
