@@ -413,14 +413,27 @@ public class Navigation2DUIController : MonoBehaviour
             }
         }
 
+        // aktual nearest
         if (buttons.TryGetValue(nearestID, out nearestButton))
         {
             nearestButton.GetComponent<Image>().color = NEAREST_BUTTON_COLOR;
         }
 
+        // previous nearest
         if (buttons.TryGetValue(previousNearestID, out nearestButton) && previousNearestID != nearestID)
         {
-            nearestButton.GetComponent<Image>().color = BASIC_BUTTON_COLOR;
+            if (previousNearestID == connectMarkersId[0] || previousNearestID == connectMarkersId[1])
+            {
+                nearestButton.GetComponent<Image>().color = NEWLINE_BUTTON_COLOR;
+            }
+            else if (previousNearestID == newSelectedID)
+            {
+                nearestButton.GetComponent<Image>().color = NAVIGATION_BUTTON_COLOR;
+            }
+            else
+            {
+                nearestButton.GetComponent<Image>().color = BASIC_BUTTON_COLOR;
+            }
         }
     }
 
@@ -524,6 +537,8 @@ public class Navigation2DUIController : MonoBehaviour
     /// </summary>
     public void update2DGraph()
     {
+        resetSelectedMarkers();
+
         navigateButton.gameObject.SetActive(true);
         modifyButton.gameObject.SetActive(true);
         finishButton.gameObject.SetActive(false);
@@ -607,8 +622,7 @@ public class Navigation2DUIController : MonoBehaviour
             graph2D[connectMarkersId[0], connectMarkersId[1]] = 0;
             graph2D[connectMarkersId[1], connectMarkersId[0]] = 0;
 
-            connectMarkersId[0] = -1;
-            connectMarkersId[1] = -1;
+            resetSelectedMarkers();
 
             AndroidHelper.ShowAndroidToastMessage("Connecion is deleted.");
             return;
@@ -636,13 +650,31 @@ public class Navigation2DUIController : MonoBehaviour
 
             areaLearning.addLineWithIds(connectMarkersId[0], connectMarkersId[1]);
 
-            connectMarkersId[0] = -1;
-            connectMarkersId[1] = -1;
+            resetSelectedMarkers();
 
             AndroidHelper.ShowAndroidToastMessage("Created is created.");
         }
     }
 
+    /// <summary>
+    /// Reset selected buttons.
+    /// </summary>
+    public void resetSelectedMarkers()
+    {
+        GameObject s0, s1;
 
+        if (buttons.TryGetValue(connectMarkersId[0], out s0))
+        {
+            s0.GetComponent<Image>().color = BASIC_BUTTON_COLOR;
+        }
+        
+        if (buttons.TryGetValue(connectMarkersId[1], out s1))
+        {
+            s1.GetComponent<Image>().color = BASIC_BUTTON_COLOR;
+        }
+
+        connectMarkersId[0] = -1;
+        connectMarkersId[1] = -1;
+    }
 
 }
