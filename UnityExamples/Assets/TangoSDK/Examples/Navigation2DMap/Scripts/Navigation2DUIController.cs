@@ -683,4 +683,12 @@ public class Navigation2DUIController : MonoBehaviour
         connectMarkersId[1] = -1;
     }
 
+    /// <summary>
+    /// Save area description from area learning scene.
+    /// </summary>
+    public void SaveAreaDescription()
+    {
+        areaLearning.Save();
+    }
+
 }

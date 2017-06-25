@@ -71,7 +71,7 @@ public class ARMarker : MonoBehaviour
     /// <summary>
     ///  ???
     /// </summary>
-    private int[] oldNeighboursIds;
+    private int[] neighboursIDs;
 
     /// <summary>
     /// Default object material
@@ -165,19 +165,19 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     /// <param name="oldId">Old ID.</param>
     /// <param name="oldNeighboursIds">Old neighbours ID.</param>
-    public void setAllParameters(int oldId, int [] oldNeighboursIds)
+    public void setParameters(int oldID, int [] neighboursIDs)
     {
-        this.ID = oldId;
-        this.oldNeighboursIds = oldNeighboursIds;
+        this.ID = oldID;
+        this.neighboursIDs = neighboursIDs;
     }
 
     /// <summary>
     /// Return old neighbours ID.
     /// </summary>
     /// <returns>Old neighbours ID.</returns>
-    public int [] getOldNeighboursIds()
+    public int [] getNeighbours()
     {
-        return oldNeighboursIds;
+        return neighboursIDs;
     }
 
     /// <summary>

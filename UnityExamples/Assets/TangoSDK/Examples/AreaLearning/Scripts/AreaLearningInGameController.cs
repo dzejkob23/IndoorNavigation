@@ -807,26 +807,28 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
                                           mark.m_orientation) as GameObject;
 
             // Set other values
-            temp_instance.GetComponent<ARMarker>().setAllParameters(mark.m_id, mark.m_neighbours);
+            temp_instance.GetComponent<ARMarker>().setParameters(mark.m_id, mark.m_neighbours);
 
             // Add re-created marker to list
-            int temp_id = temp_instance.GetComponent<ARMarker>().getID();
-            m_markerList.Add(temp_id, temp_instance);
+            m_markerList.Add(mark.m_id, temp_instance);
         }
 
         // Draw connections between markers
         foreach (KeyValuePair<int, GameObject> marker in m_markerList)
         {
             // Draw all lines to neighbours
-            int[] neighboursIds = marker.Value.GetComponent<ARMarker>().getOldNeighboursIds();
-            int capacity = neighboursIds.Length;
-            GameObject neighbour;
-
-            for (int i = 0; i < capacity; i++)
+            int[] neighboursIds;
+            if ((neighboursIds = marker.Value.GetComponent<ARMarker>().getNeighbours()) != null)
             {
-                if (m_markerList.TryGetValue(neighboursIds[i], out neighbour))
+                int capacity = neighboursIds.Length;
+                GameObject neighbour;
+
+                for (int i = 0; i < capacity; i++)
                 {
-                    marker.Value.GetComponent<ARMarker>().addLine(neighboursIds[i], neighbour.transform.position);
+                    if (m_markerList.TryGetValue(neighboursIds[i], out neighbour))
+                    {
+                        marker.Value.GetComponent<ARMarker>().addLine(neighboursIds[i], neighbour.transform.position);
+                    }
                 }
             }
         }
