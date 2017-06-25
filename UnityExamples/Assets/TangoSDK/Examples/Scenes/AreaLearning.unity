@@ -1408,7 +1408,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Create independent marker
+  m_Text: Create independent vertex
 --- !u!222 &476057772
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1860,7 +1860,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Connect new to last created marker
+  m_Text: Create line with last created vertex
 --- !u!222 &636276294
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2056,7 +2056,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Join
+  m_Text: 'Select
+
+    marker'
 --- !u!222 &688439684
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4491,7 +4493,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Connect / disconnect two markers
+  m_Text: Add / delete line between two verticies
 --- !u!222 &1663081781
 CanvasRenderer:
   m_ObjectHideFlags: 0
