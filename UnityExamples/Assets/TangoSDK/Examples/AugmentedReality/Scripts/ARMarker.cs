@@ -195,4 +195,22 @@ public class ARMarker : MonoBehaviour
     {
         gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
     }
+
+    /// <summary>
+    /// Set counter on new value for loaded markers.
+    /// </summary>
+    /// <param name="newCounterValue">New counter value.</param>
+    public void setCounter(int newCounterValue)
+    {
+        count_id = newCounterValue;
+    }
+
+    /// <summary>
+    /// Get vounter value.
+    /// </summary>
+    /// <returns>Counter value.</returns>
+    public int getCounter()
+    {
+        return count_id;
+    }
 }

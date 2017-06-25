@@ -809,6 +809,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             // Set other values
             temp_instance.GetComponent<ARMarker>().setParameters(mark.m_id, mark.m_neighbours);
 
+            if (temp_instance.GetComponent<ARMarker>().getCounter() < mark.m_id)
+            {
+                temp_instance.GetComponent<ARMarker>().setCounter(mark.m_id);
+            }
+
             // Add re-created marker to list
             m_markerList.Add(mark.m_id, temp_instance);
         }
