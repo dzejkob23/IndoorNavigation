@@ -39,7 +39,7 @@ public class Graph
         foreach (KeyValuePair<int, GameObject> marker in m_markerDictionary)
         {
             int markerId = marker.Key;
-            Dictionary<int, GameObject> renderers = marker.Value.GetComponent<ARMarker>().getRendersDictionary();
+            Dictionary<int, GameObject> renderers = marker.Value.GetComponent<ARMarker>().GetRendersDictionary();
             markersPositions.Add(marker.Key, marker.Value.transform.position);
 
             foreach (KeyValuePair<int, GameObject> rendererObj in renderers)
@@ -47,8 +47,8 @@ public class Graph
                 // get points of line from renderer (it contains marker and neighbour poisition)
                 int neighbourId = rendererObj.Key;
                 Line renderer = rendererObj.Value.GetComponent<Line>();
-                Vector3[] neighbourPositions = new Vector3 [renderer.getNumPositions()];
-                renderer.getPositions(neighbourPositions);
+                Vector3[] neighbourPositions = new Vector3 [renderer.GetNumPositions()];
+                renderer.GetPositions(neighbourPositions);
 
                 // fill marker and neighbour position
                 if (neighbourPositions.Length < 2)
@@ -76,7 +76,7 @@ public class Graph
     /// Return markers positions.
     /// </summary>
     /// <returns>Markers positions.</returns>
-    public Dictionary<int, Vector3> getMarkersPosition()
+    public Dictionary<int, Vector3> GetMarkersPosition()
     {
         return markersPositions;
     }
@@ -85,7 +85,7 @@ public class Graph
     /// Return 2D graph in matrix of distances.
     /// </summary>
     /// <returns>Graph with distances.</returns>
-    public double[,] get2DGraph()
+    public double[,] Get2DGraph()
     {
         return graph2D;
     }
@@ -94,7 +94,7 @@ public class Graph
     /// Set 2D graph in matric of distances.
     /// </summary>
     /// <param name="graph2D">2D graph with distances.</param>
-    public void set2DGraph(double [,] graph2D)
+    public void Set2DGraph(double [,] graph2D)
     {
         this.graph2D = graph2D;
     }

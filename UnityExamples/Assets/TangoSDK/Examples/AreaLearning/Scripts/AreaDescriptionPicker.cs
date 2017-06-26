@@ -138,6 +138,55 @@ public class AreaDescriptionPicker : MonoBehaviour, ITangoLifecycle
     }
 
     /// <summary>
+    /// Remove area description with xml if exists.
+    /// </summary>
+    public void RemoveAreaDescription()
+    {
+        if (m_curAreaDescriptionUUID != null)
+        {
+            string path = Application.persistentDataPath + "/" + m_curAreaDescriptionUUID + ".xml";
+            if (!_DeleteXMLFile(path))
+            {
+                return;
+            }
+
+            AreaDescription areaDescription = AreaDescription.ForUUID(m_curAreaDescriptionUUID);
+            areaDescription.Delete();
+            _PopulateList();
+            m_curAreaDescriptionUUID = null;
+        }
+        else
+        {
+            AndroidHelper.ShowAndroidToastMessage("Please, choose an area description in list.");
+        }
+    }
+
+    /// <summary>
+    /// Remove xml description via path if exists.
+    /// </summary>
+    /// <param name="path">Path to xml definition.</param>
+    /// <returns>If removing was successfull.</returns>
+    private bool _DeleteXMLFile(string path)
+    {
+        if (!File.Exists(path))
+        {
+            AndroidHelper.ShowAndroidToastMessage("XML description doesn't exist.");
+            return true;
+        }
+
+        File.Delete(path);
+
+        if (File.Exists(path))
+        {
+            AndroidHelper.ShowAndroidToastMessage("Removing of XML was unsuccessfull.");
+            return false;
+        }
+
+        AndroidHelper.ShowAndroidToastMessage("Removing XML definition was successful.");
+        return true;
+    }
+
+    /// <summary>
     /// Internal callback when a permissions event happens.
     /// </summary>
     /// <param name="permissionsGranted">If set to <c>true</c> permissions granted.</param>

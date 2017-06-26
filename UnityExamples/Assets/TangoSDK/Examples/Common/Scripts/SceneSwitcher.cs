@@ -31,4 +31,9 @@ public class SceneSwitcher : MonoBehaviour
     {
         SceneManager.LoadScene("AreaLearning");
     }
+
+    public void updateTangoCore()
+    {
+        Application.OpenURL("https://play.google.com/store/apps/details?id=com.google.tango");
+    }
 }

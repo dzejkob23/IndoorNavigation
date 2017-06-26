@@ -32,7 +32,7 @@ public class DijkstraAlgorithm
     private List<int> queue = new List<int>();
 
     /* Sets up initial settings */
-    private void Initialize(int s, int len)
+    private void _Initialize(int s, int len)
     {
         dist = new double[len];
         path = new int[len];
@@ -51,7 +51,7 @@ public class DijkstraAlgorithm
     }
 
     /* Retrives next node to evaluate from the queue */
-    private int GetNextVertex()
+    private int _GetNextVertex()
     {
         double min = Double.PositiveInfinity;
         int Vertex = -1;
@@ -83,11 +83,11 @@ public class DijkstraAlgorithm
 
         int len = G.GetLength(0);
 
-        Initialize(s, len);
+        _Initialize(s, len);
 
         while (queue.Count > 0)
         {
-            int u = GetNextVertex();
+            int u = _GetNextVertex();
             
             // There I can stop code if "u" equals "target point".
             if (u == t)
@@ -117,11 +117,11 @@ public class DijkstraAlgorithm
             }
         }
 
-        sPath = shortedPath(s, t);
+        sPath = _ShortedPath(s, t);
     }
 
     /* Method return the shortest path of graph */
-    private int[] shortedPath(int start, int target)
+    private int[] _ShortedPath(int start, int target)
     {
         List<int> shortedPathList = new List<int>();
         int current = target;

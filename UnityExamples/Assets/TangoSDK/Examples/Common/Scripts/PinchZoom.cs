@@ -19,15 +19,15 @@ class PinchZoom : MonoBehaviour
     /// <summary>
     /// Prespective camera zoom speed.
     /// </summary>
-    public float perspectiveZoomSpeed = 0.5f;        // The rate of change of the field of view in perspective mode.
+    private static float PERSPECTIVE_ZOOM_SPEED = 1;        // The rate of change of the field of view in perspective mode.
     /// <summary>
     /// Orthographic camera zoom speed.
     /// </summary>
-    public float orthoZoomSpeed = 0.5f;        // The rate of change of the orthographic size in orthographic mode.
+    private static float ORTHOGRPHIC_ZOOM_SPEED = 1;        // The rate of change of the orthographic size in orthographic mode.
     /// <summary>
     /// Orthographic camera draging speed.
     /// </summary>
-    public float orthoDragSpeed = 0.01f;
+    private static float ORTHOGRAPHIC_DRAG_SPEED = 2;
     /// <summary>
     /// Indicator of relocalization using.
     /// </summary>
@@ -47,21 +47,21 @@ class PinchZoom : MonoBehaviour
             return;
         }
 
-        cameraMove();
-        cameraZoom();
+        _CameraMove();
+        _CameraZoom();
     }
 
     /// <summary>
     /// Camera moving.
     /// </summary>
-    private void cameraMove()
+    private void _CameraMove()
     {
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         // zkusit pouze podminku "if (Input.touchCount == 1)" - chvalne, co to udela
         {
             // Move camera
             Vector2 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-            transform.Translate(-touchDeltaPosition.x * orthoDragSpeed, -touchDeltaPosition.y * orthoDragSpeed, 0);
+            transform.Translate(-touchDeltaPosition.x * ORTHOGRAPHIC_DRAG_SPEED, -touchDeltaPosition.y * ORTHOGRAPHIC_DRAG_SPEED, 0);
 
             // Stop using relocalization - mobing only with touching the screen
             isUsingRelocalization = false;
@@ -71,7 +71,7 @@ class PinchZoom : MonoBehaviour
     /// <summary>
     /// Camera zooming.
     /// </summary>
-    private void cameraZoom()
+    private void _CameraZoom()
     {
         // If there are two touches on the device...
         if (Input.touchCount == 2)
@@ -95,7 +95,7 @@ class PinchZoom : MonoBehaviour
             if (Camera.main.orthographic)
             {
                 // ... change the orthographic size based on the change in distance between the touches.
-                Camera.main.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
+                Camera.main.orthographicSize += deltaMagnitudeDiff * ORTHOGRPHIC_ZOOM_SPEED;
 
                 // Make sure the orthographic size never drops below zero.
                 Camera.main.orthographicSize = Mathf.Max(Camera.main.orthographicSize, 0.1f);
@@ -103,7 +103,7 @@ class PinchZoom : MonoBehaviour
             else
             {
                 // Otherwise change the field of view based on the change in distance between the touches.
-                Camera.main.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
+                Camera.main.fieldOfView += deltaMagnitudeDiff * PERSPECTIVE_ZOOM_SPEED;
 
                 // Clamp the field of view to make sure it's between 0 and 180.
                 Camera.main.fieldOfView = Mathf.Clamp(Camera.main.fieldOfView, 0.1f, 179.9f);

@@ -257,14 +257,14 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         if (Input.touchCount == 1)
         {
-            _reactionOnTouch();
+            _ReactionOnTouch();
         }
     }
 
     /// <summary>
     /// Do something on touch on screen
     /// </summary>
-    private void _reactionOnTouch()
+    private void _ReactionOnTouch()
     {
         Touch t = Input.GetTouch(0);
         Vector2 guiPosition = new Vector2(t.position.x, Screen.height - t.position.y);
@@ -284,11 +284,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             }
             else if (Physics.Raycast(cam.ScreenPointToRay(t.position), out hitInfo))
             {
-                _selectCreatedMarker(hitInfo);
+                _SelectCreatedMarker(hitInfo);
             }
             else
             {
-                _placeNewMarker(t);
+                _PlaceNewMarker(t);
             }
         }
         else
@@ -301,7 +301,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Select craete marker via touch
     /// </summary>
     /// <param name="hitInfo"></param>
-    private void _selectCreatedMarker(RaycastHit hitInfo)
+    private void _SelectCreatedMarker(RaycastHit hitInfo)
     {
         // Found a marker, select it (so long as it isn't disappearing)!
         GameObject tapped = hitInfo.collider.gameObject;
@@ -315,7 +315,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Place new ar marker to scene
     /// </summary>
     /// <param name="t"></param>
-    private void _placeNewMarker(Touch t)
+    private void _PlaceNewMarker(Touch t)
     {
         // Place a new point at that location, clear selection
         m_selectedMarker = null;
@@ -363,10 +363,10 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             screenRect.yMin = Mathf.Min(yMin, yMax);
             screenRect.yMax = Mathf.Max(yMin, yMax);
             
-            if (GUI.Button(screenRect, "<size=30>Touch again = <color=red>HIDE MARKER</color></size>"))
+            if (GUI.Button(screenRect, "<size=30>Touch again = <color=red>REMOVE MARKER</color></size>"))
             {
-                int selected_id = m_selectedMarker.gameObject.GetComponent<ARMarker>().getID();
-                deleteLineRendererViaMarkerId(selected_id);
+                int selected_id = m_selectedMarker.gameObject.GetComponent<ARMarker>().GetID();
+                _DeleteLineRendererViaMarkerId(selected_id);
                 
                 m_markerList.Remove(selected_id);
                 m_selectedMarker.SendMessage("Hide");
@@ -421,7 +421,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 #endif
     }
 
-    private void deleteLineRendererViaMarkerId(int id)
+    private void _DeleteLineRendererViaMarkerId(int id)
     {
         foreach (KeyValuePair<int, GameObject> obj in m_markerList)
         {
@@ -492,12 +492,14 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         if (m_selectedMarker != null && m_connectMarkers[0] == null)
         {
             m_connectMarkers[0] = m_selectedMarker;
+            m_connectMarkers[0].GetComponent<ARMarker>().SelectGameObject();
             m_selectedMarker = null;
         }
 
         if (m_selectedMarker != null && m_connectMarkers[1] == null)
         {
             m_connectMarkers[1] = m_selectedMarker;
+            m_connectMarkers[1].GetComponent<ARMarker>().SelectGameObject();
             m_selectedMarker = null;
         }
 
@@ -506,39 +508,48 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             // TODO - check if line exists
             // removeLineBetweenMarkers(firstID, secondID);
             GameObject tmpLine = null;
-            if (m_connectMarkers[0].lines.TryGetValue(m_connectMarkers[1].getID(), out tmpLine))
+            if (m_connectMarkers[0].lines.TryGetValue(m_connectMarkers[1].GetID(), out tmpLine))
             {
-                m_connectMarkers[0].lines.Remove(m_connectMarkers[1].getID());
+                m_connectMarkers[0].lines.Remove(m_connectMarkers[1].GetID());
             }
 
             if (tmpLine == null)
             {
-                if (m_connectMarkers[1].lines.TryGetValue(m_connectMarkers[0].getID(), out tmpLine))
+                if (m_connectMarkers[1].lines.TryGetValue(m_connectMarkers[0].GetID(), out tmpLine))
                 {
-                    m_connectMarkers[1].lines.Remove(m_connectMarkers[0].getID());
+                    m_connectMarkers[1].lines.Remove(m_connectMarkers[0].GetID());
                 }
             }
 
             if (tmpLine != null)
             {
                 Destroy(tmpLine);
-
-                m_connectMarkers[0] = null;
-                m_connectMarkers[1] = null;
-                m_selectedMarker = null;
-
                 AndroidHelper.ShowAndroidToastMessage("Connection is deleted.");
             }
             else
             {
-                m_connectMarkers[0].addLine(m_connectMarkers[1].getID(), m_connectMarkers[1].transform.position);
-
-                m_connectMarkers[0] = null;
-                m_connectMarkers[1] = null;
-                m_selectedMarker = null;
-
+                m_connectMarkers[0].AddLine(m_connectMarkers[1].GetID(), m_connectMarkers[1].transform.position);
                 AndroidHelper.ShowAndroidToastMessage("Connection is created.");
             }
+
+            _ResetSelectedMarkers();
+
+            m_selectedMarker = null;
+        }
+    }
+
+    private void _ResetSelectedMarkers()
+    {
+        if (m_connectMarkers[0] != null)
+        {
+            m_connectMarkers[0].GetComponent<ARMarker>().UnselectedGameObject();
+            m_connectMarkers[0] = null;
+        }
+
+        if (m_connectMarkers[1] != null)
+        {
+            m_connectMarkers[1].GetComponent<ARMarker>().UnselectedGameObject();
+            m_connectMarkers[1] = null;
         }
     }
 
@@ -547,14 +558,15 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     public void FinishMarkers()
     {
+        _ResetSelectedMarkers();
         graph.CreateEvaluatedGraph(m_markerList);
-        show2DMapScene();
+        _Show2DMapScene();
     }
 
     /// <summary>
     /// Switch scene from 3D to 2D prespective.
     /// </summary>
-    private void show2DMapScene()
+    private void _Show2DMapScene()
     {
         SceneManager.LoadScene("Navigation2DMap", LoadSceneMode.Additive);
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Navigation2DMap"));
@@ -753,7 +765,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             temp.m_orientation = obj.Value.transform.rotation;
             temp.m_neighbours = new int[obj.Value.GetComponent<ARMarker>().lines.Keys.Count];
             obj.Value.GetComponent<ARMarker>().lines.Keys.CopyTo(temp.m_neighbours, 0);
-            temp.m_id = obj.Value.GetComponent<ARMarker>().getID();
+            temp.m_id = obj.Value.GetComponent<ARMarker>().GetID();
 
             xmlDataList.Add(temp);
         }
@@ -779,6 +791,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         List<MarkerData> xmlDataList = serializer.Deserialize(stream) as List<MarkerData>;
 
+        int max = int.MinValue;
+        GameObject gameObjectMaxValue;
+
         if (xmlDataList == null)
         {
             Debug.Log("AndroidInGameController._LoadMarkerFromDisk(): xmlDataList is null");
@@ -795,28 +810,40 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
                                           mark.m_orientation) as GameObject;
 
             // Set other values
-            temp_instance.GetComponent<ARMarker>().setAllParameters(mark.m_id, mark.m_neighbours);
+            temp_instance.GetComponent<ARMarker>().SetParameters(mark.m_id, mark.m_neighbours);
+
+            if (max < mark.m_id)
+            {
+                max = mark.m_id;
+            }
 
             // Add re-created marker to list
-            int temp_id = temp_instance.GetComponent<ARMarker>().getID();
-            m_markerList.Add(temp_id, temp_instance);
+            m_markerList.Add(mark.m_id, temp_instance);
         }
 
         // Draw connections between markers
         foreach (KeyValuePair<int, GameObject> marker in m_markerList)
         {
             // Draw all lines to neighbours
-            int[] neighboursIds = marker.Value.GetComponent<ARMarker>().getOldNeighboursIds();
-            int capacity = neighboursIds.Length;
-            GameObject neighbour;
-
-            for (int i = 0; i < capacity; i++)
+            int[] neighboursIds;
+            if ((neighboursIds = marker.Value.GetComponent<ARMarker>().GetNeighbours()) != null)
             {
-                if (m_markerList.TryGetValue(neighboursIds[i], out neighbour))
+                int capacity = neighboursIds.Length;
+                GameObject neighbour;
+
+                for (int i = 0; i < capacity; i++)
                 {
-                    marker.Value.GetComponent<ARMarker>().addLine(neighboursIds[i], neighbour.transform.position);
+                    if (m_markerList.TryGetValue(neighboursIds[i], out neighbour))
+                    {
+                        marker.Value.GetComponent<ARMarker>().AddLine(neighboursIds[i], neighbour.transform.position);
+                    }
                 }
             }
+        }
+
+        if (m_markerList.TryGetValue(max, out gameObjectMaxValue))
+        {
+            gameObjectMaxValue.GetComponent<ARMarker>().SetCounter(max);
         }
     }
 
@@ -893,7 +920,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
                                     Quaternion.LookRotation(forward, up)) as GameObject;
 
         ARMarker markerScript = newMarkObject.GetComponent<ARMarker>();
-        int newMarker_id = markerScript.getID();
+        int newMarker_id = markerScript.GetID();
 
         markerScript.m_type = m_currentMarkType;
         markerScript.m_timestamp = (float) m_poseController.m_poseTimestamp;
@@ -921,7 +948,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         {
             ARMarker lastTmp = lastCreatedMarker.GetComponent<ARMarker>();
             ARMarker newTmp = newMarkObject.GetComponent<ARMarker>();
-            lastTmp.addLine(newTmp.getID(), newTmp.transform.position);
+            lastTmp.AddLine(newTmp.GetID(), newTmp.transform.position);
         }
     }
 
@@ -929,7 +956,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Return list of markers.
     /// </summary>
     /// <returns>Dictionary with markers</returns>
-    public Dictionary<int, GameObject> getMarkerList()
+    public Dictionary<int, GameObject> GetMarkerList()
     {
         return m_markerList;
     }
@@ -938,7 +965,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Return instance of navigation graph.
     /// </summary>
     /// <returns>Instance of class Graph.</returns>
-    public Graph getGraph()
+    public Graph GetGraph()
     {
         return graph;
     }
@@ -947,7 +974,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Return current position of device in 3D space.
     /// </summary>
     /// <returns>Vector with position.</returns>
-    public Vector3 getCurrentPosition()
+    public Vector3 GetCurrentPosition()
     {
         return m_poseController.m_tangoPosition;
     }
@@ -957,7 +984,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     /// <param name="id1">Id of start marker.</param>
     /// <param name="id2">Id of target marker.</param>
-    public void addLineWithIds(int id1, int id2)
+    public void AddLineWithIds(int id1, int id2)
     {
         GameObject go1;
         GameObject go2;
@@ -968,13 +995,13 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         ARMarker marker1 = go1.GetComponent<ARMarker>();
         ARMarker marker2 = go2.GetComponent<ARMarker>();
 
-        marker1.addLine(marker2.getID(), marker2.transform.position);
+        marker1.AddLine(marker2.GetID(), marker2.transform.position);
     }
 
     /// <summary>
     /// Toggle of navigation indicator.
     /// </summary>
-    public void toggleNavigationScene()
+    public void ToggleNavigationScene()
     {
         isNavigation = !isNavigation;
     }
@@ -983,7 +1010,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Return navigation indicator
     /// </summary>
     /// <returns>True\false if si navigation enable.</returns>
-    public bool getIsNavigation()
+    public bool GetIsNavigation()
     {
         return isNavigation;
     }
@@ -992,7 +1019,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Enable or disable all markers with lines in 3D space.
     /// </summary>
     /// <param name="enable">True-enable\False-disable.</param>
-    public void enableDisableAllMarkers(bool enable)
+    public void EnableDisableAllMarkers(bool enable)
     {
         foreach (KeyValuePair<int, GameObject> obj in m_markerList)
         {
@@ -1009,9 +1036,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     public void EnableAllMarkers()
     {
-        toggleNavigationScene();
-        hideNavigationMarkers();
-        enableDisableAllMarkers(true);
+        ToggleNavigationScene();
+        _HideNavigationMarkers();
+        EnableDisableAllMarkers(true);
         canvas2DTo3D.SetActive(false);
         canvas3DTo2D.SetActive(true);
     }
@@ -1027,7 +1054,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// <summary>
     /// Hide navigation markers in shortest path.
     /// </summary>
-    private void hideNavigationMarkers()
+    private void _HideNavigationMarkers()
     {
         foreach (GameObject obj in shortestPathLines)
         {
@@ -1039,7 +1066,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// Show navigation path with last marker.
     /// </summary>
     /// <param name="shortestPath">Array with markers.</param>
-    public void showNavigationMarkers(int [] shortestPath)
+    public void ShowNavigationMarkers(int [] shortestPath)
     {
         if (shortestPathLines == null)
         {
@@ -1058,7 +1085,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             {
                 GameObject tmpLine = new GameObject();
                 tmpLine.transform.SetParent(gameObject.transform); 
-                tmpLine.AddComponent<Line>().lineSetup(tmp1.transform.position, tmp2.transform.position, 0.1f, arrowMaterial);              
+                tmpLine.AddComponent<Line>().LineSetup(tmp1.transform.position, tmp2.transform.position, 0.1f, arrowMaterial);              
                 shortestPathLines.Add(tmpLine);
             }
         }
@@ -1073,7 +1100,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
     /// </summary>
     /// <param name="start">Start ID.</param>
     /// <param name="target">Target ID.</param>
-    public void removeLineBetweenMarkers(int start, int target)
+    public void RemoveLineBetweenMarkers(int start, int target)
     {
         GameObject tmpObject;
         GameObject tmpLine;

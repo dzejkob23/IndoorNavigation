@@ -27,6 +27,11 @@ using UnityEngine.UI;
 public class TangoPresentController : MonoBehaviour
 {
     /// <summary>
+    /// Download Tango Core.
+    /// </summary>
+    public GameObject download;
+
+    /// <summary>
     /// Start app button.
     /// </summary>
     public GameObject start;
@@ -78,10 +83,12 @@ public class TangoPresentController : MonoBehaviour
         if (!AndroidHelper.IsTangoCorePresent())
         {
             tangoState = TangoState.NotPresent;
+            download.SetActive(true);
         }
         else if (!AndroidHelper.IsTangoCoreUpToDate())
         {
             tangoState = TangoState.OutOfDate;
+            download.SetActive(true);
         }
         else
         {

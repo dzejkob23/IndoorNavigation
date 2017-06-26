@@ -71,14 +71,28 @@ public class ARMarker : MonoBehaviour
     /// <summary>
     ///  ???
     /// </summary>
-    private int[] oldNeighboursIds;
+    private int[] neighboursIDs;
+
+    /// <summary>
+    /// Default object material
+    /// </summary>
+    private Material defaultMaterial;
+
+    /// <summary>
+    /// Selected material mode
+    /// </summary>
+    public Material selectedMaterial;
+    /// <summary>
+    /// Default width of line.
+    /// </summary>
+    private static float WIDTH_OF_LINE = 0.01f;
 
     /// <summary>
     /// Start this instance
     /// </summary>
     public void Start()
     {
-        // EMPTY
+        defaultMaterial = gameObject.GetComponent<MeshRenderer>().material;
     }
 
     /// <summary>
@@ -118,7 +132,7 @@ public class ARMarker : MonoBehaviour
     /// Get instance ID
     /// </summary>
     /// <returns>Instance ID</returns>
-    public int getID()
+    public int GetID()
     {
         return ID;
     }
@@ -128,11 +142,11 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     /// <param name="markerId">Id of target marker.</param>
     /// <param name="markerPosition">Position of target marker.</param>
-    public void addLine(int markerId, Vector3 markerPosition)
+    public void AddLine(int markerId, Vector3 markerPosition)
     {
         GameObject tmp = new GameObject();
         tmp.transform.SetParent(gameObject.transform);
-        tmp.AddComponent<Line>().lineSetup(gameObject.transform.position, markerPosition, 0.01f, null);
+        tmp.AddComponent<Line>().LineSetup(gameObject.transform.position, markerPosition, WIDTH_OF_LINE, null);
 
         lines.Add(markerId, tmp);
     }
@@ -141,7 +155,7 @@ public class ARMarker : MonoBehaviour
     /// Return all lines attached to this marker.
     /// </summary>
     /// <returns>List of lines.</returns>
-    public Dictionary<int, GameObject> getRendersDictionary()
+    public Dictionary<int, GameObject> GetRendersDictionary()
     {
         return lines;
     }
@@ -151,18 +165,52 @@ public class ARMarker : MonoBehaviour
     /// </summary>
     /// <param name="oldId">Old ID.</param>
     /// <param name="oldNeighboursIds">Old neighbours ID.</param>
-    public void setAllParameters(int oldId, int [] oldNeighboursIds)
+    public void SetParameters(int oldID, int [] neighboursIDs)
     {
-        this.ID = oldId;
-        this.oldNeighboursIds = oldNeighboursIds;
+        this.ID = oldID;
+        this.neighboursIDs = neighboursIDs;
     }
 
     /// <summary>
     /// Return old neighbours ID.
     /// </summary>
     /// <returns>Old neighbours ID.</returns>
-    public int [] getOldNeighboursIds()
+    public int [] GetNeighbours()
     {
-        return oldNeighboursIds;
+        return neighboursIDs;
+    }
+
+    /// <summary>
+    /// Change game object material on selected mode
+    /// </summary>
+    public void SelectGameObject()
+    {
+        gameObject.GetComponent<MeshRenderer>().material = selectedMaterial;
+    }
+
+    /// <summary>
+    /// Change object material on default mode
+    /// </summary>
+    public void UnselectedGameObject()
+    {
+        gameObject.GetComponent<MeshRenderer>().material = defaultMaterial;
+    }
+
+    /// <summary>
+    /// Set counter on new value for loaded markers.
+    /// </summary>
+    /// <param name="newCounterValue">New counter value.</param>
+    public void SetCounter(int newCounterValue)
+    {
+        count_id = newCounterValue;
+    }
+
+    /// <summary>
+    /// Get vounter value.
+    /// </summary>
+    /// <returns>Counter value.</returns>
+    public int GetCounter()
+    {
+        return count_id;
     }
 }
