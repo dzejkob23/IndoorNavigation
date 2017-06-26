@@ -50,7 +50,7 @@ public class Line : MonoBehaviour
     /// <param name="nextP">End point.</param>
     /// <param name="widthOfLine">Width of line.</param>
     /// <param name="material">Material of line.</param>
-    public void lineSetup(Vector3 originalP, Vector3 nextP, float widthOfLine, Material material)
+    public void LineSetup(Vector3 originalP, Vector3 nextP, float widthOfLine, Material material)
     {
         renderer = gameObject.AddComponent<LineRenderer>();
 
@@ -72,7 +72,7 @@ public class Line : MonoBehaviour
     /// </summary>
     /// <param name="widthOfLine">New width of line.</param>
     /// <param name="material">New material of line.</param>
-    public void resetLineSetup(float widthOfLine, Material material)
+    public void ResetLineSetup(float widthOfLine, Material material)
     {
         renderer.startWidth = widthOfLine;
         renderer.endWidth = widthOfLine;
@@ -83,7 +83,7 @@ public class Line : MonoBehaviour
     /// Return number of vertices.
     /// </summary>
     /// <returns>NCount of vertices.</returns>
-    public int getNumPositions()
+    public int GetNumPositions()
     {
         return renderer.numPositions;
     }
@@ -92,7 +92,7 @@ public class Line : MonoBehaviour
     /// Save LineRenderer positions to input parameter.
     /// </summary>
     /// <param name="positions">Storage for positions.</param>
-    public void getPositions(Vector3 [] positions)
+    public void GetPositions(Vector3 [] positions)
     {
         renderer.GetPositions(positions);
     }

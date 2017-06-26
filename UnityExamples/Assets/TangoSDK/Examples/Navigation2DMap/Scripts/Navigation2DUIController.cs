@@ -161,8 +161,8 @@ public class Navigation2DUIController : MonoBehaviour
         GameObject.FindGameObjectWithTag("AreaLearning").SetActive(false);
 
         // Get values from previous scene
-        newMarkersPosition = scaleMarkersPositions(areaLearning.getGraph().getMarkersPosition());
-        graph2D = areaLearning.getGraph().get2DGraph();
+        newMarkersPosition = _ScaleMarkersPositions(areaLearning.GetGraph().GetMarkersPosition());
+        graph2D = areaLearning.GetGraph().Get2DGraph();
 
         // Initialization
         lineRenderers = new Dictionary<KeyPair, GameObject>();
@@ -175,8 +175,8 @@ public class Navigation2DUIController : MonoBehaviour
         }
 
         // Prepare environment
-        drawGuiButtons(newMarkersPosition);
-        drawConnectionsBetweenButtons(newMarkersPosition, graph2D);
+        _DrawGuiButtons(newMarkersPosition);
+        _DrawConnectionsBetweenButtons(newMarkersPosition, graph2D);
     }
 
     /// <summary>
@@ -185,19 +185,19 @@ public class Navigation2DUIController : MonoBehaviour
     public void Update()
     {
         // Select marker to navigate
-        selectMarkerToNavigate();
+        _SelectMarkerToNavigate();
 
         // Mark the nearest navigation marker
-        markNearestMarker(newMarkersPosition);
+        _MarkNearestMarker(newMarkersPosition);
 
         // Update position navigation icon on screen
-        setPositionNavigationIcon();
+        _SetPositionNavigationIcon();
     }
 
     /// <summary>
     /// Set position icon position by position controller.
     /// </summary>
-    private void setPositionNavigationIcon()
+    private void _SetPositionNavigationIcon()
     {
         // Prepare data
         Vector3 currentPosition = poseController.m_tangoPosition;
@@ -226,7 +226,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// <summary>
     /// Set relocalization icon on value true.
     /// </summary>
-    public void relocalizeNavigationIconPosition()
+    public void RelocalizeNavigationIconPosition()
     {
         Camera.main.GetComponent<PinchZoom>().isUsingRelocalization = true;
     }
@@ -234,7 +234,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// <summary>
     /// Select marker to navigate.
     /// </summary>
-    private void selectMarkerToNavigate()
+    private void _SelectMarkerToNavigate()
     {
         // mark the nearest marker to user position - return
         if (newSelectedID == nearestID)
@@ -278,7 +278,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// Draw GUI buttons by input positions.
     /// </summary>
     /// <param name="newMarkersPosition">Position for buttons in 2D</param>
-    private void drawGuiButtons(Dictionary<int, Vector2> newMarkersPosition)
+    private void _DrawGuiButtons(Dictionary<int, Vector2> newMarkersPosition)
     {
         
         if (newMarkersPosition == null || newMarkersPosition.Keys.Count == 0 || newMarkersPosition.Values.Count == 0)
@@ -293,7 +293,7 @@ public class Navigation2DUIController : MonoBehaviour
                 break;
             }
 
-            drawButton(marker.Key, marker.Value.x, marker.Value.y);
+            _DrawButton(marker.Key, marker.Value.x, marker.Value.y);
         }
     }
 
@@ -302,7 +302,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// </summary>
     /// <param name="markers">Dictionarz of markers.</param>
     /// <returns>Min and Max values.</returns>
-    private Vector4 findMinXY(Dictionary<int, Vector3> markers)
+    private Vector4 _FindMinXY(Dictionary<int, Vector3> markers)
     {
         float minX = float.MaxValue;
         float minY = float.MaxValue;
@@ -337,7 +337,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// </summary>
     /// <param name="markers">Dictionary of markers.</param>
     /// <returns>New scaled positions in 2D.</returns>
-    private Dictionary<int, Vector2> scaleMarkersPositions(Dictionary<int, Vector3> markers)
+    private Dictionary<int, Vector2> _ScaleMarkersPositions(Dictionary<int, Vector3> markers)
     {
         Dictionary<int, Vector2> scaledPositions = new Dictionary<int, Vector2>();
 
@@ -357,7 +357,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// </summary>
     /// <param name="newMarkersPosition">Markers positions in 2D.</param>
     /// <param name="graph2D">Matrix of neighbours between markers.</param>
-    private void drawConnectionsBetweenButtons(Dictionary<int, Vector2> newMarkersPosition, double[,] graph2D)
+    private void _DrawConnectionsBetweenButtons(Dictionary<int, Vector2> newMarkersPosition, double[,] graph2D)
     {
         for (int i = 0; i < graph2D.GetLength(0); i++)
         {
@@ -371,7 +371,7 @@ public class Navigation2DUIController : MonoBehaviour
 
                 if (graph2D[i, j] != ZERO_DISTANCE && isFillFirst && isFillSecond)
                 {
-                    addLine(firstPosition, secondPosition, i, j);
+                    _AddLine(firstPosition, secondPosition, i, j);
                 }
             }
         }
@@ -384,11 +384,11 @@ public class Navigation2DUIController : MonoBehaviour
     /// <param name="secondPosition">End position of line.</param>
     /// <param name="from">Line from id marker.</param>
     /// <param name="to">Line to id marker.</param>
-    private void addLine(Vector2 firstPosition, Vector2 secondPosition, int from, int to)
+    private void _AddLine(Vector2 firstPosition, Vector2 secondPosition, int from, int to)
     {
         GameObject tmp = new GameObject();
         tmp.transform.SetParent(gameObject.transform);
-        tmp.AddComponent<Line>().lineSetup(new Vector3(firstPosition.x, firstPosition.y, 0),
+        tmp.AddComponent<Line>().LineSetup(new Vector3(firstPosition.x, firstPosition.y, 0),
                                            new Vector3(secondPosition.x, secondPosition.y, 0),
                                            5f,
                                            line2DMap);
@@ -399,9 +399,9 @@ public class Navigation2DUIController : MonoBehaviour
     /// Find nearest the nearest marker to device position.
     /// </summary>
     /// <param name="markers">Dictionary of markers.</param>
-    private void markNearestMarker(Dictionary<int, Vector2> markers)
+    private void _MarkNearestMarker(Dictionary<int, Vector2> markers)
     {
-        Vector3 myPosition3D = areaLearning.getCurrentPosition();
+        Vector3 myPosition3D = areaLearning.GetCurrentPosition();
         Vector2 myPosition2D = new Vector2(myPosition3D.x * SCALING, myPosition3D.z * SCALING);
         GameObject nearestButton = null;
 
@@ -449,14 +449,14 @@ public class Navigation2DUIController : MonoBehaviour
     /// <param name="buttonId">Button ID.</param>
     /// <param name="x">Button position X.</param>
     /// <param name="y">Button position Y.</param>
-    private void drawButton(int buttonId, float x, float y)
+    private void _DrawButton(int buttonId, float x, float y)
     {
         GameObject newButton = Instantiate(button) as GameObject;
         newButton.transform.SetParent(gameObject.transform, true);
         newButton.GetComponent<Image>().color = BASIC_BUTTON_COLOR;
         newButton.GetComponentInChildren<Text>().text = buttonId.ToString();
         newButton.transform.position = new Vector3(x, y, 0);
-        newButton.GetComponent<Button>().onClick.AddListener( () => { doOnButton(buttonId); } );
+        newButton.GetComponent<Button>().onClick.AddListener( () => { _DoOnButton(buttonId); } );
 
         buttons.Add(buttonId, newButton);
     }
@@ -464,8 +464,8 @@ public class Navigation2DUIController : MonoBehaviour
     /// <summary>
     /// Save button ID on touch.
     /// </summary>
-    /// <param name="currentId"></param>
-    private void doOnButton(int currentId)
+    /// <param name="currentId">Previous scene ID.</param>
+    private void _DoOnButton(int currentId)
     {
         newSelectedID = currentId;
     }
@@ -473,7 +473,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// <summary>
     /// Switch scena from 2D to 3D.
     /// </summary>
-    public void show3DMapScene()
+    public void Show3DMapScene()
     {
         // before switching
         // enable 3D camere with augmented reality rendering
@@ -491,7 +491,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// <summary>
     /// Switch scene from 2D to navigation.
     /// </summary>
-    public void moveToNavigation()
+    public void MoveToNavigation()
     {
         if (nearestID == -1 || newSelectedID == -1)
         {
@@ -510,13 +510,13 @@ public class Navigation2DUIController : MonoBehaviour
 
         // before switching
         // disable all markers with renderers
-        areaLearning.enableDisableAllMarkers(false);
+        areaLearning.EnableDisableAllMarkers(false);
         // toggle scene settings from "create navigation map" to "navigate in 3D space"
-        areaLearning.toggleNavigationScene();
+        areaLearning.ToggleNavigationScene();
         // enable 3D camere with augmented reality rendering
         poseController.GetComponentInParent<Camera>().enabled = true;
         // show only markers for navigation
-        areaLearning.showNavigationMarkers(dijkstra.sPath);
+        areaLearning.ShowNavigationMarkers(dijkstra.sPath);
 
         foreach (GameObject canvas in GameObject.FindGameObjectsWithTag("Navigation2DMap"))
         {
@@ -530,7 +530,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// <summary>
     /// Switch buttons on screen for modifing lines on 2D graph.
     /// </summary>
-    public void modify2DMap()
+    public void Modify2DMap()
     {
         navigateButton.gameObject.SetActive(false);
         modifyButton.gameObject.SetActive(false);
@@ -541,9 +541,9 @@ public class Navigation2DUIController : MonoBehaviour
     /// <summary>
     /// Switch buttons on screen for moving to navigation in 3D.
     /// </summary>
-    public void update2DGraph()
+    public void Update2DGraph()
     {
-        resetSelectedMarkers();
+        ResetSelectedMarkers();
 
         navigateButton.gameObject.SetActive(true);
         modifyButton.gameObject.SetActive(true);
@@ -554,7 +554,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// <summary>
     /// Add or delete line in 2D.
     /// </summary>
-    public void addLineIn2D()
+    public void AddLineIn2D()
     {
         GameObject tmp;
 
@@ -623,12 +623,12 @@ public class Navigation2DUIController : MonoBehaviour
                 lineRenderers.Remove(tmpKeyPair);
             }
 
-            areaLearning.removeLineBetweenMarkers(connectMarkersId[0], connectMarkersId[1]);
+            areaLearning.RemoveLineBetweenMarkers(connectMarkersId[0], connectMarkersId[1]);
 
             graph2D[connectMarkersId[0], connectMarkersId[1]] = 0;
             graph2D[connectMarkersId[1], connectMarkersId[0]] = 0;
 
-            resetSelectedMarkers();
+            ResetSelectedMarkers();
 
             AndroidHelper.ShowAndroidToastMessage("Connecion is deleted.");
             return;
@@ -645,7 +645,7 @@ public class Navigation2DUIController : MonoBehaviour
             newMarkersPosition.TryGetValue(connectMarkersId[0], out firstPosition);
             newMarkersPosition.TryGetValue(connectMarkersId[1], out secondPosition);
 
-            addLine(firstPosition, secondPosition, connectMarkersId[0], connectMarkersId[1]);
+            _AddLine(firstPosition, secondPosition, connectMarkersId[0], connectMarkersId[1]);
 
             firstPosition = new Vector2(firstPosition.x / SCALING, firstPosition.y / SCALING);
             secondPosition = new Vector2(secondPosition.x / SCALING, secondPosition.y / SCALING);
@@ -654,9 +654,9 @@ public class Navigation2DUIController : MonoBehaviour
             graph2D[connectMarkersId[0], connectMarkersId[1]] = distance;
             graph2D[connectMarkersId[1], connectMarkersId[0]] = distance;
 
-            areaLearning.addLineWithIds(connectMarkersId[0], connectMarkersId[1]);
+            areaLearning.AddLineWithIds(connectMarkersId[0], connectMarkersId[1]);
 
-            resetSelectedMarkers();
+            ResetSelectedMarkers();
 
             AndroidHelper.ShowAndroidToastMessage("Created is created.");
         }
@@ -665,7 +665,7 @@ public class Navigation2DUIController : MonoBehaviour
     /// <summary>
     /// Reset selected buttons.
     /// </summary>
-    public void resetSelectedMarkers()
+    public void ResetSelectedMarkers()
     {
         GameObject s0, s1;
 

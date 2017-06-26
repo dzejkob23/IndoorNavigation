@@ -47,14 +47,14 @@ class PinchZoom : MonoBehaviour
             return;
         }
 
-        cameraMove();
-        cameraZoom();
+        _CameraMove();
+        _CameraZoom();
     }
 
     /// <summary>
     /// Camera moving.
     /// </summary>
-    private void cameraMove()
+    private void _CameraMove()
     {
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         // zkusit pouze podminku "if (Input.touchCount == 1)" - chvalne, co to udela
@@ -71,7 +71,7 @@ class PinchZoom : MonoBehaviour
     /// <summary>
     /// Camera zooming.
     /// </summary>
-    private void cameraZoom()
+    private void _CameraZoom()
     {
         // If there are two touches on the device...
         if (Input.touchCount == 2)
