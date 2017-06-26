@@ -791,6 +791,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         List<MarkerData> xmlDataList = serializer.Deserialize(stream) as List<MarkerData>;
 
+        int max = int.MinValue;
+        GameObject gameObjectMaxValue;
+
         if (xmlDataList == null)
         {
             Debug.Log("AndroidInGameController._LoadMarkerFromDisk(): xmlDataList is null");
@@ -809,9 +812,16 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             // Set other values
             temp_instance.GetComponent<ARMarker>().SetParameters(mark.m_id, mark.m_neighbours);
 
+            /*
             if (temp_instance.GetComponent<ARMarker>().GetCounter() < mark.m_id)
             {
                 temp_instance.GetComponent<ARMarker>().SetCounter(mark.m_id);
+            }
+            */
+
+            if (max < mark.m_id)
+            {
+                max = mark.m_id;
             }
 
             // Add re-created marker to list
@@ -836,6 +846,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
                     }
                 }
             }
+        }
+
+        if (m_markerList.TryGetValue(max, out gameObjectMaxValue))
+        {
+            gameObjectMaxValue.GetComponent<ARMarker>().setCounter(max);
         }
     }
 
