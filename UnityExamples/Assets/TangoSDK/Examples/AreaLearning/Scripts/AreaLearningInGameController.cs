@@ -363,7 +363,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             screenRect.yMin = Mathf.Min(yMin, yMax);
             screenRect.yMax = Mathf.Max(yMin, yMax);
             
-            if (GUI.Button(screenRect, "<size=30>Touch again = <color=red>HIDE MARKER</color></size>"))
+            if (GUI.Button(screenRect, "<size=30>Touch again = <color=red>REMOVE MARKER</color></size>"))
             {
                 int selected_id = m_selectedMarker.gameObject.GetComponent<ARMarker>().GetID();
                 _DeleteLineRendererViaMarkerId(selected_id);
@@ -812,13 +812,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             // Set other values
             temp_instance.GetComponent<ARMarker>().SetParameters(mark.m_id, mark.m_neighbours);
 
-            /*
-            if (temp_instance.GetComponent<ARMarker>().GetCounter() < mark.m_id)
-            {
-                temp_instance.GetComponent<ARMarker>().SetCounter(mark.m_id);
-            }
-            */
-
             if (max < mark.m_id)
             {
                 max = mark.m_id;
@@ -850,7 +843,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         if (m_markerList.TryGetValue(max, out gameObjectMaxValue))
         {
-            gameObjectMaxValue.GetComponent<ARMarker>().setCounter(max);
+            gameObjectMaxValue.GetComponent<ARMarker>().SetCounter(max);
         }
     }
 
