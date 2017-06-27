@@ -27,11 +27,17 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class SceneSwitcher : MonoBehaviour
 {
+    /// <summary>
+    /// Run Area Learning scene.
+    /// </summary>
     public void runAreaLearning()
     {
         SceneManager.LoadScene("AreaLearning");
     }
 
+    /// <summary>
+    /// Open URL with Tango Core.
+    /// </summary>
     public void updateTangoCore()
     {
         Application.OpenURL("https://play.google.com/store/apps/details?id=com.google.tango");

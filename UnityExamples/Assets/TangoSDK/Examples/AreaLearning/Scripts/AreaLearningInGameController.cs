@@ -421,6 +421,10 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 #endif
     }
 
+    /// <summary>
+    /// Delete line via marker ID.
+    /// </summary>
+    /// <param name="id">ID of deleted marker.</param>
     private void _DeleteLineRendererViaMarkerId(int id)
     {
         foreach (KeyValuePair<int, GameObject> obj in m_markerList)
@@ -505,8 +509,6 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         if (m_connectMarkers[0] != null && m_connectMarkers[1] != null)
         {
-            // TODO - check if line exists
-            // removeLineBetweenMarkers(firstID, secondID);
             GameObject tmpLine = null;
             if (m_connectMarkers[0].lines.TryGetValue(m_connectMarkers[1].GetID(), out tmpLine))
             {
@@ -538,6 +540,9 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         }
     }
 
+    /// <summary>
+    /// Unselect both markers.
+    /// </summary>
     private void _ResetSelectedMarkers()
     {
         if (m_connectMarkers[0] != null)
