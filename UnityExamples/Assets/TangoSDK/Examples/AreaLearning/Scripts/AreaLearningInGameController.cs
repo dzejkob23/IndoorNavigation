@@ -31,7 +31,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// AreaLearningGUIController is responsible for the main game interaction.
+/// AreaLearningGUIController is responsible for the main game interaction in 3D.
 /// 
 /// This class also takes care of loading / save persistent data(marker), and loop closure handling.
 /// </summary>

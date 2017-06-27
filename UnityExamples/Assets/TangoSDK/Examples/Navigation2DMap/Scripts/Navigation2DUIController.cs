@@ -15,7 +15,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
-/// Controller script for 2D scene.
+/// Navigation2DUIController is responsible for the main game interaction in 2D.
 /// </summary>
 public class Navigation2DUIController : MonoBehaviour
 {

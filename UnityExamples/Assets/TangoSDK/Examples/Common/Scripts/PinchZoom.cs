@@ -12,7 +12,7 @@ using System.Text;
 using UnityEngine;
 
 /// <summary>
-/// Script for using touches on screen.
+/// PinchZoom gives using touches on screen.
 /// </summary>
 class PinchZoom : MonoBehaviour
 {
