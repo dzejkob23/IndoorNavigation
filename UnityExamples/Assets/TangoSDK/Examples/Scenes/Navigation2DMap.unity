@@ -1229,7 +1229,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Select
 
-    marker'
+    vertex'
 --- !u!222 &1968228322
 CanvasRenderer:
   m_ObjectHideFlags: 0
