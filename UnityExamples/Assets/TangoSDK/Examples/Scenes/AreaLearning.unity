@@ -3103,6 +3103,9 @@ MonoBehaviour:
   - {fileID: 188320, guid: bb3ba25bb7f2d422dbf25c1079b02c8a, type: 2}
   - {fileID: 188320, guid: cd33881bc3c6743a2ae490d4428bf4f2, type: 2}
   - {fileID: 188320, guid: b93817ddafe384d2dacef38f55680bf0, type: 2}
+  - {fileID: 1643689546339304, guid: 5a87c96725459a04ab55561ebb6831cb, type: 2}
+  - {fileID: 1383374699419958, guid: c9bff0f12d1b31e408acc54958a91035, type: 2}
+  - {fileID: 1808161939792100, guid: 353458760c9209b41b1783cd099915b6, type: 2}
   m_pointCloud: {fileID: 264882624}
   m_canvas: {fileID: 358972277}
   m_prefabTouchEffect: {fileID: 22497430, guid: 5a77b678bf7604d5fb4f0b5399e89224,
@@ -3623,7 +3626,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 3
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
