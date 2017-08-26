@@ -13,7 +13,7 @@ using System.Text;
 using UnityEngine;
 
 /// <summary>
-/// Script initialize primary keys which represent marker on one line.
+/// KeyPair initialize primary keys which represent marker on one line.
 /// </summary>
 public class KeyPair
 {

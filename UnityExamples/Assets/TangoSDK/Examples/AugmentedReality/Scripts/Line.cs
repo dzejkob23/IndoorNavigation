@@ -12,7 +12,7 @@ using System.Text;
 using UnityEngine;
 
 /// <summary>
-/// Script gives behaviour to LineRenderer in 3D scene.
+/// Script Line describes behaviour of LineRenderer in 3D scene.
 /// </summary>
 public class Line : MonoBehaviour
 {

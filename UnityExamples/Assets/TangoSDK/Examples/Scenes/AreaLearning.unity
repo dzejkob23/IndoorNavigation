@@ -264,10 +264,10 @@ RectTransform:
   m_Father: {fileID: 1640595980}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 60, y: -10}
-  m_SizeDelta: {x: 120, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -10}
+  m_SizeDelta: {x: 0, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &108889365
 MonoBehaviour:
@@ -2058,7 +2058,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Select
 
-    marker'
+    vertex'
 --- !u!222 &688439684
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2096,10 +2096,10 @@ RectTransform:
   m_Father: {fileID: 238009439}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 60, y: -66.666664}
-  m_SizeDelta: {x: 120, y: 26.666666}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -66.666664}
+  m_SizeDelta: {x: 0, y: 26.666666}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &709635717
 MonoBehaviour:
@@ -2871,10 +2871,10 @@ RectTransform:
   m_Father: {fileID: 238009439}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 60, y: -40}
-  m_SizeDelta: {x: 120, y: 26.666666}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -40}
+  m_SizeDelta: {x: 0, y: 26.666666}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1111626294
 MonoBehaviour:
@@ -3140,10 +3140,10 @@ RectTransform:
   m_Father: {fileID: 238009439}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 60, y: -13.333333}
-  m_SizeDelta: {x: 120, y: 26.666666}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -13.333333}
+  m_SizeDelta: {x: 0, y: 26.666666}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1299377511
 MonoBehaviour:
@@ -3570,10 +3570,10 @@ RectTransform:
   m_Father: {fileID: 1640595980}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 60, y: -30}
-  m_SizeDelta: {x: 120, y: 20}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -30}
+  m_SizeDelta: {x: 0, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1387551859
 MonoBehaviour:
@@ -4493,7 +4493,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Add / delete line between two verticies
+  m_Text: Add / delete line between two vertices
 --- !u!222 &1663081781
 CanvasRenderer:
   m_ObjectHideFlags: 0

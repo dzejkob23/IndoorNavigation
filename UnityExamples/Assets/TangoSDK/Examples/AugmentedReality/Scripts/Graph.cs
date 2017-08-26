@@ -13,7 +13,7 @@ using System.Text;
 using UnityEngine;
 
 /// <summary>
-/// Script represents instance of navigation graph.
+/// Graph represents instance of navigation graph.
 /// </summary>
 public class Graph
 {
