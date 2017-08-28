@@ -803,6 +803,10 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
             temp.m_position = obj.Value.transform.position;
             temp.m_orientation = obj.Value.transform.rotation;
             temp.m_neighbours = new int[obj.Value.GetComponent<ARMarker>().lines.Keys.Count];
+            if(obj.Value.GetComponent<ARMarker>().m_type == 3)
+            {
+                temp.m_description = obj.Value.GetComponentInChildren<TextMesh>().text;
+            }
             obj.Value.GetComponent<ARMarker>().lines.Keys.CopyTo(temp.m_neighbours, 0);
             temp.m_id = obj.Value.GetComponent<ARMarker>().GetID();
 
@@ -850,6 +854,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
             // Set other values
             temp_instance.GetComponent<ARMarker>().SetParameters(mark.m_id, mark.m_neighbours);
+
+            if (mark.m_type == 3)
+            {
+                temp_instance.GetComponentInChildren<TextMesh>().text = mark.m_description;
+            }
 
             if (max < mark.m_id)
             {
@@ -1200,5 +1209,11 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         /// </summary>
         [XmlElement("id")]
         public int m_id;
+
+        /// <summary>
+        /// Description on marker
+        /// </summary>
+        [XmlElement("description")]
+        public string m_description;
     }
 }
