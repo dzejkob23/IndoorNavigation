@@ -329,6 +329,40 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
         normalizedPosition.x /= Screen.width;
         normalizedPosition.y /= Screen.height;
         touchEffectRectTransform.anchorMin = touchEffectRectTransform.anchorMax = normalizedPosition;
+
+        StartCoroutine(_PlaceTextOnMarker());
+    }
+
+    private IEnumerator _PlaceTextOnMarker()
+    {
+        if (m_currentMarkType != 3)
+        {
+            yield break;
+        }
+
+        if (TouchScreenKeyboard.visible || m_saveThread != null)
+        {
+            yield break;
+        }
+
+        TouchScreenKeyboard kb = TouchScreenKeyboard.Open("Unnamed");
+        while (!kb.done && !kb.wasCanceled)
+        {
+            yield return null;
+        }
+
+        bool saveConfirmed = kb.done;
+
+        if (saveConfirmed)
+        {
+            AndroidHelper.ShowAndroidToastMessage("Nenastaveno 3 ...");
+            newMarkObject.GetComponentInChildren<TextMesh>().text = kb.text;
+            AndroidHelper.ShowAndroidToastMessage("... NASTAVENO ...");
+        }
+        else
+        {
+            AndroidHelper.ShowAndroidToastMessage("... NE-NASTAVENO ...");
+        }
     }
 
     /// <summary>
