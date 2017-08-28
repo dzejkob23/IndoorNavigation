@@ -355,13 +355,7 @@ public class AreaLearningInGameController : MonoBehaviour, ITangoPose, ITangoEve
 
         if (saveConfirmed)
         {
-            AndroidHelper.ShowAndroidToastMessage("Nenastaveno 3 ...");
             newMarkObject.GetComponentInChildren<TextMesh>().text = kb.text;
-            AndroidHelper.ShowAndroidToastMessage("... NASTAVENO ...");
-        }
-        else
-        {
-            AndroidHelper.ShowAndroidToastMessage("... NE-NASTAVENO ...");
         }
     }
 
